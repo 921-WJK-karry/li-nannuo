@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>李南诺的《高级网页设计》课堂实践</title>
+
+  <style>
+    :root {
+      --primary: #58a6a6;
+      --primary-light: #dff3f1;
+      --secondary: #8ba7d9;
+      --accent: #f2b880;
+      --text: #344054;
+      --muted: #718096;
+      --bg: #f4faf9;
+      --white: #ffffff;
+      --line: #dcebea;
+      --shadow: 0 12px 30px rgba(78, 126, 130, .12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 8% 8%, #dff5f1 0, transparent 28%),
+        radial-gradient(circle at 92% 90%, #fff0dc 0, transparent 26%),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(1160px, calc(100% - 32px));
+      margin: auto;
+      padding: 36px 0 50px;
+    }
+
+    .hero {
+      overflow: hidden;
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      padding: 42px 46px 36px;
+      background: linear-gradient(135deg, #effaf8, #f8f5ff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 7px 14px;
+      color: var(--primary);
+      background: var(--primary-light);
+      border-radius: 999px;
+      font-size: 13px;
+      letter-spacing: .08em;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      color: #315b61;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      max-width: 700px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .badge {
+      display: grid;
+      place-items: center;
+      width: 116px;
+      height: 116px;
+      flex-shrink: 0;
+      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 28px;
+      box-shadow: 0 10px 22px rgba(88, 166, 166, .25);
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 24px;
+      padding: 30px;
+    }
+
+    .panel {
+      padding: 24px;
+      background: rgba(255, 255, 255, .82);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+    }
+
+    .panel h2 {
+      margin: 0 0 20px;
+      color: #3f686b;
+      font-size: 1.45rem;
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .catalog-item {
+      position: relative;
+      display: block;
+      padding: 20px 42px 18px 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      transition: .25s;
+    }
+
+    .catalog-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 22px rgba(88, 166, 166, .16);
+    }
+
+    .catalog-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #3f686b;
+      font-size: 1.05rem;
+    }
+
+    .catalog-item span {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.7;
+    }
+
+    .catalog-item::after {
+      content: "→";
+      position: absolute;
+      top: 18px;
+      right: 17px;
+      color: var(--primary);
+      font-size: 1.3rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px 14px;
+      text-align: center;
+      background: #f7fcfb;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .num {
+      margin-bottom: 6px;
+      color: var(--primary);
+      font-size: 1.7rem;
+      font-weight: bold;
+    }
+
+    .label {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .prompt-box {
+      margin-top: 20px;
+      padding: 18px;
+      color: var(--muted);
+      background: #fffaf3;
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      font-size: .9rem;
+      line-height: 1.8;
+    }
+
+    .prompt-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #806247;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    @media (max-width: 850px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero-top {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 30px 24px;
+      }
+
+      .badge {
+        width: 86px;
+        height: 86px;
+        font-size: 22px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+
+      .catalog {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">高级网页设计 · 课堂实践</div>
+          <h1>李南诺的《高级网页设计》</h1>
+          <p class="subtitle">
+            课程学习目录与课堂实践集合，记录网页设计、布局、图标和 JavaScript 学习过程。
+          </p>
+        </div>
+
+        <div class="badge">Web</div>
+      </div>
+
+      <main class="content">
+        <section class="panel">
+          <h2>课堂目录</h2>
+
+          <div class="catalog">
+            <a class="catalog-item" href="./flex布局复习.html">
+              <strong>Flex 复习</strong>
+              <span>复习弹性盒模型、布局属性与响应式页面实践。</span>
+            </a>
+
+            <a class="catalog-item" href="./svg图标.html">
+              <strong>SVG 图标</strong>
+              <span>学习 SVG 图标、导航栏和交互状态切换。</span>
+            </a>
+
+            <a class="catalog-item" href="./font/demo_index.html">
+              <strong>字体图标</strong>
+              <span>字体图标的使用方法与图标展示实践。</span>
+            </a>
+
+            <a class="catalog-item" href="./datetype.html">
+              <strong>datetype</strong>
+              <span>JavaScript 数据类型课堂实践。</span>
+            </a>
+
+            <a class="catalog-item" href="./function.html">
+              <strong>JavaScript 函数 · 猜数游戏</strong>
+              <span>练习函数、随机数生成与猜数游戏逻辑。</span>
+            </a>
+
+            <a class="catalog-item" href="./object.html">
+              <strong>JavaScript 对象</strong>
+              <span>练习对象属性、方法、遍历与引用类型。</span>
+            </a>
+
+            <a class="catalog-item" href="./js_boj_apply.html">
+              <strong>JavaScript 对象应用</strong>
+              <span>通过学生明信片案例练习对象属性与方法。</span>
+            </a>
+
+            <a class="catalog-item" href="./li-nan-nuo-web-practice/index.html">
+              <strong>课堂实践首页</strong>
+              <span>课程实践项目的统一入口。</span>
+            </a>
+
+            <a class="catalog-item" href="./li-nan-nuo-web-practice/pages/flex-review.html">
+              <strong>课堂实践 · Flex</strong>
+              <span>项目中的 Flex 布局复习页面。</span>
+            </a>
+
+            <a class="catalog-item" href="./li-nan-nuo-web-practice/pages/font-icons.html">
+              <strong>课堂实践 · 字体图标</strong>
+              <span>字体图标说明与页面示例。</span>
+            </a>
+
+            <a class="catalog-item" href="./li-nan-nuo-web-practice/pages/modules/index.html">
+              <strong>其余模块</strong>
+              <span>后续课堂模块将在这里持续增加。</span>
+            </a>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>学习状态</h2>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="num">11</div>
+              <div class="label">目录页面</div>
+            </div>
+
+            <div class="stat">
+              <div class="num">03</div>
+              <div class="label">核心模块</div>
+            </div>
+
+            <div class="stat">
+              <div class="num">+</div>
+              <div class="label">持续更新</div>
+            </div>
+
+            <div class="stat">
+              <div class="num">2026</div>
+              <div class="label">课堂实践</div>
+            </div>
+          </div>
+
+          <div class="prompt-box">
+            <strong>本提示词</strong>
+            帮我修改这个index.htm，要包括目录下的所有网页的超链接，使用原生代码，不使用cdn，新页面名称为index.html，主题为李南诺的《高级网页设计》，课堂实践，美化页面，课堂目录中包含flex复习，字体图标、datetype,其余模块后续增加，页面中包含本提示词，整体风格清新好看整齐，颜色不要深色。
+          </div>
+        </aside>
+      </main>
+    </header>
+
+    <div class="footer-note">
+      © 2026 李南诺的《高级网页设计》课堂实践
+    </div>
+  </div>
+</body>
+
+</html>

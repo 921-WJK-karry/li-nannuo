@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS函数</title>
+</head>
+<body>
+    <!--写一个随机数的猜数游戏，计算机随机给出一定范围的随机数，学生输入猜测的数字，计算机给出数字大了或者小了，直到猜中或者到达指定猜测次数-->
+    <button onclick="gessNum()">猜猜我是几？</button>
+   <script>
+    //匿名游戏
+    var gessNum = function(){
+        //Math.random()返回一个0到1之间的随机数，Math.floor()向下取整，Math.random()*100+1返回1到100之间的随机数
+        let num = getRandomNum(1,25);v
+        let count = 0;
+        while(count<5){
+            let input = prompt("请输入数字:");
+            input = parseInt(input);
+            if (isNaN(input)) {
+                alert("请输入一个有效的数字！");
+                continue;
+            }
+            if(input>num){
+                alert("太大了！");
+              
+            }else if(input<num){
+                alert("太小了！");
+            }else{
+                alert("恭喜你，猜中了！");
+                return;
+            }
+            count++;
+        }
+        alert("游戏结束！正确答案是"+num);
+    }
+    //获取从min到max之间的随机数
+    //箭头函数
+    //箭头函数的参数可以省略小括号，如果参数只有一个，可以省略小括号和大括号
+    //箭头函数的返回值可以省略大括号和return关键字
+    function getRandomNum(min,max)  {
+        return Math.floor(Math.random()*(max-min+1)+min);
+    }
+    
+
+   </script>
+</body>
+</html>
