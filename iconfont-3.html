@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>青花纹样考 · 舟楫 —— 移动端导航卷（字体图标）</title>
+<link rel="stylesheet" href="font/iconfont.css">
+<style>
+  :root {
+    --LNN_porcelain: #F4F7F6;
+    --LNN_porcelain-deep: #E4EDE9;
+    --LNN_cobalt: #24439B;
+    --LNN_ink: #132A5E;
+    --LNN_celadon: #A9C4D9;
+    --LNN_gild: #A8781F;
+    --LNN_cinnabar: #C0392B;
+    --LNN_serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    --LNN_sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background:
+      radial-gradient(circle at 85% 12%, rgba(169,196,217,.30) 0%, transparent 42%),
+      radial-gradient(circle at 8% 90%, rgba(36,67,155,.08) 0%, transparent 45%),
+      var(--LNN_porcelain);
+    color: var(--LNN_ink);
+    font-family: var(--LNN_sans);
+    font-size: 16px;
+    line-height: 1.85;
+    min-height: 100vh;
+  }
+
+  /* 移动端画布：居中 480px 内如同手机 */
+  .LNN_phone {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 80% 8%, rgba(169,196,217,.22) 0%, transparent 38%),
+      #FAFCFB;
+    box-shadow: 0 0 0 1px rgba(19,42,94,.10), 0 24px 60px -30px rgba(19,42,94,.4);
+    position: relative;
+  }
+
+  /* 顶部品牌条 */
+  .LNN_topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 20px 22px 0;
+  }
+  .LNN_brand {
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: .26em;
+    color: var(--LNN_ink);
+  }
+  .LNN_vol {
+    font-family: var(--LNN_serif);
+    font-size: 13px;
+    letter-spacing: .18em;
+    color: var(--LNN_gild);
+  }
+
+  /* 内容面板 */
+  .LNN_main { padding: 0 0 108px; }
+  .LNN_panel { display: none; padding: 30px 22px 0; }
+  .LNN_panel-active { display: block; animation: LNN_panelIn .32s ease-out both; }
+  @keyframes LNN_panelIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .LNN_panel-active { animation: none; }
+  }
+
+  .LNN_panelHead { text-align: center; margin-bottom: 18px; }
+  .LNN_panelPlate {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 14px;
+    background: radial-gradient(circle at 32% 26%, #ffffff 0%, var(--LNN_porcelain) 55%, var(--LNN_porcelain-deep) 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(19,42,94,.20),
+      inset 0 0 0 4px #ffffff,
+      inset 0 0 0 5px rgba(36,67,155,.26),
+      inset 0 0 0 11px rgba(255,255,255,.85),
+      inset 0 0 0 12px rgba(36,67,155,.12),
+      0 12px 22px -14px rgba(19,42,94,.4);
+  }
+  .LNN_panelPlate .iconfont { font-size: 40px; color: var(--LNN_cobalt); }
+  .LNN_panelTitle {
+    font-family: var(--LNN_serif);
+    font-weight: 900;
+    font-size: 27px;
+    letter-spacing: .3em;
+    color: var(--LNN_ink);
+  }
+  .LNN_panelSub {
+    font-size: 12.5px;
+    letter-spacing: .14em;
+    color: rgba(19,42,94,.5);
+    margin-top: 2px;
+  }
+
+  .LNN_panelText {
+    font-size: 14.5px;
+    border-left: 3px solid var(--LNN_cobalt);
+    padding-left: 14px;
+    margin: 20px 0 24px;
+    color: rgba(19,42,94,.85);
+  }
+  .LNN_panelText em { font-style: normal; color: var(--LNN_cobalt); font-weight: 600; }
+  .LNN_codeChip {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: var(--LNN_cobalt);
+    background: #ffffff;
+    border: 1px solid rgba(36,67,155,.22);
+    border-radius: 4px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+
+  /* 搜索面板 */
+  .LNN_searchBox { position: relative; margin-bottom: 18px; }
+  .LNN_searchInput {
+    width: 100%;
+    font: inherit;
+    font-size: 14.5px;
+    color: var(--LNN_ink);
+    padding: 11px 14px 11px 40px;
+    border: 1px solid rgba(36,67,155,.3);
+    border-radius: 10px;
+    background: #ffffff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .LNN_searchInput:focus {
+    border-color: var(--LNN_cobalt);
+    box-shadow: 0 0 0 3px rgba(36,67,155,.12);
+  }
+  .LNN_searchBox .iconfont {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 17px;
+    color: rgba(36,67,155,.55);
+    pointer-events: none;
+  }
+  .LNN_resultList { list-style: none; }
+  .LNN_resultItem {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(19,42,94,.1);
+  }
+  .LNN_resultItem .iconfont { font-size: 17px; color: var(--LNN_cobalt); flex-shrink: 0; }
+  .LNN_resultName {
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 15.5px;
+    letter-spacing: .2em;
+    color: var(--LNN_ink);
+    flex-shrink: 0;
+  }
+  .LNN_resultDesc { font-size: 12.5px; color: rgba(19,42,94,.55); }
+  .LNN_empty {
+    text-align: center;
+    font-size: 13px;
+    color: rgba(19,42,94,.45);
+    padding: 26px 0 8px;
+    display: none;
+  }
+
+  /* 操作按钮 */
+  .LNN_actionBtn {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: 15px;
+    letter-spacing: .12em;
+    color: #F5F8F7;
+    background: linear-gradient(135deg, #3A5CB8 0%, var(--LNN_cobalt) 60%, #1B3478 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 13px 0;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -12px rgba(19,42,94,.6);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .LNN_actionBtn:active { transform: scale(.97); box-shadow: 0 6px 14px -10px rgba(19,42,94,.6); }
+  .LNN_actionBtn:focus-visible { outline: 2px solid var(--LNN_gild); outline-offset: 3px; }
+  .LNN_actionNote {
+    text-align: center;
+    font-size: 12.5px;
+    color: rgba(19,42,94,.5);
+    margin-top: 14px;
+    min-height: 1.8em;
+  }
+  .LNN_actionNote strong { color: var(--LNN_cinnabar); font-weight: 600; }
+
+  /* 底部固定导航：四项均分，自适应宽度 */
+  .LNN_tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 480px);
+    display: flex;
+    background: rgba(250,252,251,.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(19,42,94,.14);
+    box-shadow: 0 -10px 30px -18px rgba(19,42,94,.4);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 10;
+  }
+  .LNN_tab {
+    flex: 1 1 0;
+    min-width: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 11px 0 12px;
+    background: none;
+    border: none;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: .14em;
+    color: #71809E;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .LNN_tab:focus-visible { outline: 2px solid var(--LNN_cobalt); outline-offset: -3px; border-radius: 8px; }
+  .LNN_tab-active { color: var(--LNN_cobalt); font-weight: 600; }
+  .LNN_tab-active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 28px;
+    height: 3px;
+    background: var(--LNN_cobalt);
+    border-radius: 0 0 3px 3px;
+  }
+  .LNN_tabIconWrap { position: relative; line-height: 1; }
+  .LNN_tab .iconfont { font-size: 23px; }
+
+  /* 右上角数字徽章 */
+  .LNN_badge {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--LNN_cinnabar);
+    border: 2px solid #FAFCFB;
+    color: #ffffff;
+    font-style: normal;
+    font-family: var(--LNN_sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 13px;
+    text-align: center;
+    box-sizing: content-box;
+  }
+  .LNN_badge-pop { animation: LNN_pop .35s ease-out; }
+  @keyframes LNN_pop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.45); }
+    100% { transform: scale(1); }
+  }
+
+  /* 右上角红点 */
+  .LNN_dot {
+    position: absolute;
+    top: -2px;
+    right: -6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--LNN_cinnabar);
+    border: 2px solid #FAFCFB;
+  }
+
+  /* 页内页脚 */
+  .LNN_pageLinks {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    padding: 34px 22px 26px;
+    font-size: 13px;
+  }
+  .LNN_pageLinks a {
+    color: var(--LNN_cobalt);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(36,67,155,.4);
+    padding-bottom: 1px;
+  }
+  .LNN_pageLinks a:hover { border-bottom-color: var(--LNN_cobalt); }
+  .LNN_pageLinks a:focus-visible { outline: 2px solid var(--LNN_cobalt); outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <div class="LNN_phone">
+
+    <header class="LNN_topbar">
+      <span class="LNN_brand">青花纹样考</span>
+      <span class="LNN_vol">卷三 舟楫</span>
+    </header>
+
+    <main class="LNN_main">
+
+      <!-- 面板一：首页 -->
+      <section class="LNN_panel LNN_panel-active" id="LNN_panelShouye">
+        <div class="LNN_panelHead">
+          <div class="LNN_panelPlate"><span class="iconfont icon-shouye"></span></div>
+          <h1 class="LNN_panelTitle">舟楫</h1>
+          <p class="LNN_panelSub">移动端导航卷 · 字体图标</p>
+        </div>
+        <p class="LNN_panelText">舟楫以济川，导航以引路。底部四项以 <code class="LNN_codeChip">flex: 1</code> 均分屏宽，锚定于视口之底；图标由 <code class="LNN_codeChip">@font-face</code> 载入的字库绘制，每个纹样占用一个 Unicode 码位。</p>
+      </section>
+
+      <!-- 面板二：搜索 -->
+      <section class="LNN_panel" id="LNN_panelSousuo">
+        <div class="LNN_panelHead">
+          <div class="LNN_panelPlate"><span class="iconfont icon-sousuo"></span></div>
+          <h1 class="LNN_panelTitle">检纹</h1>
+          <p class="LNN_panelSub">输入即检 · 实时过滤</p>
+        </div>
+        <div class="LNN_searchBox">
+          <input type="text" class="LNN_searchInput" id="LNN_searchInput" placeholder="检索四卷之名，如：舟楫">
+        </div>
+        <ul class="LNN_resultList" id="LNN_resultList">
+          <li class="LNN_resultItem"><span class="iconfont icon-shouye"></span><span class="LNN_resultName">缠枝</span><span class="LNN_resultDesc">卷一 · Font Awesome 字体图标</span></li>
+          <li class="LNN_resultItem"><span class="iconfont icon-baocun"></span><span class="LNN_resultName">素坯</span><span class="LNN_resultDesc">卷二 · Lucide SVG 图标</span></li>
+          <li class="LNN_resultItem"><span class="iconfont icon-xinzeng"></span><span class="LNN_resultName">舟楫</span><span class="LNN_resultDesc">卷三 · 本页，移动端导航与字体图标</span></li>
+          <li class="LNN_resultItem"><span class="iconfont icon-sousuo"></span><span class="LNN_resultName">司南</span><span class="LNN_resultDesc">卷四 · 移动端导航与 SVG 图标</span></li>
+        </ul>
+        <p class="LNN_empty" id="LNN_searchEmpty">未检得纹样，试他字样。</p>
+      </section>
+
+      <!-- 面板三：新增 -->
+      <section class="LNN_panel" id="LNN_panelXinzeng">
+        <div class="LNN_panelHead">
+          <div class="LNN_panelPlate"><span class="iconfont icon-xinzeng"></span></div>
+          <h1 class="LNN_panelTitle">增纹</h1>
+          <p class="LNN_panelSub">数字徽章 · 随添随涨</p>
+        </div>
+        <p class="LNN_panelText">底部「新增」一项右上角悬着<em>数字徽章</em>：朱砂为底，白字计数。点击下方按钮添一件纹样，徽章应声而涨。</p>
+        <button type="button" class="LNN_actionBtn" id="LNN_addBtn">添一件纹样入窑</button>
+        <p class="LNN_actionNote" id="LNN_addNote">窑中已待 <strong>6</strong> 件新纹。</p>
+      </section>
+
+      <!-- 面板四：保存 -->
+      <section class="LNN_panel" id="LNN_panelBaocun">
+        <div class="LNN_panelHead">
+          <div class="LNN_panelPlate"><span class="iconfont icon-baocun"></span></div>
+          <h1 class="LNN_panelTitle">收釉</h1>
+          <p class="LNN_panelSub">红点已读 · 一键拂去</p>
+        </div>
+        <p class="LNN_panelText">底部「首页」一项右上角燃着一粒<em>红点</em>：有新纹样而未看。看过之后，于此拂去。</p>
+        <button type="button" class="LNN_actionBtn" id="LNN_readBtn">标记首页红点为已读</button>
+        <p class="LNN_actionNote" id="LNN_readNote">首页尚有<strong>未读纹样</strong>。</p>
+      </section>
+
+      <footer class="LNN_pageLinks">
+        <a href="index.html">回到首页</a>
+        <a href="iconfont-4.html">下一卷 司南（SVG）</a>
+      </footer>
+    </main>
+
+    <!-- 底部固定导航 -->
+    <nav class="LNN_tabbar">
+      <button type="button" class="LNN_tab LNN_tab-active" data-LNN-panel="LNN_panelShouye">
+        <span class="LNN_tabIconWrap">
+          <span class="iconfont icon-shouye"></span>
+          <i class="LNN_dot" id="LNN_homeDot" title="有未读纹样"></i>
+        </span>
+        <span>首页</span>
+      </button>
+      <button type="button" class="LNN_tab" data-LNN-panel="LNN_panelSousuo">
+        <span class="LNN_tabIconWrap"><span class="iconfont icon-sousuo"></span></span>
+        <span>搜索</span>
+      </button>
+      <button type="button" class="LNN_tab" data-LNN-panel="LNN_panelXinzeng">
+        <span class="LNN_tabIconWrap">
+          <span class="iconfont icon-xinzeng"></span>
+          <b class="LNN_badge" id="LNN_xinzengBadge">6</b>
+        </span>
+        <span>新增</span>
+      </button>
+      <button type="button" class="LNN_tab" data-LNN-panel="LNN_panelBaocun">
+        <span class="LNN_tabIconWrap"><span class="iconfont icon-baocun"></span></span>
+        <span>保存</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script>
+    // 面板切换
+    var LNN_tabs = document.querySelectorAll('.LNN_tab');
+    var LNN_panels = document.querySelectorAll('.LNN_panel');
+
+    function LNN_activate(LNN_id) {
+      for (var LNN_i = 0; LNN_i < LNN_tabs.length; LNN_i++) {
+        var LNN_on = LNN_tabs[LNN_i].getAttribute('data-LNN-panel') === LNN_id;
+        LNN_tabs[LNN_i].classList.toggle('LNN_tab-active', LNN_on);
+      }
+      for (var LNN_j = 0; LNN_j < LNN_panels.length; LNN_j++) {
+        LNN_panels[LNN_j].classList.toggle('LNN_panel-active', LNN_panels[LNN_j].id === LNN_id);
+      }
+    }
+    for (var LNN_t = 0; LNN_t < LNN_tabs.length; LNN_t++) {
+      LNN_tabs[LNN_t].addEventListener('click', function () {
+        LNN_activate(this.getAttribute('data-LNN-panel'));
+      });
+    }
+
+    // 搜索过滤
+    var LNN_input = document.getElementById('LNN_searchInput');
+    var LNN_rows = document.querySelectorAll('.LNN_resultItem');
+    var LNN_empty = document.getElementById('LNN_searchEmpty');
+    LNN_input.addEventListener('input', function () {
+      var LNN_kw = this.value.trim();
+      var LNN_hit = 0;
+      for (var LNN_k = 0; LNN_k < LNN_rows.length; LNN_k++) {
+        var LNN_show = LNN_rows[LNN_k].textContent.indexOf(LNN_kw) > -1;
+        LNN_rows[LNN_k].style.display = LNN_show ? '' : 'none';
+        if (LNN_show) { LNN_hit++; }
+      }
+      LNN_empty.style.display = LNN_hit ? 'none' : 'block';
+    });
+
+    // 数字徽章：加一并跳动
+    var LNN_count = 6;
+    var LNN_badge = document.getElementById('LNN_xinzengBadge');
+    var LNN_addBtn = document.getElementById('LNN_addBtn');
+    var LNN_addNote = document.getElementById('LNN_addNote');
+    LNN_addBtn.addEventListener('click', function () {
+      LNN_count++;
+      LNN_badge.textContent = LNN_count;
+      LNN_badge.classList.remove('LNN_badge-pop');
+      void LNN_badge.offsetWidth;
+      LNN_badge.classList.add('LNN_badge-pop');
+      LNN_addNote.innerHTML = '窑中已待 <strong>' + LNN_count + '</strong> 件新纹。';
+    });
+
+    // 红点：标记已读
+    var LNN_dot = document.getElementById('LNN_homeDot');
+    var LNN_readBtn = document.getElementById('LNN_readBtn');
+    var LNN_readNote = document.getElementById('LNN_readNote');
+    LNN_readBtn.addEventListener('click', function () {
+      LNN_dot.style.display = 'none';
+      LNN_readNote.textContent = '红点已拂去，纹样皆已读。';
+    });
+  </script>
+</body>
+</html>

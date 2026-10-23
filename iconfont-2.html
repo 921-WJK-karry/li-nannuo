@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>青花纹样考 · 素坯 —— SVG 图标卷（Lucide）</title>
+<script src="cdn/js/lucide.min.js"></script>
+<style>
+  :root {
+    --LNN_porcelain: #F4F7F6;
+    --LNN_porcelain-deep: #E4EDE9;
+    --LNN_cobalt: #24439B;
+    --LNN_ink: #132A5E;
+    --LNN_celadon: #A9C4D9;
+    --LNN_gild: #A8781F;
+    --LNN_serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    --LNN_sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background:
+      radial-gradient(circle at 85% 12%, rgba(169,196,217,.28) 0%, transparent 42%),
+      radial-gradient(circle at 8% 90%, rgba(36,67,155,.07) 0%, transparent 45%),
+      var(--LNN_porcelain);
+    color: var(--LNN_ink);
+    font-family: var(--LNN_sans);
+    font-size: 16.5px;
+    line-height: 1.9;
+    min-height: 100vh;
+  }
+
+  /* 顶部窄条 */
+  .LNN_topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 22px clamp(24px, 5vw, 64px) 0;
+  }
+  .LNN_brand {
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: .3em;
+    color: var(--LNN_ink);
+  }
+  .LNN_topbar a {
+    color: var(--LNN_cobalt);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(36,67,155,.4);
+    padding-bottom: 2px;
+    font-size: 14.5px;
+  }
+  .LNN_topbar a:hover { border-bottom-color: var(--LNN_cobalt); }
+  a:focus-visible { outline: 2px solid var(--LNN_cobalt); outline-offset: 3px; }
+
+  /* 英雄区：左盘右题 */
+  .LNN_hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(40px, 7vw, 110px);
+    padding: clamp(48px, 8vh, 96px) 24px 40px;
+  }
+  .LNN_heroPlate {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: radial-gradient(circle at 32% 26%, #ffffff 0%, var(--LNN_porcelain) 55%, var(--LNN_porcelain-deep) 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(19,42,94,.22),
+      inset 0 0 0 9px #ffffff,
+      inset 0 0 0 10px rgba(36,67,155,.30),
+      inset 0 0 0 26px rgba(255,255,255,.85),
+      inset 0 0 0 27px rgba(36,67,155,.14),
+      inset 0 0 0 44px rgba(255,255,255,.6),
+      inset 0 0 0 45px rgba(36,67,155,.08),
+      0 26px 46px -26px rgba(19,42,94,.45);
+    display: grid;
+    place-items: center;
+    animation: LNN_rise .9s ease-out both;
+  }
+  .LNN_heroPlate svg { width: 112px; height: 112px; color: var(--LNN_cobalt); }
+  @keyframes LNN_rise {
+    from { opacity: 0; transform: scale(.94) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .LNN_heroPlate { animation: none; }
+  }
+
+  .LNN_heroText {
+    writing-mode: vertical-rl;
+    display: flex;
+    gap: clamp(18px, 2.4vw, 34px);
+  }
+  .LNN_heroTitle {
+    font-family: var(--LNN_serif);
+    font-weight: 900;
+    font-size: clamp(58px, 8vw, 104px);
+    letter-spacing: .22em;
+    color: var(--LNN_ink);
+    line-height: 1;
+  }
+  .LNN_heroSub {
+    font-family: var(--LNN_serif);
+    font-size: 19px;
+    letter-spacing: .42em;
+    color: var(--LNN_cobalt);
+    padding-top: 10px;
+  }
+  .LNN_seal {
+    writing-mode: vertical-rl;
+    align-self: flex-end;
+    background: var(--LNN_gild);
+    color: #FBF6EA;
+    font-family: var(--LNN_serif);
+    font-size: 15px;
+    letter-spacing: .2em;
+    padding: 10px 6px;
+    border-radius: 3px;
+    line-height: 1.2;
+  }
+  .LNN_heroLatin {
+    writing-mode: horizontal-tb;
+    position: absolute;
+    font-size: 12.5px;
+    letter-spacing: .14em;
+    color: rgba(19,42,94,.55);
+    margin-top: 8px;
+  }
+
+  /* 题跋（原理说明） */
+  .LNN_lede {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 72px;
+    border-left: 3px solid var(--LNN_cobalt);
+    margin-left: max(24px, calc(50% - 320px));
+  }
+  .LNN_lede p { font-size: 17px; }
+  .LNN_lede em {
+    font-style: normal;
+    color: var(--LNN_cobalt);
+    font-weight: 600;
+  }
+
+  /* 小节标题 */
+  .LNN_sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 23px;
+    letter-spacing: .24em;
+    color: var(--LNN_ink);
+    padding: 0 clamp(24px, 6vw, 80px);
+    margin-bottom: 44px;
+  }
+  .LNN_sectionTitle::before {
+    content: "";
+    width: 11px;
+    height: 11px;
+    background: var(--LNN_cobalt);
+    flex-shrink: 0;
+  }
+  .LNN_sectionTitle small {
+    font-family: var(--LNN_sans);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: .1em;
+    color: rgba(19,42,94,.55);
+  }
+
+  /* 瓷盘陈列 */
+  .LNN_gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 52px 44px;
+    padding: 0 clamp(24px, 5vw, 60px) 88px;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+  .LNN_item { text-align: center; }
+  .LNN_plate {
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 16px;
+    background: radial-gradient(circle at 32% 26%, #ffffff 0%, var(--LNN_porcelain) 55%, var(--LNN_porcelain-deep) 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(19,42,94,.20),
+      inset 0 0 0 5px #ffffff,
+      inset 0 0 0 6px rgba(36,67,155,.26),
+      inset 0 0 0 13px rgba(255,255,255,.85),
+      inset 0 0 0 14px rgba(36,67,155,.12),
+      0 16px 30px -18px rgba(19,42,94,.4);
+  }
+  .LNN_plate-lg { width: 150px; height: 150px; }
+  .LNN_plate-md { width: 122px; height: 122px; }
+  .LNN_plate-sm { width: 98px;  height: 98px;  }
+  .LNN_plate-lg svg { width: 58px; height: 58px; }
+  .LNN_plate-md svg { width: 46px; height: 46px; }
+  .LNN_plate-sm svg { width: 36px; height: 36px; }
+  .LNN_plate svg { color: var(--LNN_cobalt); }
+
+  /* 青花着色款：蓝底白纹 */
+  .LNN_plate-ink {
+    background: radial-gradient(circle at 32% 26%, #3A5CB8 0%, var(--LNN_cobalt) 58%, #1B3478 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,.35),
+      inset 0 0 0 5px rgba(255,255,255,.14),
+      inset 0 0 0 6px rgba(255,255,255,.30),
+      0 16px 30px -16px rgba(19,42,94,.65);
+  }
+  .LNN_plate-ink svg { color: #F2F6FA; }
+
+  .LNN_plateName {
+    display: block;
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 16.5px;
+    letter-spacing: .3em;
+    color: var(--LNN_ink);
+  }
+  .LNN_plateLatin {
+    display: block;
+    font-size: 11.5px;
+    letter-spacing: .12em;
+    color: rgba(19,42,94,.5);
+    margin: 1px 0 6px;
+  }
+  .LNN_codeChip {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: var(--LNN_cobalt);
+    background: #ffffff;
+    border: 1px solid rgba(36,67,155,.22);
+    border-radius: 4px;
+    padding: 1px 7px;
+    white-space: nowrap;
+  }
+
+  /* 变换演示 */
+  .LNN_demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(36px, 6vw, 90px);
+    flex-wrap: wrap;
+    padding: 0 24px 96px;
+  }
+  .LNN_demoPlate {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 32% 26%, #ffffff 0%, var(--LNN_porcelain) 55%, var(--LNN_porcelain-deep) 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(19,42,94,.22),
+      inset 0 0 0 7px #ffffff,
+      inset 0 0 0 8px rgba(36,67,155,.30),
+      inset 0 0 0 22px rgba(255,255,255,.85),
+      inset 0 0 0 23px rgba(36,67,155,.14),
+      0 22px 40px -24px rgba(19,42,94,.45);
+  }
+  .LNN_demoPlate svg { width: 100px; height: 100px; color: var(--LNN_cobalt); }
+  .LNN_demoPanel { max-width: 380px; }
+  .LNN_demoPanel label {
+    display: block;
+    font-size: 14.5px;
+    letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+  .LNN_demoPanel input[type="range"] {
+    width: 100%;
+    accent-color: var(--LNN_cobalt);
+    cursor: pointer;
+  }
+  .LNN_strokeValue {
+    font-family: var(--LNN_serif);
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--LNN_cobalt);
+    margin: 10px 0 14px;
+  }
+  .LNN_demoNote {
+    font-size: 13.5px;
+    color: rgba(19,42,94,.62);
+    margin-top: 14px;
+  }
+
+  /* 页脚 */
+  .LNN_footer {
+    border-top: 1px solid rgba(19,42,94,.18);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 26px clamp(24px, 5vw, 64px) 40px;
+    font-size: 13.5px;
+    color: rgba(19,42,94,.6);
+  }
+  .LNN_footer a {
+    color: var(--LNN_cobalt);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(36,67,155,.4);
+    padding-bottom: 1px;
+    margin-left: 22px;
+  }
+  .LNN_footer a:hover { border-bottom-color: var(--LNN_cobalt); }
+
+  /* 小屏适配 */
+  @media (max-width: 760px) {
+    .LNN_hero { flex-direction: column; gap: 44px; }
+    .LNN_heroText { writing-mode: horizontal-tb; flex-direction: column; gap: 14px; }
+    .LNN_heroTitle { font-size: clamp(52px, 14vw, 72px); letter-spacing: .14em; }
+    .LNN_heroSub { letter-spacing: .3em; padding-top: 0; }
+    .LNN_seal { writing-mode: horizontal-tb; align-self: flex-start; padding: 6px 12px; }
+    .LNN_lede { border-left: none; border-top: 3px solid var(--LNN_cobalt); padding-top: 22px; margin-left: 24px; }
+    .LNN_heroPlate { width: 220px; height: 220px; }
+    .LNN_heroPlate svg { width: 88px; height: 88px; }
+    .LNN_gallery { gap: 40px 26px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="LNN_topbar">
+    <span class="LNN_brand">青花纹样考</span>
+    <a href="index.html">回到首页</a>
+  </header>
+
+  <section class="LNN_hero">
+    <div class="LNN_heroPlate"><i data-lucide="bird"></i></div>
+    <div style="position: relative;">
+      <div class="LNN_heroText">
+        <h1 class="LNN_heroTitle">素坯</h1>
+        <p class="LNN_heroSub">以路径勾勒的图标卷</p>
+        <span class="LNN_seal">青花</span>
+      </div>
+      <span class="LNN_heroLatin">Lucide · SVG 图标</span>
+    </div>
+  </section>
+
+  <section class="LNN_lede">
+    <p>SVG 图标以<em>矢量路径</em>勾勒：线条即描边 <code class="LNN_codeChip">stroke</code>，深浅即 <code class="LNN_codeChip">stroke-width</code>。它可以随 <code class="LNN_codeChip">currentColor</code> 染色、随容器任意缩放而不生毛边 —— 如同素坯之上刻花，刀锋深浅，全凭一杆刻刀。</p>
+  </section>
+
+  <h2 class="LNN_sectionTitle">纹样陈列 <small>data-lucide 属性 → createIcons 生成 SVG</small></h2>
+  <div class="LNN_gallery">
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg"><i data-lucide="feather"></i></div>
+      <figcaption><span class="LNN_plateName">羽</span><span class="LNN_plateLatin">feather</span><code class="LNN_codeChip">data-lucide="feather"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-sm"><i data-lucide="leaf"></i></div>
+      <figcaption><span class="LNN_plateName">叶</span><span class="LNN_plateLatin">leaf</span><code class="LNN_codeChip">data-lucide="leaf"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md"><i data-lucide="fish"></i></div>
+      <figcaption><span class="LNN_plateName">鱼</span><span class="LNN_plateLatin">fish</span><code class="LNN_codeChip">data-lucide="fish"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg"><i data-lucide="sprout"></i></div>
+      <figcaption><span class="LNN_plateName">苗</span><span class="LNN_plateLatin">sprout</span><code class="LNN_codeChip">data-lucide="sprout"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md LNN_plate-ink"><i data-lucide="moon"></i></div>
+      <figcaption><span class="LNN_plateName">月</span><span class="LNN_plateLatin">moon</span><code class="LNN_codeChip">data-lucide="moon"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-sm"><i data-lucide="cloud"></i></div>
+      <figcaption><span class="LNN_plateName">云</span><span class="LNN_plateLatin">cloud</span><code class="LNN_codeChip">data-lucide="cloud"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md"><i data-lucide="waves"></i></div>
+      <figcaption><span class="LNN_plateName">波</span><span class="LNN_plateLatin">waves</span><code class="LNN_codeChip">data-lucide="waves"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg"><i data-lucide="wind"></i></div>
+      <figcaption><span class="LNN_plateName">风</span><span class="LNN_plateLatin">wind</span><code class="LNN_codeChip">data-lucide="wind"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-sm"><i data-lucide="mountain"></i></div>
+      <figcaption><span class="LNN_plateName">山</span><span class="LNN_plateLatin">mountain</span><code class="LNN_codeChip">data-lucide="mountain"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg LNN_plate-ink"><i data-lucide="flame"></i></div>
+      <figcaption><span class="LNN_plateName">焰</span><span class="LNN_plateLatin">flame</span><code class="LNN_codeChip">data-lucide="flame"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md"><i data-lucide="bell"></i></div>
+      <figcaption><span class="LNN_plateName">铃</span><span class="LNN_plateLatin">bell</span><code class="LNN_codeChip">data-lucide="bell"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-sm"><i data-lucide="heart"></i></div>
+      <figcaption><span class="LNN_plateName">心</span><span class="LNN_plateLatin">heart</span><code class="LNN_codeChip">data-lucide="heart"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md"><i data-lucide="star"></i></div>
+      <figcaption><span class="LNN_plateName">星</span><span class="LNN_plateLatin">star</span><code class="LNN_codeChip">data-lucide="star"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg"><i data-lucide="flower-2"></i></div>
+      <figcaption><span class="LNN_plateName">荷</span><span class="LNN_plateLatin">flower-2</span><code class="LNN_codeChip">data-lucide="flower-2"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md LNN_plate-ink"><i data-lucide="snowflake"></i></div>
+      <figcaption><span class="LNN_plateName">雪</span><span class="LNN_plateLatin">snowflake</span><code class="LNN_codeChip">data-lucide="snowflake"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-sm"><i data-lucide="droplet"></i></div>
+      <figcaption><span class="LNN_plateName">露</span><span class="LNN_plateLatin">droplet</span><code class="LNN_codeChip">data-lucide="droplet"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-md"><i data-lucide="sun"></i></div>
+      <figcaption><span class="LNN_plateName">日</span><span class="LNN_plateLatin">sun</span><code class="LNN_codeChip">data-lucide="sun"</code></figcaption>
+    </figure>
+    <figure class="LNN_item">
+      <div class="LNN_plate LNN_plate-lg LNN_plate-ink"><i data-lucide="cherry"></i></div>
+      <figcaption><span class="LNN_plateName">樱</span><span class="LNN_plateLatin">cherry</span><code class="LNN_codeChip">data-lucide="cherry"</code></figcaption>
+    </figure>
+  </div>
+
+  <h2 class="LNN_sectionTitle">运刀演示 <small>描边深浅，全场随之</small></h2>
+  <div class="LNN_demo">
+    <div class="LNN_demoPlate"><i data-lucide="bird"></i></div>
+    <div class="LNN_demoPanel">
+      <label for="LNN_strokeRange">描边粗细 stroke-width</label>
+      <input type="range" id="LNN_strokeRange" min="0.75" max="3" step="0.25" value="2">
+      <p class="LNN_strokeValue" id="LNN_strokeValue">2</p>
+      <code class="LNN_codeChip" id="LNN_strokeCode">stroke-width="2"</code>
+      <p class="LNN_demoNote">拖动滑杆，整页瓷盘上的刻花同时变深变浅 —— 这是 SVG 图标独有的本事：字体图标只有一套笔画，SVG 的每一根线皆可调。</p>
+    </div>
+  </div>
+
+  <footer class="LNN_footer">
+    <span>高级网页设计课程 图标专题</span>
+    <span>
+      <a href="index.html">回到首页</a>
+      <a href="iconfont-1.html">上一卷 缠枝（字体图标）</a>
+    </span>
+  </footer>
+
+  <script>
+    var LNN_range = document.getElementById('LNN_strokeRange');
+    var LNN_value = document.getElementById('LNN_strokeValue');
+    var LNN_code = document.getElementById('LNN_strokeCode');
+
+    lucide.createIcons();
+
+    function LNN_applyStroke() {
+      var LNN_w = LNN_range.value;
+      var LNN_svgs = document.querySelectorAll('.LNN_gallery svg, .LNN_heroPlate svg, .LNN_demoPlate svg');
+      for (var LNN_i = 0; LNN_i < LNN_svgs.length; LNN_i++) {
+        LNN_svgs[LNN_i].setAttribute('stroke-width', LNN_w);
+      }
+      LNN_value.textContent = LNN_w;
+      LNN_code.textContent = 'stroke-width="' + LNN_w + '"';
+    }
+    LNN_range.addEventListener('input', LNN_applyStroke);
+    LNN_applyStroke();
+  </script>
+</body>
+</html>
