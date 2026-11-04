@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<!-- 作者：李南诺 | 建立时间：2026-11-04 | 使用大模型：GLM-5.3-Flash | 功能名称：新浪排行榜选项卡（新闻/证券/理财/博客，新闻默认选中，1:1 还原设计图） -->
+<!-- 作者：李南诺 | 建立时间：2026-11-04 | 使用大模型：GLM-5.3-Flash | 功能名称：新浪排行榜练习入口页（进入 sina-rank.html / 返回课程总首页） -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>排行榜 —— 新浪风格选项卡</title>
+<title>练习入口 —— 新浪排行榜选项卡</title>
 <style>
   :root {
     --LNN_sinaBlue: #1E4FA2;
     --LNN_sinaBorder: #C6CBD4;
-    --LNN_sinaGrayTab: #E6E9EE;
-    --LNN_sinaRed: #CC0000;
-    --LNN_sinaBadgeGray: #A8A8A8;
     --LNN_sinaText: #333333;
   }
 
@@ -21,215 +18,72 @@
     background: #FFFFFF;
     color: var(--LNN_sinaText);
     font-family: "Microsoft YaHei", "PingFang SC", SimSun, sans-serif;
-    font-size: 15.5px;
+    font-size: 16px;
     min-height: 100vh;
-  }
-
-  /* 排行榜组件：宽 580px 居中，与设计图一致 */
-  .LNN_sinaWidget {
-    width: 580px;
-    max-width: calc(100% - 32px);
-    margin: 36px auto 24px;
-  }
-
-  /* 头部：左侧标题 + 右侧选项卡 */
-  .LNN_sinaHead {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-  .LNN_sinaTitle {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--LNN_sinaBlue);
-    letter-spacing: 2px;
-    line-height: 1;
-    margin-bottom: 3px;
-  }
-  .LNN_sinaTabbar {
-    display: flex;
-    gap: 3px;
-  }
-  .LNN_sinaTab {
-    width: 64px;
-    height: 38px;
-    border: none;
-    background: var(--LNN_sinaGrayTab);
-    font: inherit;
-    font-size: 17px;
-    color: var(--LNN_sinaText);
-    cursor: pointer;
-    padding: 0;
-  }
-  .LNN_sinaTab:hover { color: var(--LNN_sinaBlue); }
-  .LNN_sinaTab:focus-visible { outline: 2px solid var(--LNN_sinaBlue); outline-offset: -3px; }
-  /* 选中选项卡：白底、上左右描边、无下边框，与内容区无缝衔接 */
-  .LNN_sinaTab-active {
-    background: #FFFFFF;
-    color: var(--LNN_sinaBlue);
-    font-weight: 700;
-    border: 1px solid var(--LNN_sinaBorder);
-    border-bottom: none;
-    position: relative;
-    z-index: 2;
-    margin-bottom: -1px;
-  }
-
-  /* 内容区：白色边框盒 */
-  .LNN_sinaBody {
-    border: 1px solid var(--LNN_sinaBorder);
-    background: #FFFFFF;
-    padding: 8px 24px 12px;
-  }
-  .LNN_sinaPanel { display: none; }
-  .LNN_sinaPanel-show { display: block; }
-
-  .LNN_sinaList {
-    list-style: none;
-  }
-  .LNN_sinaList li {
     display: flex;
     align-items: center;
-    padding: 10px 0;
-  }
-  /* 序号徽章：前 3 名红色，4-10 名灰色 */
-  .LNN_sinaRank {
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    background: var(--LNN_sinaBadgeGray);
-    color: #FFFFFF;
-    font-size: 13px;
-    line-height: 20px;
-    text-align: center;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  .LNN_sinaRank-hot { background: var(--LNN_sinaRed); }
-  .LNN_sinaText {
-    flex: 1;
-    min-width: 0;
-    color: var(--LNN_sinaText);
-    white-space: nowrap;
-    overflow: hidden;
+    justify-content: center;
   }
 
-  /* 组件之外的页脚链接（不参与还原区域） */
-  .LNN_homeLink {
+  /* 入口卡片 */
+  .LNN_entryCard {
+    width: 460px;
+    max-width: calc(100% - 40px);
+    border: 1px solid var(--LNN_sinaBorder);
+    border-radius: 10px;
+    padding: 44px 40px 36px;
     text-align: center;
-    padding-bottom: 48px;
+    box-shadow: 0 16px 40px -30px rgba(30,79,162,.5);
+  }
+  .LNN_entryTitle {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--LNN_sinaBlue);
+    letter-spacing: 3px;
+  }
+  .LNN_entrySub {
+    margin-top: 14px;
+    font-size: 14.5px;
+    color: rgba(51,51,51,.72);
+    line-height: 1.9;
+  }
+  .LNN_enterBtn {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 46px;
+    background: var(--LNN_sinaBlue);
+    color: #FFFFFF;
+    font-size: 16.5px;
+    letter-spacing: 4px;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background .18s ease;
+  }
+  .LNN_enterBtn:hover { background: #173D85; }
+  .LNN_enterBtn:focus-visible { outline: 2px solid var(--LNN_sinaBlue); outline-offset: 3px; }
+  .LNN_homeBack {
+    display: block;
+    margin-top: 26px;
     font-size: 13.5px;
   }
-  .LNN_homeLink a {
+  .LNN_homeBack a {
     color: var(--LNN_sinaBlue);
     text-decoration: none;
     border-bottom: 1px solid rgba(30,79,162,.4);
     padding-bottom: 1px;
   }
-  .LNN_homeLink a:hover { border-bottom-color: var(--LNN_sinaBlue); }
-  .LNN_homeLink a:focus-visible { outline: 2px solid var(--LNN_sinaBlue); outline-offset: 3px; }
+  .LNN_homeBack a:hover { border-bottom-color: var(--LNN_sinaBlue); }
+  .LNN_homeBack a:focus-visible { outline: 2px solid var(--LNN_sinaBlue); outline-offset: 3px; }
 </style>
 </head>
 <body>
 
-  <div class="LNN_sinaWidget">
-    <div class="LNN_sinaHead">
-      <h1 class="LNN_sinaTitle">排行榜</h1>
-      <div class="LNN_sinaTabbar" role="tablist" aria-label="排行榜分类">
-        <button type="button" class="LNN_sinaTab LNN_sinaTab-active" role="tab">新闻</button>
-        <button type="button" class="LNN_sinaTab" role="tab">证券</button>
-        <button type="button" class="LNN_sinaTab" role="tab">理财</button>
-        <button type="button" class="LNN_sinaTab" role="tab">博客</button>
-      </div>
-    </div>
+  <main class="LNN_entryCard">
+    <h1 class="LNN_entryTitle">新浪排行榜</h1>
+    <p class="LNN_entrySub">Tab 选项卡练习 · 1:1 还原设计图<br>选项卡：新闻 / 证券 / 理财 / 博客（新闻默认选中）</p>
+    <a class="LNN_enterBtn" href="sina-rank.html">进入排行榜</a>
+    <span class="LNN_homeBack"><a href="../index.html">回到课程总首页</a></span>
+  </main>
 
-    <div class="LNN_sinaBody">
-      <!-- 新闻榜（默认显示，内容与设计图一致） -->
-      <section class="LNN_sinaPanel LNN_sinaPanel-show" role="tabpanel">
-        <ol class="LNN_sinaList">
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">1</span><span class="LNN_sinaText">构建"股市+债市"稳市机制！央行新工具来了</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">2</span><span class="LNN_sinaText">美媒：美军已准备好再打击伊朗 特朗普或中期选举后再动手</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">3</span><span class="LNN_sinaText">姆巴佩发表涉中国不当言论，多家品牌终止合作，媒体持续关注</span></li>
-          <li><span class="LNN_sinaRank">4</span><span class="LNN_sinaText">东鹏饮料集团：零容忍伤害民族感情行为，终止与姆巴佩的合作</span></li>
-          <li><span class="LNN_sinaRank">5</span><span class="LNN_sinaText">300672，业绩暴增超560%！10股业绩大增（附股）</span></li>
-          <li><span class="LNN_sinaRank">6</span><span class="LNN_sinaText">史上最大IPO要来了！7位创始人人均超130亿美元</span></li>
-          <li><span class="LNN_sinaRank">7</span><span class="LNN_sinaText">外交部：对英国警方任意、过度执法行为表示强烈不满</span></li>
-          <li><span class="LNN_sinaRank">8</span><span class="LNN_sinaText">1000000美元！特朗普重金悬赏</span></li>
-          <li><span class="LNN_sinaRank">9</span><span class="LNN_sinaText">张一鸣以6700亿元刷新中国首富财富纪录！《2026胡润百富榜》发布</span></li>
-          <li><span class="LNN_sinaRank">10</span><span class="LNN_sinaText">Gucci卖不动了 开云今年将关掉至少125家门店</span></li>
-        </ol>
-      </section>
-
-      <!-- 证券榜 -->
-      <section class="LNN_sinaPanel" role="tabpanel">
-        <ol class="LNN_sinaList">
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">1</span><span class="LNN_sinaText">三大指数集体收涨，沪指重返3500点关口</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">2</span><span class="LNN_sinaText">券商板块午后拉升，多只龙头股封涨停板</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">3</span><span class="LNN_sinaText">北向资金连续五日净流入，累计加仓超200亿元</span></li>
-          <li><span class="LNN_sinaRank">4</span><span class="LNN_sinaText">新股申购提示：本周共6只新股可申购</span></li>
-          <li><span class="LNN_sinaRank">5</span><span class="LNN_sinaText">两融余额重回1.9万亿，杠杆资金青睐这些行业</span></li>
-          <li><span class="LNN_sinaRank">6</span><span class="LNN_sinaText">半导体板块全线飘红，芯片股获主力抢筹</span></li>
-          <li><span class="LNN_sinaRank">7</span><span class="LNN_sinaText">多家上市公司披露回购计划，金额上限创新高</span></li>
-          <li><span class="LNN_sinaRank">8</span><span class="LNN_sinaText">港股恒生科技指数涨超3%，南向资金加速布局</span></li>
-          <li><span class="LNN_sinaRank">9</span><span class="LNN_sinaText">龙虎榜揭秘：机构席位现身这10只个股</span></li>
-          <li><span class="LNN_sinaRank">10</span><span class="LNN_sinaText">下周解禁市值超800亿元，这些股需注意</span></li>
-        </ol>
-      </section>
-
-      <!-- 理财榜 -->
-      <section class="LNN_sinaPanel" role="tabpanel">
-        <ol class="LNN_sinaList">
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">1</span><span class="LNN_sinaText">存款利率再度下调，闲置资金如何打理更划算</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">2</span><span class="LNN_sinaText">国债发售秒光，储蓄国债热度为何居高不下</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">3</span><span class="LNN_sinaText">银行理财净值回暖，固收类产品收益回升</span></li>
-          <li><span class="LNN_sinaRank">4</span><span class="LNN_sinaText">黄金价格高位震荡，普通投资者还能上车吗</span></li>
-          <li><span class="LNN_sinaRank">5</span><span class="LNN_sinaText">货币基金七日年化跌破1.5%，替代方案盘点</span></li>
-          <li><span class="LNN_sinaRank">6</span><span class="LNN_sinaText">个人养老金账户开户数突破7000万</span></li>
-          <li><span class="LNN_sinaRank">7</span><span class="LNN_sinaText">指数基金规模首超主动权益类基金</span></li>
-          <li><span class="LNN_sinaRank">8</span><span class="LNN_sinaText">保险预定利率下调在即，产品切换窗口期有限</span></li>
-          <li><span class="LNN_sinaRank">9</span><span class="LNN_sinaText">QDII额度收紧，海外理财通道收窄</span></li>
-          <li><span class="LNN_sinaRank">10</span><span class="LNN_sinaText">年底理财节将至，银行花式揽客比拼收益</span></li>
-        </ol>
-      </section>
-
-      <!-- 博客榜 -->
-      <section class="LNN_sinaPanel" role="tabpanel">
-        <ol class="LNN_sinaList">
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">1</span><span class="LNN_sinaText">博主热文：从"股市+债市"组合看家庭资产配置</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">2</span><span class="LNN_sinaText">专栏：一分钟看懂央行新工具的操作逻辑</span></li>
-          <li><span class="LNN_sinaRank LNN_sinaRank-hot">3</span><span class="LNN_sinaText">资深基民手记：定投五年，我踩过的那些坑</span></li>
-          <li><span class="LNN_sinaRank">4</span><span class="LNN_sinaText">财经作家：首富更替背后的产业变迁史</span></li>
-          <li><span class="LNN_sinaRank">5</span><span class="LNN_sinaText">技术派复盘：本周大盘放量突破意味着什么</span></li>
-          <li><span class="LNN_sinaRank">6</span><span class="LNN_sinaText">观察：年轻人为什么开始热衷攒金豆</span></li>
-          <li><span class="LNN_sinaRank">7</span><span class="LNN_sinaText">读书笔记：《聪明的投资者》五十周年再读</span></li>
-          <li><span class="LNN_sinaRank">8</span><span class="LNN_sinaText">实测对比：六款记账App谁是效率之王</span></li>
-          <li><span class="LNN_sinaRank">9</span><span class="LNN_sinaText">访谈实录：一位操盘手的二十年交易心得</span></li>
-          <li><span class="LNN_sinaRank">10</span><span class="LNN_sinaText">随笔：慢富，是普通人理财的最优解</span></li>
-        </ol>
-      </section>
-    </div>
-  </div>
-
-  <p class="LNN_homeLink"><a href="../index.html">回到首页</a></p>
-
-  <script>
-    var LNN_sinaTabs = document.querySelectorAll('.LNN_sinaTab');
-    var LNN_sinaPanels = document.querySelectorAll('.LNN_sinaPanel');
-
-    // 为每个选项卡绑定点击监听事件（切换逻辑：先清除所有选中状态，再设置当前项）
-    for (var LNN_i = 0; LNN_i < LNN_sinaTabs.length; LNN_i++) {
-      LNN_sinaTabs[LNN_i].addEventListener('click', function () {
-        // 第一步：先清除所有选项卡的选中状态，并隐藏所有面板
-        for (var LNN_j = 0; LNN_j < LNN_sinaTabs.length; LNN_j++) {
-          LNN_sinaTabs[LNN_j].classList.remove('LNN_sinaTab-active');
-          LNN_sinaPanels[LNN_j].classList.remove('LNN_sinaPanel-show');
-        }
-        // 第二步：再设置当前元素的选中状态，并显示对应面板
-        this.classList.add('LNN_sinaTab-active');
-        var LNN_k = Array.prototype.indexOf.call(LNN_sinaTabs, this);
-        LNN_sinaPanels[LNN_k].classList.add('LNN_sinaPanel-show');
-      });
-    }
-  </script>
 </body>
 </html>
