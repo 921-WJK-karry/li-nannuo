@@ -20,6 +20,22 @@
 
 创建技能skill：提交到github，将本项目提交commit并push到`https://github.com/921-WJK-karry/li-nannuo`，使用已设置公钥ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANyz/kydUiXTDfeyP8YHUZbtnJDVR6A08mqS0tyxpd9 3290985376@qq.com。
 
+## 2026-10-30 | 模型：GLM-5.3-Flash
+
+好的，执行吧（按 AGENTS.md 约定：将新建页面 iconfont-3.html、iconfont-4.html 链接进根目录 index.html，课程页加 .lesson 卡片并递增计数器，或加 .other-links 药丸链接）
+
+## 2026-11-04 | 模型：GLM-5.3-Flash
+
+修改规则文件AGENT.md，在新建html文件时加入注释，注释包括：李南诺，建立时间，使用大模型，功能名称。在js部分函数加上函数主要实现功能的注释。
+
+## 2026-11-04 | 模型：GLM-5.3-Flash
+
+好的，执行吧（为存量页面 iconfont-1~4.html 补加 HTML 头注释：李南诺、建立时间、使用大模型、功能名称；并为其中 JS 函数补加功能注释）
+
+## 2026-11-04 | 模型：GLM-5.3-Flash
+
+请给我新建一个html文件，显示tab选项卡，选择卡分别为：国内新闻，省内新闻，国际新闻，最热新闻，国内新闻设定为默认选项。JS文件单独放在js文件夹中，外部引用。要求js中的tab选项卡可以复用，实现代码中的包含监听事件，、先清除所有选项卡的选中状态，然后再设置当前元素的选中状态。
+
 ## 2026-10-30 | 模型：opencode/big-pickle
 
 Create or update `AGENTS.md` for this repository.
@@ -88,3 +104,7 @@ When in doubt, omit.
 Prefer short sections and bullets. If the repo is simple, keep the file simple. If the repo is large, summarize the few structural facts that actually change how an agent should work.
 
 If `AGENTS.md` already exists at `D:\程序设计比赛题库\Web前端技术课程`, improve it in place rather than rewriting blindly. Preserve verified useful guidance, delete fluff or stale claims, and reconcile it with the current codebase.
+
+## 2026-11-04 | 模型：GLM-5.3-Flash
+
+把文件夹sina-tab上传到GitHub里面
