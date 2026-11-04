@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!-- 作者：李南诺 | 建立时间：2026-11-04 | 使用大模型：GLM-5.3-Flash | 功能名称：Tab 新闻选项卡切换（国内/省内/国际/最热，国内新闻默认选中） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新闻选项卡 —— Tab 切换练习</title>
+<style>
+  :root {
+    --LNN_porcelain: #F4F7F6;
+    --LNN_porcelain-deep: #E4EDE9;
+    --LNN_cobalt: #24439B;
+    --LNN_ink: #132A5E;
+    --LNN_celadon: #A9C4D9;
+    --LNN_gild: #A8781F;
+    --LNN_serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, serif;
+    --LNN_sans: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background:
+      radial-gradient(circle at 85% 12%, rgba(169,196,217,.28) 0%, transparent 42%),
+      radial-gradient(circle at 8% 90%, rgba(36,67,155,.07) 0%, transparent 45%),
+      var(--LNN_porcelain);
+    color: var(--LNN_ink);
+    font-family: var(--LNN_sans);
+    font-size: 16px;
+    line-height: 1.85;
+    min-height: 100vh;
+  }
+
+  /* 顶部品牌条 */
+  .LNN_topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 22px clamp(24px, 5vw, 64px) 0;
+  }
+  .LNN_brand {
+    font-family: var(--LNN_serif);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: .3em;
+    color: var(--LNN_ink);
+  }
+  .LNN_topbar a {
+    color: var(--LNN_cobalt);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(36,67,155,.4);
+    padding-bottom: 2px;
+    font-size: 14.5px;
+  }
+  .LNN_topbar a:hover { border-bottom-color: var(--LNN_cobalt); }
+  a:focus-visible { outline: 2px solid var(--LNN_cobalt); outline-offset: 3px; }
+
+  /* 页头 */
+  .LNN_pageHead {
+    text-align: center;
+    padding: clamp(40px, 7vh, 72px) 24px 34px;
+  }
+  .LNN_pageTitle {
+    font-family: var(--LNN_serif);
+    font-weight: 900;
+    font-size: clamp(34px, 5vw, 46px);
+    letter-spacing: .24em;
+  }
+  .LNN_pageSub {
+    font-size: 13.5px;
+    letter-spacing: .16em;
+    color: rgba(19,42,94,.55);
+    margin-top: 4px;
+  }
+
+  /* 选项卡主体 */
+  .LNN_tabsWrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 90px;
+  }
+  .LNN_tabbar {
+    display: flex;
+    border-bottom: 2px solid rgba(19,42,94,.18);
+  }
+  .LNN_tab {
+    flex: 1 1 0;
+    min-width: 0;
+    position: relative;
+    background: none;
+    border: none;
+    font: inherit;
+    font-size: 15.5px;
+    letter-spacing: .1em;
+    color: #71809E;
+    padding: 12px 4px 13px;
+    cursor: pointer;
+    transition: color .18s ease;
+  }
+  .LNN_tab:hover { color: var(--LNN_cobalt); }
+  .LNN_tab:focus-visible { outline: 2px solid var(--LNN_cobalt); outline-offset: -3px; border-radius: 8px; }
+  .LNN_tab-active {
+    color: var(--LNN_cobalt);
+    font-weight: 700;
+  }
+  .LNN_tab-active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -2px;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 3px;
+    background: var(--LNN_cobalt);
+    border-radius: 3px 3px 0 0;
+  }
+
+  /* 内容面板 */
+  .LNN_panel {
+    display: none;
+    background: #FBFDFC;
+    border: 1px solid rgba(19,42,94,.12);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    padding: 8px 26px 14px;
+    box-shadow: 0 18px 34px -26px rgba(19,42,94,.4);
+  }
+  .LNN_panel-show { display: block; animation: LNN_panelIn .28s ease-out both; }
+  @keyframes LNN_panelIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .LNN_panel-show { animation: none; }
+  }
+  .LNN_newsList { list-style: none; }
+  .LNN_newsList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 13px 2px;
+    border-bottom: 1px solid rgba(19,42,94,.1);
+  }
+  .LNN_newsList li:last-child { border-bottom: none; }
+  .LNN_newsTitle {
+    font-size: 15px;
+    color: var(--LNN_ink);
+    flex: 1;
+  }
+  .LNN_newsTitle::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--LNN_cobalt);
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: 2px;
+  }
+  .LNN_newsDate {
+    font-size: 12.5px;
+    color: rgba(19,42,94,.5);
+    letter-spacing: .06em;
+    flex-shrink: 0;
+  }
+  .LNN_demoNote {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(19,42,94,.42);
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+  <header class="LNN_topbar">
+    <span class="LNN_brand">高级网页设计 · 课堂练习</span>
+    <a href="index.html">回到首页</a>
+  </header>
+
+  <section class="LNN_pageHead">
+    <h1 class="LNN_pageTitle">新闻选项卡</h1>
+    <p class="LNN_pageSub">Tab 切换 · JS 外部引用 · 可复用组件</p>
+  </section>
+
+  <main class="LNN_tabsWrap">
+    <div class="LNN_tabbar" role="tablist" aria-label="新闻分类">
+      <button type="button" class="LNN_tab LNN_tab-active" role="tab">国内新闻</button>
+      <button type="button" class="LNN_tab" role="tab">省内新闻</button>
+      <button type="button" class="LNN_tab" role="tab">国际新闻</button>
+      <button type="button" class="LNN_tab" role="tab">最热新闻</button>
+    </div>
+
+    <section class="LNN_panel LNN_panel-show" role="tabpanel">
+      <ul class="LNN_newsList">
+        <li><span class="LNN_newsTitle">全国冬季能源保供工作稳步推进，重点电网工程相继投运</span><span class="LNN_newsDate">11-04</span></li>
+        <li><span class="LNN_newsTitle">多部门联合部署高校毕业生就业服务专项行动</span><span class="LNN_newsDate">11-03</span></li>
+        <li><span class="LNN_newsTitle">全国铁路实行新列车运行图，运力供给进一步优化</span><span class="LNN_newsDate">11-02</span></li>
+        <li><span class="LNN_newsTitle">数字技术与制造业深度融合，产业集群加快升级</span><span class="LNN_newsDate">11-01</span></li>
+        <li><span class="LNN_newsTitle">全国文化遗产保护数字化成果展开幕</span><span class="LNN_newsDate">10-31</span></li>
+      </ul>
+    </section>
+
+    <section class="LNN_panel" role="tabpanel">
+      <ul class="LNN_newsList">
+        <li><span class="LNN_newsTitle">全省科技创新大会召开，部署新一轮重点研发计划</span><span class="LNN_newsDate">11-04</span></li>
+        <li><span class="LNN_newsTitle">省内高速公路改扩建项目建成通车，路网通行效率提升</span><span class="LNN_newsDate">11-03</span></li>
+        <li><span class="LNN_newsTitle">全省职业技能大赛落幕，多所院校选手斩获金奖</span><span class="LNN_newsDate">11-02</span></li>
+        <li><span class="LNN_newsTitle">省内多地推出文旅消费季活动，促消费政策持续加力</span><span class="LNN_newsDate">11-01</span></li>
+        <li><span class="LNN_newsTitle">全省空气质量持续改善，蓝天保卫战成效显现</span><span class="LNN_newsDate">10-30</span></li>
+      </ul>
+    </section>
+
+    <section class="LNN_panel" role="tabpanel">
+      <ul class="LNN_newsList">
+        <li><span class="LNN_newsTitle">多国领导人出席国际气候合作会议，共商减排路径</span><span class="LNN_newsDate">11-04</span></li>
+        <li><span class="LNN_newsTitle">国际航天机构成功发射新型深空探测器</span><span class="LNN_newsDate">11-03</span></li>
+        <li><span class="LNN_newsTitle">全球数字经济峰会在海外召开，聚焦人工智能治理</span><span class="LNN_newsDate">11-02</span></li>
+        <li><span class="LNN_newsTitle">跨国高铁合作项目签署备忘录，欧亚联通再提速</span><span class="LNN_newsDate">11-01</span></li>
+        <li><span class="LNN_newsTitle">国际体育赛事收官，多项世界纪录被刷新</span><span class="LNN_newsDate">10-31</span></li>
+      </ul>
+    </section>
+
+    <section class="LNN_panel" role="tabpanel">
+      <ul class="LNN_newsList">
+        <li><span class="LNN_newsTitle">冬季旅游预订量创新高，冰雪经济持续升温</span><span class="LNN_newsDate">11-04</span></li>
+        <li><span class="LNN_newsTitle">国产大飞机新增多条商业航线，上座率保持高位</span><span class="LNN_newsDate">11-03</span></li>
+        <li><span class="LNN_newsTitle">全国秋粮收购全面展开，市场运行平稳有序</span><span class="LNN_newsDate">11-02</span></li>
+        <li><span class="LNN_newsTitle">新能源汽车出口势头强劲，海外订单持续增长</span><span class="LNN_newsDate">11-01</span></li>
+        <li><span class="LNN_newsTitle">高校科研成果转化提速，多项目落地签约</span><span class="LNN_newsDate">10-31</span></li>
+      </ul>
+    </section>
+
+    <p class="LNN_demoNote">示例数据，仅用于课堂演示 · 选项卡逻辑由 js/LNN_tabs.js 提供，可复用</p>
+  </main>
+
+  <!-- 外部 JS：置于 body 末尾，确保 DOM 渲染完成后再绑定监听事件 -->
+  <script src="js/LNN_tabs.js"></script>
+</body>
+</html>

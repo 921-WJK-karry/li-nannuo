@@ -14,6 +14,14 @@ Static classroom-practice site for 《高级网页设计》(学号 24002120324, 
 - Page outside the course sequence: add a pill link to `.other-links`.
 - Do not rename existing legacy classes (e.g. `.tab-item`, `.budge-*`) just to satisfy the `LNN_` rule.
 
+## Code comments
+
+- Every new `.html` file must carry a header comment right after `<!DOCTYPE html>`, containing: author 李南诺, creation date (`YYYY-MM-DD`), the LLM used, and the page's feature name. Template:
+  `<!-- 作者：李南诺 | 建立时间：2026-11-04 | 使用大模型：GLM-5.3-Flash | 功能名称：页面功能名 -->`
+- Every function inside a `<script>` block must have a one-line comment above it stating what the function mainly does; add inline comments only for non-obvious logic. Example:
+  `// 切换底部导航高亮项并显示对应内容面板`
+  `function LNN_activate(LNN_id) { ... }`
+
 ## Layout and source of truth
 
 - Root files are the active site: `index.html` (catalog), `flex-review.html/.css`, `svg图标.html/.css`, `iconfont-1..4.html`, the JS lesson pages, `ball.html`.
