@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937}
+  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937;overflow-x:hidden}
   .wy-wrap{max-width:1000px;margin:0 auto;padding:40px 20px 60px}
 
   /* 头部 */
@@ -27,7 +27,7 @@
   .wy-rule code{background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:13px}
 
   /* 章节 */
-  .wy-sec{background:#fff;border-radius:18px;padding:28px 30px;margin-bottom:26px;border:1px solid #e8ecf5;box-shadow:0 4px 14px rgba(31,41,55,.06);position:relative;overflow:hidden}
+  .wy-sec{background:#fff;border-radius:18px;padding:28px 30px;margin-bottom:26px;border:1px solid #e8ecf5;box-shadow:0 4px 14px rgba(31,41,55,.06);position:relative}
   .wy-sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#0f2b5b,#1d5bbf)}
   .wy-sec-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
   .wy-sec-head .wy-no{flex:none;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;font-size:19px;font-weight:bold;display:flex;align-items:center;justify-content:center}
@@ -49,6 +49,8 @@
   .wy-demo .wy-demo-tag{display:inline-block;font-size:12.5px;color:#0f2b5b;background:#e8f0ff;border:1px solid #c7d8f8;border-radius:999px;padding:4px 14px;margin-bottom:12px}
   .wy-swiper{width:100%;max-width:760px;margin:0 auto;border-radius:16px;overflow:visible!important}
   .wy-swiper .swiper{border-radius:16px;box-shadow:0 10px 26px rgba(15,43,91,.18)}
+  /* creative/cube 效果的左右张在容器边界之外，需放开裁剪才能看到"选片墙" */
+  .wy-swiper .swiper.swiper-creative,.wy-swiper .swiper.swiper-cube{overflow:visible!important}
   .wy-swiper .swiper-slide{position:relative;height:290px}
   .wy-swiper .swiper-slide img{width:100%;height:100%;object-fit:cover;display:block}
   .wy-swiper .wy-cap{
@@ -76,6 +78,23 @@
   .wy-fx button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(29,91,191,.18)}
   .wy-fx button.wy-on{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;border-color:transparent}
 
+  /* ── 作业作答区组件（LNN_ 前缀） ── */
+  .LNN_prompt{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 18px;margin:12px 0}
+  .LNN_prompt h4{font-size:14px;color:#0f2b5b;margin-bottom:8px}
+  .LNN_prompt blockquote{border-left:3px solid #1d5bbf;background:#eef4ff;padding:8px 14px;margin:8px 0;font-size:13.5px;color:#374151;border-radius:0 8px 8px 0;line-height:1.9}
+  .LNN_prompt pre{background:#1f2937;color:#e5e7eb;padding:12px 14px;border-radius:8px;font-size:12.5px;line-height:1.7;overflow-x:auto;margin:8px 0;font-family:Consolas,monospace}
+  .LNN_prompt p{font-size:13.5px;color:#374151;line-height:2}
+  .LNN_prompt code{background:#eef2ff;color:#1d4ed8;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+  .LNN_ok{color:#16a34a;font-weight:bold}
+  .LNN_bad{color:#dc2626;font-weight:bold}
+  /* 验证效果图 */
+  .LNN_shot{margin:10px 0 4px}
+  .LNN_shot img{max-width:100%;border:1px solid #dbe4ff;border-radius:10px;display:block;box-shadow:0 4px 12px rgba(15,43,91,.10)}
+  .LNN_shot figcaption{font-size:12.5px;color:#6b7280;margin-top:6px;text-align:center}
+  .LNN_qa{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:12px 16px;margin:12px 0}
+  .LNN_qa p{font-size:13.5px;color:#7c2d12;line-height:2;margin:6px 0}
+  .LNN_qa b{color:#9a3412}
+
   .wy-back{text-align:center;margin-top:28px}
   .wy-back a{display:inline-block;text-decoration:none;color:#0f2b5b;font-size:14.5px;font-weight:bold;background:#fff;border:1px solid #dbe4ff;border-radius:999px;padding:10px 26px;transition:transform .2s,box-shadow .2s}
   .wy-back a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,43,91,.15)}
@@ -90,8 +109,8 @@
     <span class="wy-badge">高 职 · 高 级 网 页 设 计 · 课 堂 操 作 任 务</span>
     <h1>Swiper 轮播组件 · <b>大国重器光影展（学生版）</b></h1>
     <p>HTML 骨架和 CSS 样式已经全部搭好，图片也备齐了——但这个页面的轮播<b>一个都不会动</b>！
-    因为所有 <b>&lt;script&gt; 里的 JS 初始化代码都被抽走了</b>。你的任务：把 4 个轮播全部"救活"。</p>
-    <div class="wy-goals"><i>任务 1 · 救活最小轮播</i><i>任务 2 · 装上圆点和箭头</i><i>任务 3 · 让它自己翻页</i><i>任务 4 · 六种效果随心换</i></div>
+    因为所有 <b>&lt;script&gt; 里的 JS 初始化代码都被抽走了</b>。你的任务：把 5 个轮播全部"救活"。</p>
+    <div class="wy-goals"><i>任务 1 · 救活最小轮播</i><i>任务 2 · 装上圆点和箭头</i><i>任务 3 · 让它自己翻页</i><i>任务 4 · 六种效果随心换</i><i>任务 5 · creative 电影墙</i><i>加餐 · zoom 双击缩放</i></div>
   </div>
 
   <div class="wy-rule">
@@ -113,17 +132,20 @@
       <h3>✍️ 任务 1 要求</h3>
       <p>在页面底部 <code>&lt;script&gt;</code> 中初始化 <code>#wySw1</code>，让它成为可拖动的轮播（最基础写法，一个空配置对象即可）。</p>
       <span class="wy-star">⭐ 验证标准：按住鼠标左右拖动，照片能跟着手走</span>
+      <p>🎁 课外加餐：本演示还开启了课堂上<b>没讲过</b>的 <code>zoom</code> 能力——<b>双击图片可放大到 3 倍，再双击还原</b>。用法：图片要包一层 <code>&lt;div class="swiper-zoom-container"&gt;</code>，并在配置里加 <code>zoom: { enabled: true, maxRatio: 3 }</code>（注意 enabled 默认是 false，必须显式开启）。</p>
     </div>
     <div class="wy-demo">
-      <span class="wy-demo-tag">🎛️ 演示一 · 最小轮播（救活后按住拖一拖）</span>
+      <span class="wy-demo-tag">🎛️ 演示一 · 最小轮播（拖一拖，双击图片还能放大）</span>
       <div class="wy-swiper">
         <div class="swiper" id="wySw1">
           <div class="swiper-wrapper">
-            <div class="swiper-slide"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"><div class="wy-cap"><h3>天宫空间站</h3><p>2022 年全面建成 · 中国人的太空家园</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号动车组"><div class="wy-cap"><h3>复兴号动车组</h3><p>350 km/h · 世界商业运营最高时速</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>2023 年商业首航 · 国产干线客机翱翔蓝天</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>10909 米 · 触碰地球第四极马里亚纳海沟</p></div></div>
-            <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>500 米口径 · 世界最大单口径射电望远镜</p></div></div>
+            <!-- 图片包在 swiper-zoom-container 里，配合 zoom 配置即可双击缩放 -->
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"></div><div class="wy-cap"><h3>天宫空间站</h3><p>2022 年全面建成 · 中国人的太空家园</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号动车组"></div><div class="wy-cap"><h3>复兴号动车组</h3><p>350 km/h · 世界商业运营最高时速</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"></div><div class="wy-cap"><h3>C919 大飞机</h3><p>2023 年商业首航 · 国产干线客机翱翔蓝天</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"></div><div class="wy-cap"><h3>奋斗者号</h3><p>10909 米 · 触碰地球第四极马里亚纳海沟</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"></div><div class="wy-cap"><h3>中国天眼 FAST</h3><p>500 米口径 · 世界最大单口径射电望远镜</p></div></div>
+            <div class="swiper-slide"><div class="swiper-zoom-container"><img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"></div><div class="wy-cap"><h3>爱达·魔都号</h3><p>首艘国产大型邮轮 · 2024 年 1 月首航</p></div></div>
           </div>
         </div>
       </div>
@@ -152,6 +174,7 @@
             <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>让中国人的大飞机梦照进现实</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>坐底万米 · 深海探测进入"中国时代"</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>南仁东先生 22 年铸就的观天巨目</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"><div class="wy-cap"><h3>爱达·魔都号</h3><p>13.55 万总吨 · 2125 间客房的海上之城</p></div></div>
           </div>
           <div class="swiper-pagination" id="wyPag2"></div>
           <div class="swiper-button-prev" id="wyPrev2"></div>
@@ -183,6 +206,7 @@
             <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>蓝天之上 · 大国担当</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>万米深潜 · 无畏探索</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>仰望星空 · 脚踏实地</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"><div class="wy-cap"><h3>爱达·魔都号</h3><p>海上度假城 · 2024 年 1 月首航</p></div></div>
           </div>
           <div class="swiper-pagination" id="wyPag3"></div>
         </div>
@@ -204,9 +228,9 @@
       <span class="wy-star">⭐ 验证标准：基础分——轮播自动翻页；进阶分——点 cube 按钮变 3D 立方体、点 fade 变淡入淡出</span>
     </div>
     <div class="wy-fx">
-      <button class="wy-on" data-fx="slide">slide 平推（默认·稳重）</button>
+      <button data-fx="slide">slide 平推（默认·稳重）</button>
       <button data-fx="fade">fade 淡入淡出（优雅）</button>
-      <button data-fx="cube">cube 3D 立方体（炫酷）</button>
+      <button class="wy-on" data-fx="cube">cube 3D 立方体（炫酷）</button>
       <button data-fx="coverflow">coverflow 画廊堆叠（沉浸）</button>
       <button data-fx="flip">flip 翻页（复古）</button>
       <button data-fx="cards">cards 卡片（俏皮）</button>
@@ -221,10 +245,201 @@
             <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>企业官网爱用 fade</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>游戏网站爱用 cube</p></div></div>
             <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>相册页面爱用 coverflow</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"><div class="wy-cap"><h3>爱达·魔都号</h3><p>新展品也来试试六种讲述方式</p></div></div>
           </div>
           <div class="swiper-pagination" id="wyPag4"></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- 任务 5 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">5</span>
+      <h2>creative 电影墙<small>creativeEffect 自定义变换 · 大片感</small></h2>
+    </div>
+    <p class="wy-txt">这是最自由的效果：<code>effect: 'creative'</code> 允许用 <code>prev</code> / <code>next</code> 各定义一组 <b>translate（位移）、rotate（旋转）、scale（缩放）</b>，把轮播摆成一面"电影选片墙"（transform 写法参考 <code>swiper/demo/257-effect-creative.html</code>）。</p>
+    <div class="wy-req">
+      <h3>✍️ 任务 5 要求</h3>
+      <p>初始化 <code>#LNN_Sw5</code>，实现：① 循环 + 自动播放（3.2 秒）+ 圆点分页器（#LNN_Pag5）；② <code>effect: 'creative'</code> 并配置 <code>creativeEffect</code>——<b>上一张缩小左移并绕 Y 轴内旋退到"墙"深处，下一张放大右移进场</b>（提示：translate 的 % 相对容器原点，0% 表示与当前张重合；rotate 取 [x,y,z]，绕 Y 轴旋转才有立体透视感；origin 可指定铰点）。</p>
+      <span class="wy-star">⭐ 验证标准：左侧能看到一张缩小倾斜的"退片"，右侧有一张放大倾斜的"进场海报"</span>
+    </div>
+    <div class="wy-demo">
+      <span class="wy-demo-tag">🎛️ 演示五 · 电影选片墙（大片感）</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="LNN_Sw5">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"><div class="wy-cap"><h3>天宫空间站</h3><p>今晚的主打大片</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号动车组"><div class="wy-cap"><h3>复兴号动车组</h3><p>墙壁上的一张张海报</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919大飞机"><div class="wy-cap"><h3>C919 大飞机</h3><p>抽出来，推向观众</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>深海题材 · 票房冠军</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/fast_1.jpg" alt="中国天眼"><div class="wy-cap"><h3>中国天眼 FAST</h3><p>科幻巨制 · 正在热映</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"><div class="wy-cap"><h3>爱达·魔都号</h3><p>邮轮巨制 · 贺岁档新片</p></div></div>
+          </div>
+          <div class="swiper-pagination" id="LNN_Pag5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ 作业作答区（李南诺 · 24002120324） ═══════════ -->
+
+  <!-- 作答一：提示词工程师，两轮迭代记录 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">答1</span>
+      <h2>任务一作答 · 提示词工程师<small>两轮提示词迭代记录 + 逐项验证结论</small></h2>
+    </div>
+    <div class="LNN_prompt">
+      <h4>📋 任务一需求原文（要"翻译"给 AI 的 4 条需求）</h4>
+      <p>生成 <code>new Swiper('#wySw4', {...})</code> 配置：<b>① 无缝循环　② 3.2 秒自动翻页且手动操作后不停止　③ 圆点分页器可点击　④ 初始效果为 cube</b>。本任务不写代码、只写提示词；硬性要求：至少迭代 2 轮、保留每轮提示词与 AI 回答、逐项粘贴验证并给结论。</p>
+    </div>
+    <div class="LNN_prompt">
+      <h4>🗣️ 第 1 轮提示词（凭感觉说，没拆需求）</h4>
+      <blockquote>"页面上有个 id 叫 wySw4 的轮播容器，Swiper 库已经通过 CDN 引入好了。帮我写一段初始化代码：让它能无缝循环播放，每隔 3.2 秒自动翻一页就行。"</blockquote>
+      <h4>🤖 AI 第 1 次回答</h4>
+      <pre>new Swiper('#wySw4', {
+  loop: true,
+  autoplay: { delay: 3200 }
+});</pre>
+      <h4>🔍 粘贴进页面逐项验证</h4>
+      <p><span class="LNN_ok">✔ 无缝循环</span>：正常；<span class="LNN_ok">✔ 3.2 秒自动翻页</span>：正常；
+      <span class="LNN_bad">✘ 手动操作后不停止</span>：拖动一下自动播放就永久停了（缺 <code>disableOnInteraction: false</code>）；
+      <span class="LNN_bad">✘ 圆点分页器可点击</span>：配置里根本没有 pagination；
+      <span class="LNN_bad">✘ 初始效果为 cube</span>：没提效果，默认是普通平推。—— 4 条需求漏了 3 条。</p>
+      <figure class="LNN_shot">
+        <img src="swiper-imgs/verify_r1.png" alt="第 1 轮验证：无分页圆点、普通平推效果">
+        <figcaption>第 1 轮实测截图：普通平推效果，底部没有分页圆点 —— 需求 ②后半 / ③ / ④ 均未满足</figcaption>
+      </figure>
+    </div>
+    <div class="LNN_prompt">
+      <h4>🗣️ 第 2 轮提示词（给背景 + 需求编号 + 点名参数 + 输出约束）</h4>
+      <blockquote>"你是资深前端工程师。背景：Swiper 11 已通过 CDN 引入，页面有轮播容器 #wySw4、分页器容器 #wyPag4。请生成 new Swiper('#wySw4', {...}) 的完整配置，以下 4 条需求缺一不可：① loop: true 无缝循环；② autoplay 每 3200ms 自动翻页，且用户手动拖动后自动播放不停止（必须显式写 disableOnInteraction: false）；③ pagination.el 指向 '#wyPag4' 且 clickable: true 可点击跳转；④ 初始切换效果 effect 为 'cube'，并附 cubeEffect 阴影参数（shadow、slideShadows、shadowOffset、shadowScale）。输出约束：只输出配置代码，不要解释。"</blockquote>
+      <h4>🤖 AI 第 2 次回答</h4>
+      <pre>new Swiper('#wySw4', {
+  loop: true,                       // ① 无缝循环
+  speed: 800,
+  autoplay: {                       // ② 3.2 秒自动翻页
+    delay: 3200,
+    disableOnInteraction: false     //    手动操作后不停止
+  },
+  pagination: {                     // ③ 圆点可点击跳转
+    el: '#wyPag4',
+    clickable: true
+  },
+  effect: 'cube',                   // ④ 初始效果为 cube
+  cubeEffect: { shadow: true, slideShadows: true, shadowOffset: 20, shadowScale: 0.94 }
+});</pre>
+      <h4>🔍 逐项验证结论</h4>
+      <p><span class="LNN_ok">✔ ① 最后一张往后翻回到第一张</span>；<span class="LNN_ok">✔ ② 每 3.2 秒自动翻页，拖动松手后接着自动翻</span>；<span class="LNN_ok">✔ ③ 点圆点直接跳到对应张</span>；<span class="LNN_ok">✔ ④ 打开页面即是 3D 立方体翻转</span>。一句话结论：<b>4 条需求全部通过</b>——本页演示四的初始效果已按该配置应用为 cube（对应按钮默认高亮）。</p>
+      <figure class="LNN_shot">
+        <img src="swiper-imgs/verify_r2_cube.png" alt="第 2 轮验证：cube 3D 翻转中，右缘可见下一张的倾斜面">
+        <figcaption>第 2 轮实测截图 ①：cube 立方体翻转途中，右缘露出下一张的倾斜侧面，底部 6 个圆点齐全 —— 需求 ④ ✔</figcaption>
+      </figure>
+      <figure class="LNN_shot">
+        <img src="swiper-imgs/verify_r2_dots.png" alt="第 2 轮验证：橙色激活圆点移动、自动翻页正常">
+        <figcaption>第 2 轮实测截图 ②：橙色激活圆点已移到后面位置、画面已换成 C919 —— 自动翻页 ② 与圆点分页 ③ ✔</figcaption>
+      </figure>
+    </div>
+    <div class="LNN_prompt">
+      <h4>✅ 硬性要求对照</h4>
+      <p><span class="LNN_ok">✔ 迭代 2 轮提示词</span>（上方两轮完整记录）；<span class="LNN_ok">✔ 每轮提示词与 AI 回答均原样保留</span>；<span class="LNN_ok">✔ 逐项粘贴进页面验证，截图存档并附一句话结论</span>（4 条需求全部通过）。</p>
+    </div>
+    <div class="LNN_qa">
+      <p><b>答辩抽问 1 · 第一版提示词漏掉了哪个需求？</b>漏了"圆点分页器可点击"和"初始效果为 cube"两条；"手动操作后不停止"虽然嘴上说到了，但没点名参数，AI 按默认行为写，实际不满足。</p>
+      <p><b>答辩抽问 2 · 第二轮怎么"说清楚"的？</b>把需求拆成 ①~④ 编号，每条都点名对应 API 写法（disableOnInteraction、pagination.el、clickable、effect），并要求"只输出配置代码"，AI 没有自由发挥的空间，一次到位。</p>
+      <p><b>答辩抽问 3 · AI 第一次给的代码错在哪？</b>autoplay 缺 disableOnInteraction: false——Swiper 默认用户一交互自动播放就永久停止；另外整段缺 pagination 与 effect/cubeEffect。</p>
+    </div>
+  </div>
+
+  <!-- 作答二：creative 电影墙自查报告 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">答2</span>
+      <h2>任务二作答 · creative 仿写自查报告<small>实现位于上方"任务五 · 电影选片墙"演示台（#LNN_Sw5）</small></h2>
+    </div>
+    <div class="LNN_prompt">
+      <h4>📋 对照任务二要求逐条核对（浏览器实测 + 截图确认）</h4>
+      <p><span class="LNN_ok">✔ 上一张缩小左移并带角度</span>：prev 组 scale 0.8 缩小、translate 横向 -42% 左移、绕 Y 轴 +35° 内旋（origin 指定左缘为铰点）、z 轴压深 -480px 退进"墙"里；</p>
+      <p><span class="LNN_ok">✔ 下一张放大右移进场</span>：next 组 scale 1.08 放大、translate 横向 +46% 右移、绕 Y 轴 -35°（origin 右缘为铰点），像从墙上抽出海报推向观众；</p>
+      <p><span class="LNN_ok">✔ 像电影选片墙</span>：两侧海报 3D 透视内旋退入墙中、中间主打海报平整突出，切换时海报沿各自铰点转出/转入，有走廊选片的进深感。</p>
+      <p>⚠️ 迭代踩坑记录：第一版用 rotateZ 平面打斜 + 两侧大方片互叠，杂乱无立体感；读官方示例 swiper/demo/257-effect-creative.html 第 6 例后改为 <b>rotateY 绕纵轴旋转 + origin 指定铰点 + z 轴压深</b>，才出现真透视。期间还排掉了两处 overflow:hidden 把侧边海报裁掉的问题（.swiper 自身与外层卡片）。</p>
+    </div>
+    <div class="LNN_prompt">
+      <h4>💻 核心代码（任务五 #LNN_Sw5 实测通过的配置）</h4>
+      <pre>var LNN_Sw5 = new Swiper('#LNN_Sw5', {
+  loop: true,
+  effect: 'creative',
+  speed: 800,
+  autoplay: { delay: 3200, disableOnInteraction: false },
+  pagination: { el: '#LNN_Pag5', clickable: true },
+  creativeEffect: {
+    prev: {   // 上一张：缩小左移，以左缘为铰点绕 Y 轴内旋 35°，压向"墙"深处
+      shadow: true, origin: 'left center',
+      translate: ['-42%', 0, -480], rotate: [0, 35, 0],
+      scale: 0.8, opacity: 0.9
+    },
+    next: {   // 下一张：放大右移进场，像从墙上抽出海报推向观众
+      shadow: true, origin: 'right center',
+      translate: ['46%', 0, -320], rotate: [0, -35, 0],
+      scale: 1.08
+    }
+  }
+});</pre>
+    </div>
+    <div class="LNN_prompt">
+      <h4>✍️ 向 AI 追问后，用自己的话写：prev / next 的 transform 各控制什么？</h4>
+      <p><b>prev</b> 控制当前张<b>左边</b>那些"已翻过去的张"在进度 progress = +1 时的形态：translate 决定位移到哪、rotate 决定转多少度、scale 决定缩多小、z 分量决定压多深；<b>next</b> 同理，控制<b>右边</b>待进场的张在 progress = -1 时的形态。翻页过程中 Swiper 按 progress 在 0 与 ±1 之间线性插值，所以海报是"平滑地从墙上转到眼前"，而不是跳变。</p>
+    </div>
+    <div class="LNN_qa">
+      <p><b>答辩抽问 1 · transform 里的百分号是相对谁的？</b>相对<b>轮播容器（.swiper）的原点</b>：0% 表示与当前张完全重合，+100% 是往右平移一整个容器宽，-42% 就是往左挪 42% 个容器宽——不是相对 slide 自身。</p>
+      <p><b>答辩抽问 2 · 改一个数值让卡片转 20 度？</b>把 prev 的 rotate 从 [0, 35, 0] 改成 [0, 20, 0]（next 同步改 [0, -20, 0]），海报内旋变缓、墙更"平"一些；若要平面打斜 20° 则用 [0, 0, 20]。</p>
+    </div>
+  </div>
+
+  <!-- 作答三：综合创作 + 技术答辩 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">答3</span>
+      <h2>任务三作答 · 综合创作 + 技术答辩<small>第六件展品爱达·魔都号 + 超纲能力 zoom 双击缩放</small></h2>
+    </div>
+    <div class="LNN_prompt">
+      <h4>① 第六件展品：爱达·魔都号（首艘国产大型邮轮，2024 年 1 月首航）</h4>
+      <p>图片使用 AI 生成的横版大图，保存为 <code>swiper-imgs/adora_1.jpg</code>；slide 结构完整（img + alt + 图注 wy-cap 双层文字），并挂进<b>全部 5 个轮播</b>（演示一~演示五），分页器圆点自动变为 6 个，实测第 6 张显示正常。各演示图注文案示例：演示一"首艘国产大型邮轮 · 2024 年 1 月首航"、演示二"13.55 万总吨 · 2125 间客房的海上之城"、演示五电影墙"邮轮巨制 · 贺岁档新片"。核心 slide 结构（5 个轮播均按此挂载）：</p>
+      <pre>&lt;div class="swiper-slide"&gt;
+  &lt;img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"&gt;
+  &lt;div class="wy-cap"&gt;
+    &lt;h3&gt;爱达·魔都号&lt;/h3&gt;
+    &lt;p&gt;首艘国产大型邮轮 · 2024 年 1 月首航&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+    </div>
+    <div class="LNN_prompt">
+      <h4>② 课堂没讲过的能力：zoom 双击缩放（加在演示一；keyboard / mousewheel / parallax 为备选项）</h4>
+      <p>核心代码 ① 结构——图片包一层 <code>.swiper-zoom-container</code>：</p>
+      <pre>&lt;div class="swiper-slide"&gt;
+  &lt;div class="swiper-zoom-container"&gt;
+    &lt;img src="swiper-imgs/adora_1.jpg" alt="爱达·魔都号"&gt;
+  &lt;/div&gt;
+  &lt;div class="wy-cap"&gt;…图注…&lt;/div&gt;
+&lt;/div&gt;</pre>
+      <p>核心代码 ② 配置——注意 <code>enabled: true</code> 必须显式开启：</p>
+      <pre>var wySw1 = new Swiper("#wySw1", {
+  zoom: { enabled: true, maxRatio: 3 }
+});</pre>
+      <p>验证：快速双击图片 → 激活张获得 <code>swiper-slide-zoomed</code> 类、图片放大到 scale(3)，再双击还原 scale(1)，控制台零报错（截图存档）。</p>
+      <p>⚠️ 踩坑记录：AI 第一次只给 <code>zoom: { maxRatio: 3 }</code>，双击毫无反应；读 Swiper 11 源码 zoom.mjs 发现 <code>enabled</code> 默认是 <code>false</code>，必须显式开启才生效。</p>
+    </div>
+    <div class="LNN_qa">
+      <p><b>答辩四连问 1 · 这段代码什么意思？</b>开启 Swiper 的 zoom 模块：图片包在 .swiper-zoom-container 里后，双击（移动端双指开合）即可把图片放大到最多 3 倍，放大状态下可拖动查看细节，再次双击还原。</p>
+      <p><b>答辩四连问 2 · AI 第一次给的哪里不对、你改了什么？</b>漏了 enabled: true（默认 false，模块装上了却没"通电"），补上后双击缩放立即生效。</p>
+      <p><b>答辩四连问 3 · 新参数的作用？</b>enabled：zoom 总开关；maxRatio：最大放大倍数；toggle：是否允许双击切换缩放；minRatio：最小缩放倍数（默认 1）。</p>
+      <p><b>答辩四连问 4 · 现场把 delay 改成指定值？</b>如把 autoplay.delay 从 3200 改成 5000：预期每张停留从 3.2 秒变 5 秒、翻页节奏明显变慢，其余行为（无缝循环、手动后不停止）不受影响。</p>
+    </div>
+    <div class="LNN_prompt">
+      <h4>📦 提交物清单</h4>
+      <p>① 能运行的页面：即本页（swiper-task.html）；② 与 AI 的关键对话记录（每轮提示词 + 重要往返）统一收录在 <a href="LNN_prompt.md" style="color:#1d5bbf;font-weight:bold">LNN_prompt.md</a>，随仓库一起发布到 GitHub，可在线访问。</p>
     </div>
   </div>
 
@@ -235,12 +450,15 @@
 
 <script>
   // ══════════════════════════════════════════════════════════
-  //  ✍️ 学生作答区：把 4 个轮播全部救活（参考各演示台上方的绿色任务卡）
+  //  ✍️ 学生作答区：把 5 个轮播全部救活（参考各演示台上方的绿色任务卡）
   // ══════════════════════════════════════════════════════════
 
   // ── 任务 1：初始化 #wySw1，让它至少可以拖动 ──
-  // TODO: 在这里写你的代码
-var wySw1 = new Swiper("#wySw1", {});
+  // 课外加餐：zoom 双击缩放（课堂没讲的新能力）——图片需包在 .swiper-zoom-container 中，双击放大、再双击还原
+  // ⚠️ 注意：zoom.enabled 默认是 false，必须显式开启，只写 maxRatio 是不会生效的
+var wySw1 = new Swiper("#wySw1", {
+  zoom: { enabled: true, maxRatio: 3 }
+});
 
   // ── 任务 2：初始化 #wySw2，循环 + 600ms + 圆点可点 + 箭头切换 ──
   // TODO: 在这里写你的代码
@@ -297,7 +515,8 @@ var wySw2 = new Swiper("#wySw2", {
     }
     return new Swiper('#wySw4', LNN_conf);
   }
-  var wySw4 = LNN_buildSw4('slide');
+  // 初始效果按"任务一"需求定为 cube（作答一见下方作答区）
+  var wySw4 = LNN_buildSw4('cube');
 
   // ── 任务 4 进阶：按钮点击实时切换六种效果 ──
   // 动态换 effect 只改参数是无效的，必须先销毁旧实例再重建（destroy + new）
@@ -315,6 +534,38 @@ var wySw2 = new Swiper("#wySw2", {
       // 第 3 步：读取按钮上的 data-fx，用新效果重建实例（其余配置原样保留）
       wySw4 = LNN_buildSw4(this.dataset.fx);
     });
+  });
+
+  // ── 任务 5：初始化 #LNN_Sw5，creative 电影墙（参考 demo 257） ──
+  // translate % 相对容器原点：0% = 与当前张完全重合，正值右移、负值左移
+  // rotate 用 [x,y,z] 三轴角度：绕 Y 轴（第二个值）旋转才有立体透视感，rotateZ 只是平面打斜
+  // origin 指定变换铰点（参考 demo 257 swiper6），prev 以左缘为轴内旋、next 以右缘为轴内旋
+  var LNN_Sw5 = new Swiper('#LNN_Sw5', {
+    loop: true,
+    effect: 'creative',
+    speed: 800,
+    grabCursor: true,
+    autoplay: { delay: 3200, disableOnInteraction: false },
+    pagination: { el: '#LNN_Pag5', clickable: true },
+    creativeEffect: {
+      prev: {
+        // 上一张：缩小左移，以左缘为铰点绕 Y 轴内旋 35°、压向纵深，像走廊左侧墙里的退片
+        shadow: true,
+        origin: 'left center',
+        translate: ['-42%', 0, -480],
+        rotate: [0, 35, 0],
+        scale: 0.8,
+        opacity: 0.9
+      },
+      next: {
+        // 下一张：放大右移，以右缘为铰点反向内旋 35°，像右侧海报抽出向观众进场
+        shadow: true,
+        origin: 'right center',
+        translate: ['46%', 0, -320],
+        rotate: [0, -35, 0],
+        scale: 1.08
+      }
+    }
   });
 </script>
 </body>
