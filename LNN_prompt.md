@@ -185,3 +185,90 @@ If `AGENTS.md` already exists at `D:\程序设计比赛题库\Web前端技术课
 ## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
 
 好的，推送到 GitHub
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+"页面上有个 id 叫 wySw4 的轮播容器，Swiper 库已经通过 CDN 引入好了。帮我写一段初始化代码：让它能无缝循环播放，每隔 3.2 秒自动翻一页就行。"
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+"你是资深前端工程师。背景：Swiper 11 已通过 CDN 引入，页面有轮播容器 #wySw4、分页器容器 #wyPag4。请生成 new Swiper('#wySw4', {...}) 的完整配置，以下 4 条需求缺一不可：① loop: true 无缝循环；② autoplay 每 3200ms 自动翻页，且用户手动拖动后自动播放不停止（必须显式写 disableOnInteraction: false）；③ pagination.el 指向 '#wyPag4' 且 clickable: true 可点击跳转；④ 初始切换效果 effect 为 'cube'，并附 cubeEffect 阴影参数（shadow、slideShadows、shadowOffset、shadowScale）。输出约束：只输出配置代码，不要解释。"
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+`d:/程序设计比赛题库/Web前端技术课程/LNN_prompt.md`帮我把这个人口加在swiper-task.html中
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+var wySw4 = new Swiper('#wySw4', {
+  loop: true,
+  autoplay: {
+    delay: 3200
+  }
+});根据这个第一轮提示词，做出这个的效果展示页面滑动效果在swiper-task.html中
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+var wySw4 = new Swiper('#wySw4', {
+  loop: true,
+  effect: 'cube',
+  autoplay: {
+    delay: 3200,
+    disableOnInteraction: false
+  },
+  pagination: {
+    el: '#wyPag4',
+    clickable: true
+  },
+  cubeEffect: {
+    shadow: true,
+    slideShadows: true,
+    shadowOffset: 20,
+    shadowScale: 0.94
+  }
+});根据这个第二轮提示词，做出这个的效果展示页面滑动效果在swiper-task.html中
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+var wySw4 = new Swiper('#wySw4', {
+loop: true,
+autoplay: {
+delay: 3200
+}
+});根据这个第一轮提示词，做出这个的效果展示页面滑动效果在swiper-task.html中，在任务一作答 · 提示词工程师补全所有效果展示，代码根据我给出进行设计
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+把两轮提示词的截图部分删掉，并且将两轮提示词演示的轮播效果一致
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+第 2 轮配置实况演示，第二轮结果改成平推
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+`net::ERR_ABORTED http://127.0.0.1:8333/swiper-task.html`修改错误（将 Swiper 库由 CDN 改为本地 cdn/swiper 引用）
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+好的，按这个方案修改（选择：在 swiper-task.html 加 CSP meta 并用 nonce 白名单，拦截 IDE 注入的 /@vite/client 脚本）
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+任务三：挑一个课堂上没讲过的 zoom 双击缩放，把第六件展品第六件展品爱达·魔都号（首艘国产大型邮轮，2024 年 1 月首航），按照这个效果进行代码编写，把之前的任务三进行修改，文字加代码
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+根据swiper文件夹里面的demo帮我把任务二里面的原点分页器修改成一个没有用过的效果的圆点分页器
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+请帮我排查分页器效果不显示的原因
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+帮我把每个答辩抽问，连问这个隐藏起来，点击才可以展开
+
+## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
+
+提交到GitHub
