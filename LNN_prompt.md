@@ -276,3 +276,27 @@ delay: 3200
 ## 2026-11-11 | 模型：DeepSeek-V4.1-Flash
 
 推送到GitHub
+
+## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
+
+给我新建一个html文件，显示上图下文的结构，图片和文字通过本地启动服务器获取当前文件夹下面的db里面db.json的poems里面的图片，title和content。并给我生成server.js数据服务器文件，server.js放在db文件夹中。其中端口号为3004。
+
+## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
+
+在 db.json 的 poems 数组里新增 2 条数据（自己找诗词与配图地址）； 再给 server.js 增加第二个接口 app.get('/api/authors', ...)，返回作者列表。验收：两个接口地址都能在浏览器打开并返回正确 JSON；页面上用 Promise.all 或两次 fetch 同时取回两份数据。
+
+## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
+
+页面顶部加一个搜索框，输入关键字后只显示标题或内容匹配的诗词（数据仍来自 fetch，不重新请求也可以）；再加一个"按标题长度排序"按钮。
+
+答辩四问：为什么 fetch 要写两个 then？.json() 之前拿到的是什么？CORS 是谁拦的？如果服务器没启动，你的页面表现如何？
+
+考核点：数据加工 + 口头表达（能用 AI 查，但必须讲清）
+
+## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
+
+在index.html中加入poems.html
+
+## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
+
+放在课堂目录里面

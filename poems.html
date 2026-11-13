@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!-- 作者：李南诺 | 建立时间：2026-11-13 | 使用大模型：DeepSeek-V4.1-Flash | 功能名称：诗歌图文卡片（数据来自 db/db.json 本地接口） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>诗歌图文卡片 · 本地数据接口演示</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --LNN_ink:#2c2621;
+    --LNN_muted:#8a7f74;
+    --LNN_paper:#faf6ef;
+    --LNN_card:#fffdf9;
+    --LNN_line:#e8ddcd;
+    --LNN_accent:#a8442b;
+  }
+
+  body{
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--LNN_paper);
+    color:var(--LNN_ink);
+    min-height:100vh;
+    padding:48px 20px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .LNN_wrap{max-width:1080px;margin:0 auto}
+
+  /* 页头 */
+  .LNN_head{text-align:center;margin-bottom:12px}
+  .LNN_head h1{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:32px;letter-spacing:6px;font-weight:600;
+  }
+  .LNN_head h1::after{
+    content:"";display:block;width:56px;height:2px;margin:16px auto 0;
+    background:var(--LNN_accent);opacity:.7;
+  }
+  .LNN_head p{margin-top:16px;font-size:13px;color:var(--LNN_muted);line-height:2}
+  .LNN_head code{
+    font-family:Consolas,monospace;font-size:12px;color:#7b6a58;
+    background:#f1e9dd;border-radius:5px;padding:2px 7px;
+  }
+
+  /* 状态提示 */
+  .LNN_status{
+    text-align:center;font-size:13.5px;color:var(--LNN_muted);
+    margin:26px 0 30px;line-height:2;
+  }
+  .LNN_status.LNN_error{
+    color:var(--LNN_accent);background:#fdf1ed;border:1px solid #f3cfc6;
+    border-radius:12px;padding:14px 20px;max-width:640px;margin:26px auto 30px;
+  }
+
+  /* 卡片网格 */
+  .LNN_grid{
+    display:grid;gap:26px;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  }
+
+  /* 单张卡片：上图下文 */
+  .LNN_card{
+    background:var(--LNN_card);
+    border:1px solid var(--LNN_line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(94,74,52,.07);
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  .LNN_card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 28px rgba(94,74,52,.14);
+  }
+
+  .LNN_card figure{position:relative;overflow:hidden;background:#efe7da}
+  .LNN_card img{
+    display:block;width:100%;aspect-ratio:4/3;object-fit:cover;
+    transition:transform .5s ease;
+  }
+  .LNN_card:hover img{transform:scale(1.05)}
+
+  .LNN_card figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:26px 16px 10px;
+    color:#fff;font-size:12px;letter-spacing:1px;
+    background:linear-gradient(transparent,rgba(40,28,18,.72));
+  }
+
+  .LNN_body{padding:16px 18px 20px}
+  .LNN_body h2{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:19px;letter-spacing:2px;font-weight:600;color:var(--LNN_ink);
+  }
+  .LNN_body h2::before{
+    content:"";display:inline-block;width:4px;height:15px;margin-right:9px;
+    background:var(--LNN_accent);border-radius:2px;vertical-align:-2px;
+  }
+  .LNN_body p{
+    margin-top:10px;font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:14.5px;line-height:2;color:#5d5248;
+  }
+
+  /* 搜索与排序栏 */
+  .LNN_toolbar{
+    max-width:720px;margin:22px auto 6px;
+    display:flex;gap:10px;align-items:center;
+  }
+  .LNN_toolbar input{
+    flex:1;min-width:0;
+    font-family:inherit;font-size:14px;
+    padding:10px 14px;border:1.5px solid var(--LNN_line);
+    border-radius:999px;background:#fffdf9;
+    color:var(--LNN_ink);outline:none;
+    transition:border-color .2s,box-shadow .2s;
+  }
+  .LNN_toolbar input::placeholder{color:var(--LNN_muted)}
+  .LNN_toolbar input:focus{
+    border-color:var(--LNN_accent);
+    box-shadow:0 0 0 3px rgba(168,68,43,.12);
+  }
+  .LNN_toolbar button{
+    flex:none;font-family:inherit;font-size:13px;
+    padding:10px 16px;border:1.5px solid var(--LNN_line);
+    border-radius:999px;background:#fffdf9;
+    color:var(--LNN_ink);cursor:pointer;
+    transition:all .2s;white-space:nowrap;
+  }
+  .LNN_toolbar button:hover{
+    border-color:var(--LNN_accent);color:var(--LNN_accent);
+    transform:translateY(-1px);
+  }
+  .LNN_toolbar button.LNN_sort-on{
+    background:linear-gradient(135deg,#a8442b,#c7654a);
+    color:#fff;border-color:transparent;
+  }
+
+  /* 诗人列表区 */
+  .LNN_authors{margin-top:52px}
+  .LNN_authors h3{
+    font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:18px;letter-spacing:3px;font-weight:600;color:var(--LNN_ink);
+    padding-bottom:10px;border-bottom:1px solid var(--LNN_line);
+    margin-bottom:18px;
+  }
+  .LNN_authors h3::before{
+    content:"";display:inline-block;width:4px;height:14px;margin-right:10px;
+    background:var(--LNN_accent);border-radius:2px;vertical-align:-2px;
+  }
+  .LNN_authors ul{
+    list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:12px;
+  }
+  .LNN_authors li{
+    background:#fffdf9;border:1px solid var(--LNN_line);border-radius:10px;
+    padding:12px 16px;min-width:170px;flex:1 1 170px;
+    box-shadow:0 3px 10px rgba(94,74,52,.05);
+    transition:transform .2s,box-shadow .2s;
+  }
+  .LNN_authors li:hover{
+    transform:translateY(-2px);box-shadow:0 8px 18px rgba(94,74,52,.12);
+  }
+  .LNN_authors strong{
+    display:block;font-family:"Songti SC","STSong","SimSun",serif;
+    font-size:17px;color:var(--LNN_ink);letter-spacing:1px;
+  }
+  .LNN_authors span{font-size:12.5px;color:var(--LNN_muted);margin-top:4px;display:block}
+  .LNN_authors small{
+    display:block;margin-top:8px;font-size:12px;color:#7c6f60;line-height:1.8;
+  }
+
+  footer{
+    margin-top:46px;text-align:center;font-size:12.5px;
+    color:var(--LNN_muted);line-height:2;
+  }
+  footer a{color:var(--LNN_accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media (max-width:520px){
+    body{padding:34px 16px 48px}
+    .LNN_head h1{font-size:26px;letter-spacing:4px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .LNN_card,.LNN_card img{transition:none}
+    .LNN_card:hover{transform:none}
+    .LNN_card:hover img{transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="LNN_wrap">
+
+  <header class="LNN_head">
+    <h1>诗 歌 图 文</h1>
+    <p>数据来源：<code>db/db.json</code> → 本地接口
+      <code>GET /api/poems</code> · <code>GET /api/authors</code></p>
+  </header>
+
+  <div class="LNN_toolbar" role="search">
+    <input type="search" id="LNN_search" placeholder="输入关键字，搜索标题或正文…" aria-label="搜索诗词">
+    <button type="button" id="LNN_sort">按标题长度排序 ↕</button>
+  </div>
+
+  <p class="LNN_status" id="LNN_status">正在从本地服务器加载数据…</p>
+  <main class="LNN_grid" id="LNN_grid" aria-live="polite"></main>
+
+  <section class="LNN_authors" id="LNN_authors" aria-live="polite"></section>
+
+  <footer>
+    先在 <code>db</code> 目录执行 <code>node server.js</code> 启动服务，再刷新本页<br>
+    <a href="index.html">← 返回课堂实践中心</a>
+  </footer>
+
+</div>
+
+<script>
+  // 两个本地数据接口地址（server.js 监听 3004 端口）
+  var LNN_POEMS_API = 'http://127.0.0.1:3004/api/poems';
+  var LNN_AUTHORS_API = 'http://127.0.0.1:3004/api/authors';
+
+  // 数据仓库与 UI 状态：fetch 只请求一次，后续过滤/排序都在内存里做
+  var LNN_allPoems = [];      // 当前页拿到的全量诗词（来自 fetch）
+  var LNN_sortAsc = null;     // null=不排序，true=升序（短→长），false=降序
+
+  // fetch + 响应码校验小工具
+  function LNN_fetchJSON(LNN_url) {
+    return fetch(LNN_url).then(function (LNN_res) {
+      if (!LNN_res.ok) throw new Error('HTTP ' + LNN_res.status);
+      return LNN_res.json();
+    });
+  }
+
+  // 生成一张"上图下文"诗歌卡片并返回节点
+  function LNN_createCard(LNN_item) {
+    var LNN_card = document.createElement('article');
+    LNN_card.className = 'LNN_card';
+
+    var LNN_figure = document.createElement('figure');
+    var LNN_img = document.createElement('img');
+    LNN_img.src = LNN_item.pic || LNN_item.image || '';
+    LNN_img.alt = LNN_item.title || '诗歌配图';
+    LNN_img.referrerPolicy = 'no-referrer';
+    LNN_figure.appendChild(LNN_img);
+
+    var LNN_body = document.createElement('div');
+    LNN_body.className = 'LNN_body';
+
+    var LNN_title = document.createElement('h2');
+    LNN_title.textContent = LNN_item.title || '无题';
+
+    var LNN_text = document.createElement('p');
+    LNN_text.textContent = LNN_item.content || '';
+
+    LNN_body.appendChild(LNN_title);
+    LNN_body.appendChild(LNN_text);
+    LNN_card.appendChild(LNN_figure);
+    LNN_card.appendChild(LNN_body);
+    return LNN_card;
+  }
+
+  // 清空卡片网格，把传入数组重新渲染进去（过滤/排序后也走这里）
+  function LNN_renderGrid(LNN_list) {
+    var LNN_grid = document.getElementById('LNN_grid');
+    LNN_grid.innerHTML = '';
+    if (!LNN_list.length) {
+      var LNN_empty = document.createElement('p');
+      LNN_empty.style.cssText = 'grid-column:1/-1;text-align:center;color:var(--LNN_muted);padding:40px 0';
+      LNN_empty.textContent = '没有找到匹配的诗词…';
+      LNN_grid.appendChild(LNN_empty);
+      return;
+    }
+    LNN_list.forEach(function (LNN_item) {
+      LNN_grid.appendChild(LNN_createCard(LNN_item));
+    });
+  }
+
+  // 根据当前搜索框和排序按钮状态，产出"该显示的诗词数组"
+  function LNN_computeVisible() {
+    var LNN_kw = document.getElementById('LNN_search').value.trim().toLowerCase();
+    var LNN_arr = LNN_allPoems;
+    if (LNN_kw) {
+      // 标题或正文任一匹配即可；都转回小写做大小写不敏感
+      LNN_arr = LNN_arr.filter(function (LNN_item) {
+        var LNN_t = (LNN_item.title || '').toLowerCase();
+        var LNN_c = (LNN_item.content || '').toLowerCase();
+        return LNN_t.indexOf(LNN_kw) !== -1 || LNN_c.indexOf(LNN_kw) !== -1;
+      });
+    }
+    if (LNN_sortAsc !== null) {
+      LNN_arr = LNN_arr.slice().sort(function (a, b) {
+        var la = (a.title || '').length;
+        var lb = (b.title || '').length;
+        // 同样长度时保持原始顺序，用稳定 sort 的回退技巧
+        if (la === lb) return 0;
+        return LNN_sortAsc ? la - lb : lb - la;
+      });
+    }
+    return LNN_arr;
+  }
+
+  // 重新计算 + 重新渲染，每次搜索或排序状态变化都只调这一个函数
+  function LNN_apply() {
+    LNN_renderGrid(LNN_computeVisible());
+  }
+
+  // 根据作者数据渲染下方诗人列表
+  function LNN_renderAuthors(LNN_list) {
+    var LNN_section = document.getElementById('LNN_authors');
+    if (!LNN_list.length) { LNN_section.style.display = 'none'; return; }
+    var LNN_h = document.createElement('h3');
+    LNN_h.textContent = '诗 人 列 表';
+    LNN_section.appendChild(LNN_h);
+    var LNN_ul = document.createElement('ul');
+    LNN_list.forEach(function (LNN_a) {
+      var LNN_li = document.createElement('li');
+      var LNN_works = '';
+      if (Array.isArray(LNN_a.works) && LNN_a.works.length) {
+        LNN_works = '<small>' + LNN_a.works.slice(0, 3).join(' · ') + '</small>';
+      }
+      LNN_li.innerHTML =
+        '<strong>' + (LNN_a.name || '佚名') + '</strong>' +
+        '<span>' + (LNN_a.dynasty || '') + '</span>' +
+        LNN_works;
+      LNN_ul.appendChild(LNN_li);
+    });
+    LNN_section.appendChild(LNN_ul);
+  }
+
+  // 同时拉取两份数据：Promise.allSettled 让任一接口失败不影响另一份继续渲染
+  function LNN_loadData() {
+    var LNN_status = document.getElementById('LNN_status');
+    Promise.allSettled([
+      LNN_fetchJSON(LNN_POEMS_API),
+      LNN_fetchJSON(LNN_AUTHORS_API)
+    ]).then(function (LNN_results) {
+      var LNN_poemsDone = LNN_results[0];
+      var LNN_authorsDone = LNN_results[1];
+      var LNN_summary = [];
+
+      if (LNN_poemsDone.status === 'fulfilled') {
+        // 把拿到的数组存进模块级缓存，后续搜索/排序都改这个缓存、不重新请求
+        LNN_allPoems = LNN_poemsDone.value;
+        LNN_apply(); // 立即渲染第一版
+        LNN_summary.push(LNN_poemsDone.value.length + ' 首诗歌');
+      } else {
+        LNN_summary.push('诗歌接口加载失败（' + LNN_poemsDone.reason.message + '）');
+      }
+
+      if (LNN_authorsDone.status === 'fulfilled') {
+        LNN_renderAuthors(LNN_authorsDone.value);
+        LNN_summary.push(LNN_authorsDone.value.length + ' 位诗人');
+      } else {
+        document.getElementById('LNN_authors').style.display = 'none';
+        LNN_summary.push('诗人接口加载失败（' + LNN_authorsDone.reason.message + '）');
+      }
+
+      LNN_status.textContent = '数据来自 db.json：' + LNN_summary.join(' · ') + '。';
+
+      // 两份接口都挂了 → 最可能的原因是 server.js 没启动，显示醒目提示
+      if (LNN_poemsDone.status === 'rejected' && LNN_authorsDone.status === 'rejected') {
+        LNN_status.className = 'LNN_status LNN_error';
+        LNN_status.textContent = '无法连接 http://127.0.0.1:3004。请先在 db 目录执行 node server.js 启动数据服务器，然后刷新本页。';
+      }
+    });
+  }
+
+  // 事件绑定：输入框实时过滤 + 排序按钮切换三态（不排序→升序→降序→不排序…）
+  document.getElementById('LNN_search').addEventListener('input', function () { LNN_apply(); });
+  document.getElementById('LNN_sort').addEventListener('click', function (LNN_btn) {
+    LNN_sortAsc = LNN_sortAsc === null ? true : (LNN_sortAsc ? false : null);
+    var LNN_el = LNN_btn.currentTarget;
+    if (LNN_sortAsc === null) {
+      LNN_el.textContent = '按标题长度排序 ↕';
+      LNN_el.classList.remove('LNN_sort-on');
+    } else if (LNN_sortAsc) {
+      LNN_el.textContent = '按标题长度排序 ↑（短→长）';
+      LNN_el.classList.add('LNN_sort-on');
+    } else {
+      LNN_el.textContent = '按标题长度排序 ↓（长→短）';
+      LNN_el.classList.add('LNN_sort-on');
+    }
+    LNN_apply();
+  });
+
+  LNN_loadData();
+</script>
+</body>
+</html>
