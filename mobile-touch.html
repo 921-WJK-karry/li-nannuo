@@ -235,6 +235,20 @@
     font-size:12.5px;color:var(--LNN_muted);margin-top:10px;text-align:center;
   }
 
+  /* ── 实拍演示视频 ── */
+  .LNN_video-box{
+    background:#fff;border-radius:18px;padding:22px;margin-bottom:22px;
+    border:1px solid var(--LNN_line);box-shadow:0 4px 16px rgba(22,21,40,.05);
+    position:relative;overflow:hidden;
+  }
+  .LNN_video-box::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--LNN_accent),var(--LNN_accent2))}
+  .LNN_video-box h2{font-size:17px;margin-bottom:4px;color:var(--LNN_ink)}
+  .LNN_video-box p{font-size:13px;color:var(--LNN_muted);margin-bottom:12px}
+  .LNN_video-box video{
+    width:100%;border-radius:14px;display:block;background:#000;
+    box-shadow:0 8px 22px rgba(22,21,40,.16);
+  }
+
   /* ── 评分表 / 页脚 ── */
   .LNN_score th:last-child,.LNN_score td:last-child{width:44%}
   footer{
@@ -494,6 +508,14 @@
       <p><b>accelerationIncludingGravity 与 acceleration 的区别：</b>前者含重力（静止时约 9.8 m/s²），后者已剔除重力（静止时接近 0）。
       摇一摇用前者更稳，因为很多设备的重力剔除不准；如果做「倾斜方向」这类判断则要用后者。</p>
     </div>
+  </section>
+
+  <!-- ══════════ 任务四实拍演示视频 ══════════ -->
+  <section class="LNN_video-box">
+    <h2>🎥 任务四 · 真机演示视频</h2>
+    <p>手机实拍摇一摇与倾斜视差效果（点播放观看；视频文件为 media/test.mp4，与页面同源加载）。</p>
+    <!-- controls 显示播放控件；playsinline 防止 iPhone 自动全屏；preload=metadata 先只加载元数据 -->
+    <video src="media/test.mp4" controls playsinline preload="metadata"></video>
   </section>
 
   <!-- ══════════ 评分对照 ══════════ -->
