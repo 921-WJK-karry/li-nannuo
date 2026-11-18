@@ -316,3 +316,11 @@ delay: 3200
 ## 2026-11-18 | 模型：GLM-5.3-Flash
 
 任务二：在项目中新建移动端页面 mobile-gesture.html（4 道菜、changedTouches[0] 算位移阈值 40px、边界提示、touch-action:pan-y、0.3s 过渡 + 300ms 冷却、LNN_ 前缀、文件头姓名学号）。任务二不能进行左右切换、也没有四道菜，重新修改任务二，插入的图片要清楚、全屏
+
+## 2026-11-18 | 模型：GLM-5.3-Flash
+
+删除mobile-gesture.html
+
+## 2026-11-18 | 模型：GLM-5.3-Flash
+
+不要修改我上节课11月13号做的poems.html
