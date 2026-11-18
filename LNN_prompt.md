@@ -300,3 +300,19 @@ delay: 3200
 ## 2026-11-13 | 模型：DeepSeek-V4.1-Flash
 
 放在课堂目录里面
+
+## 2026-11-18 | 模型：DeepSeek-V4.1-Flash
+
+`https://spontaneous-valkyrie-4e4229.netlify.app/mobile-events-lesson`根据网页里面7课堂任务实践.四递进的四个任务进行一个新的HTML新建，新的html要有四个任务的效果，完全参照网页里面的要求和评分进行
+
+## 2026-11-18 | 模型：DeepSeek-V4.1-Flash
+
+帮我把图片风格统一，全归为一类，美食类
+
+## 2026-11-18 | 模型：GLM-5.3-Flash
+
+修改任务2：手势卡片把图片换成美食；任务三图片查看器换美食图且要能在手机上测试；任务四摇一摇和倾斜视差两个都要做
+
+## 2026-11-18 | 模型：GLM-5.3-Flash
+
+任务二：在项目中新建移动端页面 mobile-gesture.html（4 道菜、changedTouches[0] 算位移阈值 40px、边界提示、touch-action:pan-y、0.3s 过渡 + 300ms 冷却、LNN_ 前缀、文件头姓名学号）。任务二不能进行左右切换、也没有四道菜，重新修改任务二，插入的图片要清楚、全屏

@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<!-- 作者：李南诺 | 建立时间：2026-11-18 | 使用大模型：DeepSeek-V4.1-Flash | 功能名称：移动端触摸交互四关实践（事件探针 / 手势卡片 / 图片查看器 / 摇一摇+倾斜视差） -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- 手机页面必备三件套之一：不写 viewport 整页会被缩小 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端触摸交互 · 四关课堂实践</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  :root{
+    --LNN_bg:#f5f6fb;
+    --LNN_ink:#161528;
+    --LNN_muted:#6b7280;
+    --LNN_line:#e5e7f0;
+    --LNN_accent:#6d28d9;
+    --LNN_accent2:#0ea5e9;
+    --LNN_warn:#f59e0b;
+    --LNN_ok:#16a34a;
+    --LNN_dark:#151022;
+  }
+
+  body{
+    font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+    background:var(--LNN_bg);color:var(--LNN_ink);
+    line-height:1.7;overflow-x:hidden;
+  }
+
+  .LNN_wrap{max-width:1000px;margin:0 auto;padding:28px 16px 64px}
+
+  /* ── 页头 ── */
+  .LNN_head{
+    background:linear-gradient(135deg,#1b1035,#3b1d6e 60%,#4c1d95);
+    border-radius:20px;padding:30px 28px;color:#fff;
+    box-shadow:0 14px 32px rgba(59,29,110,.28);
+  }
+  .LNN_head .LNN_badge{
+    display:inline-block;font-size:12px;letter-spacing:2px;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
+    border-radius:999px;padding:5px 14px;margin-bottom:14px;
+  }
+  .LNN_head h1{font-size:27px;line-height:1.4;letter-spacing:1px}
+  .LNN_head h1 b{color:#ffd166}
+  .LNN_head p{margin-top:10px;font-size:14px;color:#d8d1ee;line-height:1.9}
+  .LNN_chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .LNN_chips i{
+    font-style:normal;font-size:12.5px;padding:6px 12px;border-radius:8px;
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.26);
+  }
+
+  /* ── 三件套提示 ── */
+  .LNN_tip{
+    background:#fffbea;border:1px solid #fde68a;border-radius:14px;
+    padding:14px 18px;margin:16px 0 22px;font-size:13.5px;color:#7c5e10;line-height:1.95;
+  }
+  .LNN_tip b{color:#b45309}
+  .LNN_tip code{background:#fef3c7;color:#92400e;padding:1px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+
+  /* ── 任务区块 ── */
+  .LNN_sec{
+    background:#fff;border-radius:18px;padding:24px 22px;margin-bottom:22px;
+    border:1px solid var(--LNN_line);box-shadow:0 4px 16px rgba(22,21,40,.05);
+    position:relative;overflow:hidden;
+  }
+  .LNN_sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--LNN_accent),var(--LNN_accent2))}
+  .LNN_sec-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .LNN_sec-head .LNN_no{
+    flex:none;width:40px;height:40px;border-radius:12px;color:#fff;font-weight:bold;font-size:17px;
+    background:linear-gradient(135deg,var(--LNN_accent),var(--LNN_accent2));
+    display:flex;align-items:center;justify-content:center;
+  }
+  .LNN_sec-head h2{font-size:19px;color:var(--LNN_ink)}
+  .LNN_sec-head small{display:block;font-weight:normal;font-size:12.5px;color:var(--LNN_muted);margin-top:2px}
+  .LNN_sec > p{font-size:14px;color:#374151;margin-bottom:10px}
+  .LNN_sec code{background:#eef2ff;color:#4338ca;padding:1px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+
+  /* 要求卡 */
+  .LNN_req{background:#f0fdf4;border:1.5px dashed #16a34a;border-radius:12px;padding:13px 16px;margin:12px 0}
+  .LNN_req h3{font-size:13.5px;color:#15803d;margin-bottom:6px}
+  .LNN_req p{font-size:13px;color:#166534;line-height:1.95}
+  .LNN_req li{font-size:13px;color:#166534;line-height:1.95;margin-left:18px}
+
+  /* 验收 / 作答说明 */
+  .LNN_ans{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid var(--LNN_accent);border-radius:10px;padding:12px 16px;margin:12px 0}
+  .LNN_ans h4{font-size:13.5px;color:#4c1d95;margin-bottom:6px}
+  .LNN_ans p,.LNN_ans li{font-size:13px;color:#374151;line-height:1.95}
+  .LNN_ans li{margin-left:18px}
+  .LNN_ans b{color:#4c1d95}
+
+  /* 表格 */
+  .LNN_table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+  .LNN_table th,.LNN_table td{border:1px solid var(--LNN_line);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.8}
+  .LNN_table th{background:#f3f0ff;color:#4c1d95;font-weight:bold;white-space:nowrap}
+  .LNN_table td:first-child{white-space:nowrap;color:#374151}
+  .LNN_table tbody tr:nth-child(even){background:#fbfbfe}
+
+  /* ── 通用按钮 ── */
+  .LNN_btn{
+    font-family:inherit;font-size:13px;padding:9px 16px;border-radius:999px;cursor:pointer;
+    border:1.5px solid var(--LNN_line);background:#fff;color:var(--LNN_ink);
+    transition:transform .15s,border-color .15s,color .15s;
+  }
+  .LNN_btn:hover{border-color:var(--LNN_accent);color:var(--LNN_accent);transform:translateY(-1px)}
+  .LNN_btn:active{transform:scale(.97)}
+  .LNN_btn.LNN_primary{background:linear-gradient(135deg,var(--LNN_accent),var(--LNN_accent2));color:#fff;border-color:transparent}
+
+  /* ── 任务一：事件探针 ── */
+  .LNN_probe{
+    height:170px;border-radius:14px;background:var(--LNN_dark);color:#c9c4e6;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    font-size:14px;cursor:pointer;position:relative;overflow:hidden;
+    touch-action:none;              /* 这一块的手势归我，浏览器别滚 */
+    user-select:none;-webkit-touch-callout:none;
+  }
+  .LNN_probe .LNN_probe-dot{
+    position:absolute;width:26px;height:26px;border-radius:50%;
+    background:rgba(124,58,237,.85);border:2px solid #fff;
+    transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .15s;
+  }
+  .LNN_probe .LNN_probe-dot.LNN_on{opacity:1}
+  .LNN_probe em{font-style:normal;font-size:12px;color:#8b84b8}
+  .LNN_counters{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+  .LNN_counters span{
+    font-size:12.5px;padding:5px 11px;border-radius:8px;background:#f3f0ff;
+    color:#4c1d95;border:1px solid #ddd6fe;
+  }
+  .LNN_log{
+    list-style:none;margin-top:10px;font-family:Consolas,monospace;font-size:12.5px;
+    background:#0f0d1c;border-radius:12px;padding:10px 14px;min-height:104px;color:#a5b4fc;
+  }
+  .LNN_log li{padding:2px 0;line-height:1.7}
+  .LNN_log li b{color:#fbbf24;font-weight:normal}
+  .LNN_log .LNN_empty{color:#4c4a63}
+
+  /* ── 任务二：美食卡片 ── */
+  .LNN_swipe{
+    position:relative;border-radius:16px;overflow:hidden;
+    touch-action:pan-y;            /* 只接管横向，纵向交给浏览器 */
+    user-select:none;
+    box-shadow:0 10px 26px rgba(22,21,40,.14);
+  }
+  .LNN_track{display:flex;transition:transform .3s ease;will-change:transform}
+  .LNN_food{
+    flex:0 0 100%;height:340px;position:relative;overflow:hidden;
+  }
+  /* 全屏美食图：铺满整张卡片，object-fit:cover 保证清晰不变形 */
+  .LNN_food img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    pointer-events:none;
+  }
+  .LNN_food .LNN_food-body{
+    position:absolute;left:0;right:0;bottom:0;padding:56px 20px 16px;color:#fff;
+    background:linear-gradient(transparent,rgba(10,8,20,.86));
+  }
+  .LNN_food h3{font-size:22px;letter-spacing:2px;color:#fff}
+  .LNN_food p{font-size:13px;color:#dbe6f8;line-height:1.8}
+  .LNN_food-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+  .LNN_food-footer .LNN_counter{font-size:13px;color:var(--LNN_muted)}
+  .LNN_food-hint{
+    font-size:12.5px;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;
+    border-radius:8px;padding:4px 10px;opacity:0;transition:opacity .2s;
+  }
+  .LNN_food-hint.LNN_show{opacity:1}
+  .LNN_arrows{display:flex;gap:8px}
+
+  /* ── 任务三：图片查看器 ── */
+  .LNN_viewer{
+    position:relative;width:100%;height:330px;border-radius:16px;overflow:hidden;
+    background:#0b0916;touch-action:none;user-select:none;-webkit-touch-callout:none;
+    box-shadow:0 10px 26px rgba(22,21,40,.18);
+  }
+  .LNN_viewer img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transform-origin:0 0;will-change:transform;
+  }
+  .LNN_viewer .LNN_scale-tag{
+    position:absolute;left:12px;top:12px;font-size:12px;color:#fff;
+    background:rgba(0,0,0,.5);border-radius:8px;padding:3px 9px;pointer-events:none;
+  }
+  .LNN_viewer .LNN_viewer-tip{
+    position:absolute;right:12px;bottom:12px;font-size:11.5px;color:#e5e7eb;
+    background:rgba(0,0,0,.45);border-radius:8px;padding:3px 9px;pointer-events:none;
+  }
+  .LNN_tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+
+  /* ── 任务四：摇一摇 ── */
+  .LNN_shake-box{
+    background:linear-gradient(135deg,#1b1035,#2d1b52);border-radius:16px;
+    padding:26px 20px;text-align:center;color:#fff;
+  }
+  .LNN_shake-box .LNN_phone{font-size:44px;line-height:1;transition:transform .3s}
+  .LNN_shake-box .LNN_phone.LNN_shaking{animation:LNN_shake .5s ease}
+  @keyframes LNN_shake{
+    0%,100%{transform:rotate(0)}
+    20%{transform:rotate(-14deg)}
+    45%{transform:rotate(12deg)}
+    70%{transform:rotate(-8deg)}
+  }
+  .LNN_shake-box h3{font-size:17px;margin:10px 0 4px;letter-spacing:1px}
+  .LNN_shake-box .LNN_sub{font-size:12.5px;color:#bdb4e6}
+  .LNN_result{
+    margin:16px auto 0;max-width:340px;background:rgba(255,255,255,.1);
+    border:1px dashed rgba(255,255,255,.35);border-radius:12px;padding:14px 18px;
+    font-size:20px;letter-spacing:2px;color:#ffd166;min-height:60px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .LNN_result.LNN_pop{animation:LNN_pop .45s ease}
+  @keyframes LNN_pop{
+    0%{transform:scale(.7);opacity:0}
+    60%{transform:scale(1.08);opacity:1}
+    100%{transform:scale(1)}
+  }
+  .LNN_meter{margin-top:12px;font-family:Consolas,monospace;font-size:12px;color:#a5b4fc}
+  .LNN_sensor-state{font-size:12.5px;color:#c4b5fd;margin-top:8px;min-height:20px}
+  .LNN_sensor-state.LNN_bad{color:#fca5a5}
+
+  /* ── 任务四 B：倾斜视差 ── */
+  .LNN_tilt-stage{
+    position:relative;height:240px;border-radius:16px;overflow:hidden;
+    background:linear-gradient(180deg,#0ea5e9 0%,#7dd3fc 55%,#fef3c7 55%,#fde68a 100%);
+    touch-action:pan-y;
+  }
+  .LNN_tilt-layer{position:absolute;will-change:transform;transition:transform .12s linear}
+  .LNN_tilt-sun{right:36px;top:26px;font-size:44px}
+  .LNN_tilt-mountain{left:-24px;bottom:78px;font-size:96px;letter-spacing:-14px}
+  .LNN_tilt-city{left:24px;bottom:88px;font-size:52px;letter-spacing:6px}
+  .LNN_tilt-boat{left:50%;bottom:96px;margin-left:-22px;font-size:44px}
+  .LNN_tilt-wave{left:0;right:0;bottom:0;height:86px;background:linear-gradient(180deg,transparent,#38bdf8 30%,#0284c7)}
+  .LNN_tilt-meter{
+    position:absolute;left:12px;top:12px;font-size:12px;font-family:Consolas,monospace;
+    color:#0c4a6e;background:rgba(255,255,255,.72);border-radius:8px;padding:3px 9px;
+  }
+  .LNN_tilt-label{
+    font-size:12.5px;color:var(--LNN_muted);margin-top:10px;text-align:center;
+  }
+
+  /* ── 评分表 / 页脚 ── */
+  .LNN_score th:last-child,.LNN_score td:last-child{width:44%}
+  footer{
+    text-align:center;margin-top:26px;font-size:12.5px;color:var(--LNN_muted);line-height:2;
+  }
+  footer a{color:var(--LNN_accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  .LNN_qa{background:#fff7ed;border:1px solid #fdba74;border-radius:12px;padding:10px 16px;margin:10px 0}
+  .LNN_qa summary{list-style:none;cursor:pointer;font-size:13.5px;font-weight:bold;color:#9a3412;display:flex;gap:8px;align-items:center}
+  .LNN_qa summary::-webkit-details-marker{display:none}
+  .LNN_qa summary::before{content:"▶";font-size:10px;color:#ea580c;transition:transform .2s}
+  .LNN_qa[open] summary::before{transform:rotate(90deg)}
+  .LNN_qa[open] summary{margin-bottom:6px;padding-bottom:6px;border-bottom:1px dashed #fdba74}
+  .LNN_qa p{font-size:13px;color:#7c2d12;line-height:1.95}
+
+  @media (max-width:560px){
+    .LNN_head{padding:24px 20px}
+    .LNN_head h1{font-size:22px}
+    .LNN_sec{padding:20px 16px}
+    .LNN_food{height:300px}
+    .LNN_viewer{height:260px}
+    /* 窄屏下表格允许换行，否则 nowrap 会把整页撑宽导致右侧被裁 */
+    .LNN_table{font-size:12.5px}
+    .LNN_table th,.LNN_table td{white-space:normal;word-break:break-word;padding:7px 8px}
+    .LNN_food-footer{flex-wrap:wrap}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .LNN_track{transition:none}
+    .LNN_viewer img{transition:none!important}
+    .LNN_phone.LNN_shaking{animation:none}
+    .LNN_result.LNN_pop{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="LNN_wrap">
+
+  <header class="LNN_head">
+    <span class="LNN_badge">高 级 网 页 设 计 · 移 动 端 · 学号 24002120324 李南诺</span>
+    <h1>按下 · 滑动 · 缩放 —— <b>四关课堂实践</b></h1>
+    <p>四个任务（观察 → 实现 → 综合 → 拓展）全部集成在本页，逐关往下做即可。</p>
+    <div class="LNN_chips">
+      <i>⭐ 任务一 · 事件侦探</i><i>⭐⭐ 任务二 · 手势卡片</i>
+      <i>⭐⭐⭐ 任务三 · 图片查看器</i><i>⭐⭐⭐⭐ 任务四 · 摇一摇＋倾斜视差</i>
+    </div>
+  </header>
+
+  <div class="LNN_tip">
+    <b>⚠️ 手机页面必备三件套（本页已全部落实）：</b><br>
+    ① <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> 已写在 head 里；<br>
+    ② <code>-webkit-tap-highlight-color:transparent</code> 已加在全局选择器上，点按不再出现灰块；<br>
+    ③ 要接管手势的容器（探针区 <code>#LNN_probe</code>、查看器 <code>#LNN_viewer</code>）加 <code>touch-action:none</code>，
+    美食卡片只接管横向，用 <code>touch-action:pan-y</code> 保留纵向滚动。<br>
+    📱 触摸演示请用手机打开，或在电脑浏览器按 F12 → 切换到设备模式（Toggle device toolbar）后用鼠标模拟手指。<br>
+    <b>🔌 手机真机测试方法：</b>手机与电脑连同一个 Wi-Fi → 在电脑上查本机 IP（<code>ipconfig</code> 看 IPv4 地址，如 <code>192.168.1.8</code>）→ 手机浏览器访问
+    <code>http://192.168.1.8:8334/mobile-touch.html</code>（预览服务器默认监听所有网卡，手机可直接连）。摇一摇和倾斜视差必须在真机上才能测。
+  </div>
+
+  <!-- ══════════ 任务一 ══════════ -->
+  <section class="LNN_sec">
+    <div class="LNN_sec-head">
+      <span class="LNN_no">1</span>
+      <h2>事件侦探：一次拖动到底发生了什么<small>⭐⭐ 维度：观察 · 记录 · 不写代码</small></h2>
+    </div>
+    <p>在下面的黑色探针区依次做 5 种操作，事件会按<b>真实顺序</b>记录。观察清楚后把结论填进下面的记录表。</p>
+
+    <div class="LNN_probe" id="LNN_probe">
+      <span class="LNN_probe-dot" id="LNN_probe_dot"></span>
+      <div>用手指在这里按下、拖动、抬起</div>
+      <em id="LNN_probe_state">等待你的第一次触摸……</em>
+    </div>
+
+    <div class="LNN_counters">
+      <span>touchstart <b id="LNN_c_start">0</b></span>
+      <span>touchmove <b id="LNN_c_move">0</b></span>
+      <span>touchend <b id="LNN_c_end">0</b></span>
+      <span>click <b id="LNN_c_click">0</b></span>
+      <span>touchcancel <b id="LNN_c_cancel">0</b></span>
+    </div>
+
+    <ul class="LNN_log" id="LNN_log">
+      <li class="LNN_empty">（观察下方日志）</li>
+    </ul>
+
+    <div class="LNN_tools">
+      <button class="LNN_btn" type="button" id="LNN_log_clear">清空日志与计数</button>
+    </div>
+
+    <div class="LNN_req">
+      <h3>✍️ 任务一要求</h3>
+      <p>对探针区做 5 种操作并记录事件顺序：① 单击 ② 向上拖动 ③ 向左快速滑 ④ 双指触摸 ⑤ 长按后抬起。</p>
+    </div>
+
+    <table class="LNN_table">
+      <thead>
+        <tr><th>操作</th><th>实际观察到的事件顺序</th><th>要点</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>① 单击</td><td>touchstart → touchend → click</td><td>没有 move；click 是系统在 touchend 之后补发的</td></tr>
+        <tr><td>② 向上拖动</td><td>touchstart → touchmove × N → touchend → click</td><td>N 与拖动距离、手指速度成正比，60fps 下 1 秒约 60 次</td></tr>
+        <tr><td>③ 向左快速滑</td><td>touchstart → touchmove × 少量 → touchend → click</td><td>滑得越快，move 次数越少但每次位移更大</td></tr>
+        <tr><td>④ 双指触摸</td><td>touchstart（touches.length = 2）→ touchend</td><td>用 touches.length 判断几根手指</td></tr>
+        <tr><td>⑤ 长按后抬起</td><td>touchstart →（无 move）→ touchend → click</td><td>长按本身不产生事件，要靠 setTimeout 自己判断</td></tr>
+      </tbody>
+    </table>
+
+    <div class="LNN_ans">
+      <h4>✅ 验收三问（必须能讲清）</h4>
+      <p><b>① 一次拖动里 touchmove 大约触发多少次？和距离有什么关系？</b><br>
+      和「距离 ÷ 手指速度 × 屏幕刷新率」成正比：60Hz 屏幕上拖动 1 秒约 55~60 次，拖得越远、越慢，次数越多。所以绝不能在 touchmove 里做重活，否则掉帧就不"跟手"了。</p>
+      <p><b>② click 出现在 touchend 之前还是之后？</b><br>
+      之后。顺序固定为 touchstart → touchmove… → touchend → click，系统要等这次触摸"确认不是双击"才补发 click。</p>
+      <p><b>③ 如果把 touchend 换成 touchcancel 会怎样？</b><br>
+      来电、通知横幅、系统手势返回时会触发 touchcancel 而不是 touchend。只写 touchend 的话，这类打断后状态（拖动中标记、长按定时器、起点坐标）永远清不掉，页面就"卡住"了；所以 touchcancel 里必须做和 touchend 一样的清理。</p>
+    </div>
+  </section>
+
+  <!-- ══════════ 任务二 ══════════ -->
+  <section class="LNN_sec">
+    <div class="LNN_sec-head">
+      <span class="LNN_no">2</span>
+      <h2>手势卡片：左右滑动切换内容<small>⭐⭐⭐ 维度：手势识别 · DOM 操作</small></h2>
+    </div>
+    <p>一张「中华美食卡片」共 4 道菜，整屏铺满。左右<b>拖动</b>切换上一道 / 下一道（跟手感，电脑上按住鼠标拖也可以），滑到两端会给出提示。
+    独立作业版见 <a href="mobile-gesture.html" style="color:#4c1d95;font-weight:bold">mobile-gesture.html →</a></p>
+
+    <div class="LNN_swipe" id="LNN_swipe">
+      <div class="LNN_track" id="LNN_track"></div>
+    </div>
+
+    <div class="LNN_food-footer">
+      <span class="LNN_counter" id="LNN_food_counter">第 1 / 4 张</span>
+      <span class="LNN_food-hint" id="LNN_food_hint"></span>
+      <span class="LNN_arrows">
+        <button class="LNN_btn" type="button" id="LNN_food_prev">← 上一道</button>
+        <button class="LNN_btn" type="button" id="LNN_food_next">下一道 →</button>
+      </span>
+    </div>
+
+    <div class="LNN_req">
+      <h3>✍️ 任务二要求（逐条对照）</h3>
+      <ul>
+        <li>① 4 道菜，含真实美食图片、菜名、简介，底部显示「第 N/4 张」；</li>
+        <li>② 监听 touchstart / touchend，用 <code>changedTouches[0]</code> 算横向位移，阈值 <b>40px</b>；</li>
+        <li>③ 左滑下一张、右滑上一张，边界提示「已经是第一张 / 最后一张」；</li>
+        <li>④ 卡片容器加 <code>touch-action:pan-y</code>，纵向还能滚动页面；</li>
+        <li>⑤ 切换 0.3s 过渡动画，加 <b>300ms 冷却</b>防止快速连滑一次跳两张；</li>
+        <li>⑥ 类名 / id / 变量统一 <code>LNN_</code> 前缀，文件头写明姓名学号。</li>
+      </ul>
+    </div>
+
+    <div class="LNN_ans">
+      <h4>✅ 验收点怎么保证的</h4>
+      <p>① <b>短距离误触不切换</b>：位移绝对值小于 40px 直接 return，手指按下去的几个像素抖动不算滑动；<br>
+      ② <b>快速连滑不跳两张</b>：每次切换记录时间戳，300ms 内的第二次滑动被丢弃；<br>
+      ③ <b>拖动时页面不跟着滚</b>：容器写 <code>touch-action:pan-y</code>，横向手势由我处理，纵向仍归浏览器。</p>
+    </div>
+  </section>
+
+  <!-- ══════════ 任务三 ══════════ -->
+  <section class="LNN_sec">
+    <div class="LNN_sec-head">
+      <span class="LNN_no">3</span>
+      <h2>图片查看器：双指缩放 + 双击放大 + 拖动<small>⭐⭐⭐⭐ 维度：多指手势 · 变换 · 状态管理</small></h2>
+    </div>
+    <p>双指缩放（1x～4x）、双击在 1x / 2x 之间切换、放大后单指拖动看细节，缩回 1x 自动居中。</p>
+
+    <div class="LNN_viewer" id="LNN_viewer">
+      <img src="db/img/food-3.jpg" alt="香橙鸡块" id="LNN_zoom_img">
+      <span class="LNN_scale-tag" id="LNN_scale_tag">1.00×</span>
+      <span class="LNN_viewer-tip">双指缩放请用手机打开</span>
+    </div>
+
+    <div class="LNN_tools">
+      <button class="LNN_btn" type="button" id="LNN_zoom_reset">重置为 1×</button>
+      <span style="font-size:12.5px;color:var(--LNN_muted)">电脑上可用鼠标拖动、双击、滚轮缩放</span>
+    </div>
+
+    <div class="LNN_req">
+      <h3>✍️ 任务三要求（逐条对照）</h3>
+      <ul>
+        <li>① 大图放容器里，容器 <code>overflow:hidden</code> + <code>touch-action:none</code> + <code>user-select:none</code>；</li>
+        <li>② touchstart 记录单指 / 双指状态与两指初始距离；</li>
+        <li>③ touchmove 双指按距离比例缩放（1～4 倍），以两指中点为缩放基准；</li>
+        <li>④ 单指且 scale&gt;1 时拖动，松手后限制在边界内；</li>
+        <li>⑤ 双击在 1x 与 2x 之间切换，带 0.25s 过渡；</li>
+        <li>⑥ 打开页面提示「双指缩放请用手机打开」，注释写清，变量 <code>LNN_</code> 前缀。</li>
+      </ul>
+    </div>
+
+    <div class="LNN_ans">
+      <h4>✅ 我是如何保证「缩放不跳」的（答辩用）</h4>
+      <p>缩放不跳的关键是<b>锚点法</b>：双指按下时，先算出两指中点落在图片内容上的坐标
+      <code>anchor = (中点 - 当前位移) / 当前缩放</code>；之后每一帧都用「新缩放比例」反推
+      <code>位移 = 当前中点 - anchor × 新缩放</code>。<br>
+      这样无论手指怎么移动、缩放多少，那个内容点始终被钉在两指中点下方，视觉上就是「跟着手指放大」，不会跳。
+      另外：① <code>touchstart</code> 时把上一轮的 <code>LNN_lastDist</code> 清零，避免第一帧拿残留数据比对；
+      ② 拖动 / 缩放过程中关闭 transition，松手才开 0.25s，否则会有拖尾；
+      ③ 旋转屏幕或尺寸变化后重新执行一次边界钳制，状态（缩放与位移）保留。</p>
+    </div>
+  </section>
+
+  <!-- ══════════ 任务四 ══════════ -->
+  <section class="LNN_sec">
+    <div class="LNN_sec-head">
+      <span class="LNN_no">4</span>
+      <h2>传感器双方案：摇一摇 + 倾斜视差<small>⭐⭐⭐⭐⭐ 维度：设备传感器 · 权限 · 降级（A / B 两个都做）</small></h2>
+    </div>
+    <p>A 方案「摇一摇」抽今日菜谱 + B 方案「倾斜视差」手机左右倾斜时图层错位移动，两个都实现。</p>
+
+    <!-- ── A 方案：摇一摇 ── -->
+    <h4 style="font-size:14.5px;color:#4c1d95;margin:6px 0 8px">🅰️ 方案 A · 摇一摇抽菜谱（devicemotion）</h4>
+    <div class="LNN_shake-box">
+      <div class="LNN_phone" id="LNN_phone">📱</div>
+      <h3>摇一摇手机，抽今日菜谱</h3>
+      <div class="LNN_sub">阈值 18 · 冷却 1.5 秒</div>
+      <div class="LNN_result" id="LNN_result">—</div>
+      <div class="LNN_meter" id="LNN_meter">合成加速度：—</div>
+      <div class="LNN_sensor-state" id="LNN_sensor_state"></div>
+    </div>
+
+    <!-- ── B 方案：倾斜视差 ── -->
+    <h4 style="font-size:14.5px;color:#4c1d95;margin:20px 0 8px">🅱️ 方案 B · 倾斜视差（deviceorientation）</h4>
+    <div class="LNN_tilt-stage" id="LNN_tilt_stage">
+      <span class="LNN_tilt-layer LNN_tilt-sun" data-LNN-k="-0.6">☀️</span>
+      <span class="LNN_tilt-layer LNN_tilt-mountain" data-LNN-k="0.9">⛰️⛰️</span>
+      <span class="LNN_tilt-layer LNN_tilt-city" data-LNN-k="-1.6">🏠🏢</span>
+      <span class="LNN_tilt-layer LNN_tilt-boat" data-LNN-k="2.2">⛵</span>
+      <div class="LNN_tilt-layer LNN_tilt-wave" data-LNN-k="1.4"></div>
+      <span class="LNN_tilt-meter" id="LNN_tilt_meter">gamma：—</span>
+    </div>
+    <div class="LNN_tilt-label">手机左右倾斜，远处的太阳和山移动少、近处的房子和帆船移动多 —— 这就是视差。电脑上移动鼠标可模拟倾斜。</div>
+    <div class="LNN_sensor-state" id="LNN_tilt_state"></div>
+
+    <div class="LNN_tools">
+      <button class="LNN_btn LNN_primary" type="button" id="LNN_perm_btn" style="display:none">开启传感器权限（iOS）</button>
+      <button class="LNN_btn" type="button" id="LNN_pick_btn">点我抽一次（降级方案）</button>
+    </div>
+
+    <div class="LNN_req">
+      <h3>✍️ 任务四要求（A / B 都做，逐条对照）</h3>
+      <ul>
+        <li><b>A 摇一摇</b>：① 提示「摇一摇手机，抽今日菜谱」，下方显示结果；② 监听 <code>devicemotion</code>，取 <code>accelerationIncludingGravity</code> 计算合成加速度；③ 超过阈值（约 18）判定为摇动，触发后进入 <b>1.5 秒冷却</b>；④ 随机抽一道菜显示，带弹出动画；⑤ 不支持 / 无数据时提示「当前设备不支持」并提供降级按钮。</li>
+        <li><b>B 倾斜视差</b>：① 监听 <code>deviceorientation</code>，取 <code>gamma</code>（左右倾斜角）；② 多个图层按不同系数移动产生视差（近大远小 → 近快远慢）；③ 与摇一摇共用 iOS 权限按钮（两个权限一起申请）；④ 电脑端用鼠标位置模拟倾斜，任何设备都能演示。</li>
+        <li><b>共同</b>：变量 <code>LNN_</code> 前缀，写明姓名学号，附「为什么必须做降级」与两个加速度字段区别的说明。</li>
+      </ul>
+    </div>
+
+    <div class="LNN_ans">
+      <h4>✅ 为什么必须做降级（答辩用）</h4>
+      <p>传感器不是所有环境都有：电脑浏览器没有加速度计、部分安卓机浏览器屏蔽该事件、iOS 13+ 还要求用户手势后才允许授权。
+      如果只写摇一摇这一条路，用户在这些环境下会看到「页面毫无反应」，甚至以为坏了。
+      所以我做了三层兜底：① 事件不存在 → 直接提示「当前设备不支持，请用手机打开」；
+      ② 事件存在但 3 秒内收不到数据 → 同样提示，并说明可用按钮；
+      ③ 始终提供「点我抽一次」按钮，用同一套抽签逻辑，保证功能在任何设备上都可演示。</p>
+      <p><b>accelerationIncludingGravity 与 acceleration 的区别：</b>前者含重力（静止时约 9.8 m/s²），后者已剔除重力（静止时接近 0）。
+      摇一摇用前者更稳，因为很多设备的重力剔除不准；如果做「倾斜方向」这类判断则要用后者。</p>
+    </div>
+  </section>
+
+  <!-- ══════════ 评分对照 ══════════ -->
+  <section class="LNN_sec">
+    <div class="LNN_sec-head">
+      <span class="LNN_no">5</span>
+      <h2>评分维度自检<small>对照课堂评分表逐项落实</small></h2>
+    </div>
+    <table class="LNN_table LNN_score">
+      <thead>
+        <tr><th>维度</th><th>分值</th><th>本页对应实现</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>事件理解</td><td>25</td>
+          <td>任务一实时探针：四个事件计数 + 顺序日志；记录表与三问答案写清 touches 三个列表差别、抬手为何用 changedTouches</td>
+        </tr>
+        <tr>
+          <td>手势实现</td><td>30</td>
+          <td>任务二阈值 40px + 方向判断 + 300ms 冷却 + 边界提示；任务三锚点缩放、边界钳制、双击切换、旋转屏幕后状态保留</td>
+        </tr>
+        <tr>
+          <td>移动端体验</td><td>20</td>
+          <td>跟手的 0.3s / 0.25s 过渡、<code>touch-action</code> 分区控制、响应式断点、横竖屏变化后重新钳制</td>
+        </tr>
+        <tr>
+          <td>降级与排错</td><td>15</td>
+          <td>A 摇一摇 + B 倾斜视差双方案，各三层兜底（无事件 / 无数据 / 按钮或鼠标降级）、iOS 双权限一键申请、全程无控制台报错</td>
+        </tr>
+        <tr>
+          <td>规范与记录</td><td>10</td>
+          <td>全体 <code>LNN_</code> 前缀、文件头姓名学号、每个函数一行注释、提示词记录见 <code>LNN_prompt.md</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-size:14px;color:#4c1d95;margin:16px 0 4px">🎤 现场答辩速答（点击展开）</h4>
+
+    <details class="LNN_qa">
+      <summary>① 为什么 touchend 里要用 changedTouches[0]？</summary>
+      <p>因为 touchend 触发时那根手指已经从 touches 里移除了，touches[0] 可能拿到别的手指，甚至 undefined；changedTouches 专门记录"本次事件里发生变化的手指"，抬手时就是刚抬起的那根。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>② 滑动阈值设为多少？设成 5px 会怎样？</summary>
+      <p>本页用 40px。设成 5px 会把手指按下的抖动、点击时的轻微位移都误判成滑动，出现"点一下就翻页"的问题；阈值太大又会显得迟钝，经验区间 30~50px。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>③ 双指缩放时怎么保证图片不"跳"？</summary>
+      <p>锚点法：按下时把两指中点换算成图片内容坐标，之后每帧用"当前中点 − 锚点 × 新缩放"反推位移，内容点始终钉在中点下；同时 touchstart 清空上一轮距离、拖动中关闭 transition。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>④ 页面加了 touch-action:none 之后发生了什么变化？</summary>
+      <p>该容器内的所有手势不再交给浏览器，页面不会跟着滚动或缩放，touchmove 的坐标连续、不被打断，手势完全由我的 JS 接管；代价是这块区域的滚动也被禁用，所以只加在真正需要接管的容器上。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>⑤ 手机上没有传感器数据时，代码怎么走？</summary>
+      <p>摇一摇和倾斜视差各走同一套路：先判断事件是否存在，不存在直接提示"当前设备不支持"；存在但 3 秒内没收到数据，同样提示；摇一摇保留"点我抽一次"按钮、倾斜视差启用鼠标模拟，保证任何设备都能演示且不报错不白屏。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>⑥ 倾斜视差为什么用 gamma？图层怎么产生"远近"感？</summary>
+      <p>deviceorientation 的 beta / gamma / alpha 分别是前后俯仰、左右侧倾、罗盘朝向；左右倾斜看 gamma（±90°）。给每个图层一个位移系数 data-LNN-k：太阳（远）只有 0.6、帆船（近）有 2.2，同一倾斜角下近处位移大、远处位移小，大脑就把它们解读成了景深 —— 这就是视差。gamma 还要夹在 ±30° 内，防止歪得太狠时图层飞出画面。</p>
+    </details>
+    <details class="LNN_qa">
+      <summary>⑦ devicemotion 和 deviceorientation 有什么区别？</summary>
+      <p>devicemotion 报"加速度 + 旋转速率"，回答"设备正在怎么动"，适合摇一摇、计步；deviceorientation 报"设备当前姿态角"，回答"设备摆成什么姿势"，适合水平仪、视差。所以摇一摇用 motion、倾斜视差用 orientation，各取所长；iOS 上两者都要单独申请权限。</p>
+    </details>
+  </section>
+
+  <footer>
+    高级网页设计 · 移动端事件课堂实践 · 24002120324 李南诺<br>
+    <a href="index.html">← 返回课堂实践中心</a>
+  </footer>
+
+</div>
+
+<script>
+  /* ══════════════════ 任务一：事件探针 ══════════════════ */
+  var LNN_probe = document.getElementById('LNN_probe');
+  var LNN_logBox = document.getElementById('LNN_log');
+  var LNN_probeDot = document.getElementById('LNN_probe_dot');
+  var LNN_probeState = document.getElementById('LNN_probe_state');
+  var LNN_c = { start: 0, move: 0, end: 0, click: 0, cancel: 0 };
+  var LNN_startX = 0, LNN_startY = 0, LNN_moveTimes = 0;
+
+  // 往日志区顶部插一条记录，最多保留 6 条
+  function LNN_addLog(LNN_text) {
+    var LNN_empty = LNN_logBox.querySelector('.LNN_empty');
+    if (LNN_empty) LNN_empty.remove();
+    var LNN_li = document.createElement('li');
+    LNN_li.innerHTML = LNN_text;
+    LNN_logBox.insertBefore(LNN_li, LNN_logBox.firstChild);
+    while (LNN_logBox.children.length > 6) {
+      LNN_logBox.removeChild(LNN_logBox.lastChild);
+    }
+  }
+
+  // 刷新四个事件的计数显示
+  function LNN_paintCount() {
+    document.getElementById('LNN_c_start').textContent = LNN_c.start;
+    document.getElementById('LNN_c_move').textContent = LNN_c.move;
+    document.getElementById('LNN_c_end').textContent = LNN_c.end;
+    document.getElementById('LNN_c_click').textContent = LNN_c.click;
+    document.getElementById('LNN_c_cancel').textContent = LNN_c.cancel;
+  }
+
+  // 把触点坐标换算成探针区内的相对位置，并移动小圆点
+  function LNN_moveDot(LNN_touch) {
+    var LNN_rect = LNN_probe.getBoundingClientRect();
+    LNN_probeDot.style.left = (LNN_touch.clientX - LNN_rect.left) + 'px';
+    LNN_probeDot.style.top = (LNN_touch.clientY - LNN_rect.top) + 'px';
+    LNN_probeDot.classList.add('LNN_on');
+  }
+
+  // 手指按下：记起点、开始计数
+  LNN_probe.addEventListener('touchstart', function (e) {
+    LNN_c.start++;
+    LNN_moveTimes = 0;
+    LNN_startX = e.touches[0].clientX;
+    LNN_startY = e.touches[0].clientY;
+    LNN_moveDot(e.touches[0]);
+    LNN_probeState.textContent = '按下中… 手指 ' + e.touches.length + ' 根';
+    LNN_addLog('touchstart · 手指 <b>' + e.touches.length + '</b> 根 · (' + Math.round(LNN_startX) + ', ' + Math.round(LNN_startY) + ')');
+    LNN_paintCount();
+  }, { passive: true });
+
+  // 手指移动：只累计次数，不逐条刷日志（否则日志会被刷屏）
+  LNN_probe.addEventListener('touchmove', function (e) {
+    LNN_c.move++;
+    LNN_moveTimes++;
+    LNN_moveDot(e.touches[0]);
+    LNN_probeState.textContent = '移动中… 本次已触发 touchmove ' + LNN_moveTimes + ' 次';
+    LNN_paintCount();
+  }, { passive: true });
+
+  // 手指抬起：算位移、汇总本次 move 次数
+  LNN_probe.addEventListener('touchend', function (e) {
+    LNN_c.end++;
+    var LNN_t = e.changedTouches[0];
+    var LNN_dx = Math.round(LNN_t.clientX - LNN_startX);
+    var LNN_dy = Math.round(LNN_t.clientY - LNN_startY);
+    LNN_probeDot.classList.remove('LNN_on');
+    LNN_probeState.textContent = '已抬起 · 位移 (' + LNN_dx + ', ' + LNN_dy + ')';
+    LNN_addLog('touchend · 位移 <b>(' + LNN_dx + ', ' + LNN_dy + ')</b> · 本次 move <b>' + LNN_moveTimes + '</b> 次');
+    LNN_paintCount();
+  }, { passive: true });
+
+  // 被系统打断（来电 / 通知横幅）：也要清状态，否则会「卡住」
+  LNN_probe.addEventListener('touchcancel', function () {
+    LNN_c.cancel++;
+    LNN_probeDot.classList.remove('LNN_on');
+    LNN_probeState.textContent = '手势被系统打断（touchcancel）';
+    LNN_addLog('touchcancel · 手势被打断，已清理状态');
+    LNN_paintCount();
+  }, { passive: true });
+
+  // 系统补发的 click：观察它在 touchend 之后
+  LNN_probe.addEventListener('click', function () {
+    LNN_c.click++;
+    LNN_addLog('click · 系统补发（在 touchend 之后）');
+    LNN_paintCount();
+  });
+
+  // 清空日志与全部计数
+  document.getElementById('LNN_log_clear').addEventListener('click', function () {
+    LNN_c = { start: 0, move: 0, end: 0, click: 0, cancel: 0 };
+    LNN_moveTimes = 0;
+    LNN_logBox.innerHTML = '<li class="LNN_empty">（观察下方日志）</li>';
+    LNN_probeState.textContent = '等待你的第一次触摸……';
+    LNN_probeDot.classList.remove('LNN_on');
+    LNN_paintCount();
+  });
+
+  /* ══════════════════ 任务二：美食手势卡片 ══════════════════ */
+  var LNN_foods = [
+    { name: '北京烤鸭', img: 'db/img/food-1.jpg', desc: '果木挂炉烤制，皮酥肉嫩，片成薄片裹荷叶饼，配甜面酱与葱丝。' },
+    { name: '虾仁蛋炒饭', img: 'db/img/food-2.jpg', desc: '粒粒分明的炒饭配火腿胡萝卜豌豆，锅气十足的家常主食。' },
+    { name: '香橙鸡块', img: 'db/img/food-3.jpg', desc: '酸甜橙汁裹上炸鸡块，配一片鲜橙解腻，小朋友的最爱。' },
+    { name: '菌菇蛋花汤', img: 'db/img/food-4.jpg', desc: '清汤汆蛋花，撒一把葱花，饭前喝一碗暖胃又开胃。' }
+  ];
+  var LNN_foodIndex = 0;
+  var LNN_foodLock = 0;          // 300ms 冷却时间戳（毫秒）
+  var LNN_swipe = document.getElementById('LNN_swipe');
+  var LNN_track = document.getElementById('LNN_track');
+  var LNN_foodCounter = document.getElementById('LNN_food_counter');
+  var LNN_foodHint = document.getElementById('LNN_food_hint');
+  var LNN_startX = 0, LNN_startY = 0, LNN_baseX = 0, LNN_dragging = false;
+
+  // 生成 4 张全屏美食卡片（只执行一次）
+  function LNN_buildFoods() {
+    LNN_foods.forEach(function (LNN_item) {
+      var LNN_card = document.createElement('div');
+      LNN_card.className = 'LNN_food';
+      LNN_card.innerHTML =
+        '<img src="' + LNN_item.img + '" alt="' + LNN_item.name + '">' +
+        '<div class="LNN_food-body">' +
+          '<h3>' + LNN_item.name + '</h3>' +
+          '<p>' + LNN_item.desc + '</p>' +
+        '</div>';
+      LNN_track.appendChild(LNN_card);
+    });
+  }
+
+  // 演示台宽度（拖动与吸附都按 px 计算）
+  function LNN_swipeWidth() {
+    return LNN_swipe.clientWidth;
+  }
+
+  // 应用轨道位移：拖动中关过渡跟手，松手开 0.3s 过渡
+  function LNN_applyTrack(LNN_px, LNN_animate) {
+    LNN_track.style.transition = LNN_animate ? 'transform .3s ease' : 'none';
+    LNN_track.style.transform = 'translateX(' + LNN_px + 'px)';
+  }
+
+  // 跳到第 N 张：同步「第 N/4 张」计数，动画吸附
+  function LNN_moveToFood(LNN_index) {
+    LNN_foodIndex = LNN_index;
+    LNN_applyTrack(-LNN_index * LNN_swipeWidth(), true);
+    LNN_foodCounter.textContent = '第 ' + (LNN_index + 1) + ' / ' + LNN_foods.length + ' 张';
+  }
+
+  // 短暂显示提示文字（边界提示用）
+  function LNN_showFoodHint(LNN_text) {
+    LNN_foodHint.textContent = LNN_text;
+    LNN_foodHint.classList.add('LNN_show');
+    clearTimeout(LNN_showFoodHint.LNN_timer);
+    LNN_showFoodHint.LNN_timer = setTimeout(function () {
+      LNN_foodHint.classList.remove('LNN_show');
+    }, 1200);
+  }
+
+  // 按方向切换一张：带 300ms 冷却与边界判断
+  function LNN_swipeFood(LNN_dir) {
+    var LNN_now = Date.now();
+    if (LNN_now - LNN_foodLock < 300) return;   // 冷却中，丢弃这次快速连滑
+    var LNN_next = LNN_foodIndex + LNN_dir;
+    if (LNN_next < 0) { LNN_showFoodHint('已经是第一张了'); LNN_moveToFood(LNN_foodIndex); return; }
+    if (LNN_next > LNN_foods.length - 1) { LNN_showFoodHint('已经是最后一张了'); LNN_moveToFood(LNN_foodIndex); return; }
+    LNN_foodLock = LNN_now;
+    LNN_moveToFood(LNN_next);
+  }
+
+  // 按下：记起点 XY，关掉过渡准备跟手
+  function LNN_press(LNN_x, LNN_y) {
+    LNN_dragging = true;
+    LNN_startX = LNN_x;
+    LNN_startY = LNN_y;
+    LNN_baseX = -LNN_foodIndex * LNN_swipeWidth();
+    LNN_applyTrack(LNN_baseX, false);
+  }
+
+  // 跟手移动：边界处乘 0.35 阻尼；纵向意图（|dy|>|dx|）时不动轨道
+  function LNN_follow(LNN_x, LNN_y) {
+    if (!LNN_dragging) return;
+    var LNN_dx = LNN_x - LNN_startX;
+    var LNN_dy = LNN_y - LNN_startY;
+    if (Math.abs(LNN_dx) < Math.abs(LNN_dy)) return;
+    var LNN_atStart = LNN_foodIndex === 0 && LNN_dx > 0;
+    var LNN_atEnd = LNN_foodIndex === LNN_foods.length - 1 && LNN_dx < 0;
+    if (LNN_atStart || LNN_atEnd) LNN_dx *= 0.35;
+    LNN_applyTrack(LNN_baseX + LNN_dx, false);
+  }
+
+  // 松手：位移不足 40px 回弹原位，否则按方向切换
+  function LNN_release(LNN_x) {
+    if (!LNN_dragging) return;
+    LNN_dragging = false;
+    var LNN_dx = LNN_x - LNN_startX;
+    if (Math.abs(LNN_dx) < 40) {                // 阈值：不算滑动，避免误触
+      LNN_moveToFood(LNN_foodIndex);
+      return;
+    }
+    LNN_swipeFood(LNN_dx < 0 ? 1 : -1);         // 左滑下一张，右滑上一张
+  }
+
+  // ── 触摸事件 ──
+  LNN_swipe.addEventListener('touchstart', function (e) {
+    LNN_press(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  LNN_swipe.addEventListener('touchmove', function (e) {
+    LNN_follow(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  LNN_swipe.addEventListener('touchend', function (e) {
+    LNN_release(e.changedTouches[0].clientX);   // 抬起的手指在 changedTouches 里
+  }, { passive: true });
+
+  // 被系统打断：回弹原位，防止卡在半路
+  LNN_swipe.addEventListener('touchcancel', function () {
+    LNN_dragging = false;
+    LNN_moveToFood(LNN_foodIndex);
+  }, { passive: true });
+
+  // ── 电脑端鼠标拖动（与触摸共用同一套状态机，没有手机也能测）──
+  LNN_swipe.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    LNN_press(e.clientX, e.clientY);
+  });
+  window.addEventListener('mousemove', function (e) {
+    LNN_follow(e.clientX, e.clientY);
+  });
+  window.addEventListener('mouseup', function (e) {
+    LNN_release(e.clientX);
+  });
+
+  // 桌面端的左右按钮，走同一套切换逻辑
+  document.getElementById('LNN_food_prev').addEventListener('click', function () { LNN_swipeFood(-1); });
+  document.getElementById('LNN_food_next').addEventListener('click', function () { LNN_swipeFood(1); });
+
+  // 尺寸变化（旋转屏幕等）：按新宽度重新吸附到当前张
+  window.addEventListener('resize', function () {
+    LNN_moveToFood(LNN_foodIndex);
+  });
+
+  /* ══════════════════ 任务三：图片查看器 ══════════════════ */
+  var LNN_viewer = document.getElementById('LNN_viewer');
+  var LNN_zoomImg = document.getElementById('LNN_zoom_img');
+  var LNN_scaleTag = document.getElementById('LNN_scale_tag');
+  var LNN_scale = 1, LNN_tx = 0, LNN_ty = 0;
+  var LNN_mode = '';                 // 'pinch' | 'drag' | ''
+  var LNN_pinchStartDist = 0, LNN_pinchStartScale = 1;
+  var LNN_anchorX = 0, LNN_anchorY = 0;
+  var LNN_dragStartX = 0, LNN_dragStartY = 0, LNN_dragStartTx = 0, LNN_dragStartTy = 0;
+  var LNN_tapTime = 0, LNN_tapX = 0, LNN_tapY = 0, LNN_lastTap = 0;
+
+  // 应用变换：拖动/缩放中关掉过渡才跟手，松手时再打开
+  function LNN_applyTransform(LNN_animate) {
+    LNN_zoomImg.style.transition = LNN_animate ? 'transform .25s ease' : 'none';
+    LNN_zoomImg.style.transform =
+      'translate(' + LNN_tx + 'px,' + LNN_ty + 'px) scale(' + LNN_scale + ')';
+    LNN_scaleTag.textContent = LNN_scale.toFixed(2) + '×';
+  }
+
+  // 边界钳制：缩放后内容不能拖出容器；1x 时位移强制归零
+  function LNN_clampPan() {
+    var LNN_w = LNN_viewer.clientWidth;
+    var LNN_h = LNN_viewer.clientHeight;
+    if (LNN_scale <= 1.001) {
+      LNN_tx = 0; LNN_ty = 0;
+      return;
+    }
+    var LNN_minX = LNN_w - LNN_w * LNN_scale;
+    var LNN_minY = LNN_h - LNN_h * LNN_scale;
+    LNN_tx = Math.max(LNN_minX, Math.min(0, LNN_tx));
+    LNN_ty = Math.max(LNN_minY, Math.min(0, LNN_ty));
+  }
+
+  // 两指之间的直线距离（勾股定理）
+  function LNN_dist(LNN_a, LNN_b) {
+    return Math.hypot(LNN_b.clientX - LNN_a.clientX, LNN_b.clientY - LNN_a.clientY);
+  }
+
+  // 两指中点，换算成相对容器左上角的坐标
+  function LNN_mid(LNN_a, LNN_b) {
+    var LNN_rect = LNN_viewer.getBoundingClientRect();
+    return {
+      x: (LNN_a.clientX + LNN_b.clientX) / 2 - LNN_rect.left,
+      y: (LNN_a.clientY + LNN_b.clientY) / 2 - LNN_rect.top
+    };
+  }
+
+  // 单指按下：记拖动起点与点击起点，并清空上一轮双指残留数据
+  function LNN_zoomStart(e) {
+    if (e.touches.length >= 2) {
+      LNN_mode = 'pinch';
+      LNN_pinchStartDist = LNN_dist(e.touches[0], e.touches[1]);
+      LNN_pinchStartScale = LNN_scale;
+      var LNN_m = LNN_mid(e.touches[0], e.touches[1]);
+      // 锚点：两指中点此刻落在图片内容上的坐标（这就是"不跳"的核心）
+      LNN_anchorX = (LNN_m.x - LNN_tx) / LNN_scale;
+      LNN_anchorY = (LNN_m.y - LNN_ty) / LNN_scale;
+    } else {
+      LNN_mode = 'drag';
+      LNN_dragStartX = e.touches[0].clientX;
+      LNN_dragStartY = e.touches[0].clientY;
+      LNN_dragStartTx = LNN_tx;
+      LNN_dragStartTy = LNN_ty;
+      LNN_tapTime = Date.now();
+      LNN_tapX = e.touches[0].clientX;
+      LNN_tapY = e.touches[0].clientY;
+    }
+  }
+
+  // 移动：双指算缩放比例（锚点法），单指且已放大时平移
+  function LNN_zoomMove(e) {
+    if (LNN_mode === 'pinch' && e.touches.length >= 2) {
+      if (e.cancelable) e.preventDefault();          // 阻止整页跟着缩放
+      var LNN_ratio = LNN_dist(e.touches[0], e.touches[1]) / LNN_pinchStartDist;
+      LNN_scale = Math.min(4, Math.max(1, LNN_pinchStartScale * LNN_ratio));
+      var LNN_m = LNN_mid(e.touches[0], e.touches[1]);
+      LNN_tx = LNN_m.x - LNN_anchorX * LNN_scale;
+      LNN_ty = LNN_m.y - LNN_anchorY * LNN_scale;
+      LNN_clampPan();
+      LNN_applyTransform(false);
+    } else if (LNN_mode === 'drag' && e.touches.length === 1 && LNN_scale > 1.001) {
+      if (e.cancelable) e.preventDefault();
+      LNN_tx = LNN_dragStartTx + (e.touches[0].clientX - LNN_dragStartX);
+      LNN_ty = LNN_dragStartTy + (e.touches[0].clientY - LNN_dragStartY);
+      LNN_clampPan();
+      LNN_applyTransform(false);
+    }
+  }
+
+  // 抬手：判断是双击还是普通点击，收尾时做边界钳制
+  function LNN_zoomEnd(e) {
+    if (LNN_mode === 'pinch') {
+      if (e.touches.length < 2) {
+        LNN_mode = '';
+        if (LNN_scale < 1.05) LNN_resetZoom(true);   // 缩得比 1 还小就回弹到 1x
+        else { LNN_clampPan(); LNN_applyTransform(true); }
+      }
+      return;
+    }
+    if (e.touches.length === 0) {
+      LNN_mode = '';
+      var LNN_moved = Math.hypot(LNN_tapX - (e.changedTouches[0].clientX), LNN_tapY - (e.changedTouches[0].clientY));
+      var LNN_isTap = (Date.now() - LNN_tapTime) < 250 && LNN_moved < 10;
+      if (LNN_isTap) {
+        var LNN_now = Date.now();
+        if (LNN_now - LNN_lastTap < 300) {          // 300ms 内第二下 = 双击
+          LNN_toggleZoom(LNN_tapX, LNN_tapY);
+          LNN_lastTap = 0;
+        } else {
+          LNN_lastTap = LNN_now;
+        }
+      }
+      LNN_clampPan();
+      LNN_applyTransform(true);
+    }
+  }
+
+  // 双击切换：1x ↔ 2x，并在点击位置放大
+  function LNN_toggleZoom(LNN_clientX, LNN_clientY) {
+    if (LNN_scale > 1.05) {
+      LNN_resetZoom(true);
+      return;
+    }
+    var LNN_rect = LNN_viewer.getBoundingClientRect();
+    var LNN_px = LNN_clientX - LNN_rect.left;
+    var LNN_py = LNN_clientY - LNN_rect.top;
+    var LNN_target = 2;
+    LNN_scale = LNN_target;
+    LNN_tx = LNN_px - LNN_px * LNN_target;          // 以点击点为中心放大
+    LNN_ty = LNN_py - LNN_py * LNN_target;
+    LNN_clampPan();
+    LNN_applyTransform(true);
+  }
+
+  // 回到 1x 并居中
+  function LNN_resetZoom(LNN_animate) {
+    LNN_scale = 1;
+    LNN_tx = 0;
+    LNN_ty = 0;
+    LNN_applyTransform(LNN_animate);
+  }
+
+  LNN_viewer.addEventListener('touchstart', LNN_zoomStart, { passive: true });
+  LNN_viewer.addEventListener('touchmove', LNN_zoomMove, { passive: false });
+  LNN_viewer.addEventListener('touchend', LNN_zoomEnd, { passive: true });
+  LNN_viewer.addEventListener('touchcancel', function () { LNN_mode = ''; LNN_applyTransform(true); }, { passive: true });
+
+  // 桌面端：鼠标拖动 / 双击，走与触摸一致的状态机
+  LNN_viewer.addEventListener('mousedown', function (e) {
+    LNN_mode = 'drag';
+    LNN_dragStartX = e.clientX; LNN_dragStartY = e.clientY;
+    LNN_dragStartTx = LNN_tx; LNN_dragStartTy = LNN_ty;
+  });
+  window.addEventListener('mousemove', function (e) {
+    if (LNN_mode !== 'drag' || LNN_scale <= 1.001) return;
+    LNN_tx = LNN_dragStartTx + (e.clientX - LNN_dragStartX);
+    LNN_ty = LNN_dragStartTy + (e.clientY - LNN_dragStartY);
+    LNN_clampPan();
+    LNN_applyTransform(false);
+  });
+  window.addEventListener('mouseup', function () {
+    if (LNN_mode !== 'drag') return;
+    LNN_mode = '';
+    LNN_clampPan();
+    LNN_applyTransform(true);
+  });
+  LNN_viewer.addEventListener('dblclick', function (e) { LNN_toggleZoom(e.clientX, e.clientY); });
+
+  // 滚轮缩放（锚定鼠标位置），方便电脑上验证
+  LNN_viewer.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    var LNN_rect = LNN_viewer.getBoundingClientRect();
+    var LNN_px = e.clientX - LNN_rect.left;
+    var LNN_py = e.clientY - LNN_rect.top;
+    var LNN_anchorX0 = (LNN_px - LNN_tx) / LNN_scale;
+    var LNN_anchorY0 = (LNN_py - LNN_ty) / LNN_scale;
+    var LNN_step = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    LNN_scale = Math.min(4, Math.max(1, LNN_scale * LNN_step));
+    LNN_tx = LNN_px - LNN_anchorX0 * LNN_scale;
+    LNN_ty = LNN_py - LNN_anchorY0 * LNN_scale;
+    LNN_clampPan();
+    LNN_applyTransform(false);
+  }, { passive: false });
+
+  document.getElementById('LNN_zoom_reset').addEventListener('click', function () { LNN_resetZoom(true); });
+
+  // 横竖屏切换 / 尺寸变化：状态保留，但要用新尺寸重新钳制边界
+  window.addEventListener('resize', function () {
+    LNN_clampPan();
+    LNN_applyTransform(false);
+  });
+
+  /* ══════════════════ 任务四：A 摇一摇 + B 倾斜视差 ══════════════════ */
+  var LNN_dishes = ['北京烤鸭', '虾仁蛋炒饭', '香橙鸡块', '菌菇蛋花汤', '西湖醋鱼', '东坡肉', '重庆小面', '生煎包'];
+  var LNN_resultBox = document.getElementById('LNN_result');
+  var LNN_meter = document.getElementById('LNN_meter');
+  var LNN_sensorState = document.getElementById('LNN_sensor_state');
+  var LNN_phone = document.getElementById('LNN_phone');
+  var LNN_tiltStage = document.getElementById('LNN_tilt_stage');
+  var LNN_tiltMeter = document.getElementById('LNN_tilt_meter');
+  var LNN_tiltState = document.getElementById('LNN_tilt_state');
+  var LNN_lastShake = 0;
+  var LNN_gotMotion = false;
+  var LNN_gotOrientation = false;
+  var LNN_motionTimer = null;
+  var LNN_tiltTimer = null;
+  var LNN_tiltRaf = 0;
+
+  // 抽一道菜并播放弹出动画
+  function LNN_pickDish() {
+    var LNN_pick = LNN_dishes[Math.floor(Math.random() * LNN_dishes.length)];
+    LNN_resultBox.textContent = LNN_pick;
+    LNN_resultBox.classList.remove('LNN_pop');
+    void LNN_resultBox.offsetWidth;            // 强制重排，让动画可以重复播放
+    LNN_resultBox.classList.add('LNN_pop');
+    LNN_phone.classList.remove('LNN_shaking');
+    void LNN_phone.offsetWidth;
+    LNN_phone.classList.add('LNN_shaking');
+  }
+
+  // A 区状态提示（支持 / 不支持共用一处）
+  function LNN_sensorTip(LNN_text, LNN_isBad) {
+    LNN_sensorState.textContent = LNN_text;
+    LNN_sensorState.classList.toggle('LNN_bad', !!LNN_isBad);
+  }
+
+  // B 区状态提示
+  function LNN_tiltTip(LNN_text, LNN_isBad) {
+    LNN_tiltState.textContent = LNN_text;
+    LNN_tiltState.classList.toggle('LNN_bad', !!LNN_isBad);
+  }
+
+  // 按 gamma 角驱动所有视差图层：每层带 data-LNN-k 系数，近处系数大、远处系数小
+  function LNN_applyTilt(LNN_gamma) {
+    var LNN_layers = LNN_tiltStage.querySelectorAll('.LNN_tilt-layer');
+    for (var LNN_i = 0; LNN_i < LNN_layers.length; LNN_i++) {
+      var LNN_k = parseFloat(LNN_layers[LNN_i].getAttribute('data-LNN-k'));
+      LNN_layers[LNN_i].style.transform = 'translateX(' + (LNN_gamma * LNN_k) + 'px)';
+    }
+    LNN_tiltMeter.textContent = 'gamma：' + LNN_gamma.toFixed(1) + '°';
+  }
+
+  // B：处理 deviceorientation，gamma 夹在 ±30° 内防推到边缘时位移过大
+  function LNN_onOrientation(e) {
+    if (e.gamma === null || e.gamma === undefined) return;
+    LNN_gotOrientation = true;
+    var LNN_gamma = Math.max(-30, Math.min(30, e.gamma));
+    cancelAnimationFrame(LNN_tiltRaf);
+    LNN_tiltRaf = requestAnimationFrame(function () { LNN_applyTilt(LNN_gamma); });
+  }
+
+  // A：处理 devicemotion，合成加速度超过 18 且过了冷却才抽签
+  function LNN_onMotion(e) {
+    var LNN_a = e.accelerationIncludingGravity;   // 含重力的三轴加速度
+    if (!LNN_a || LNN_a.x === null) return;
+    LNN_gotMotion = true;
+    var LNN_mag = Math.sqrt(LNN_a.x * LNN_a.x + LNN_a.y * LNN_a.y + LNN_a.z * LNN_a.z);
+    LNN_meter.textContent = '合成加速度：' + LNN_mag.toFixed(1) + '（阈值 18）';
+    if (LNN_mag > 18) {
+      var LNN_now = Date.now();
+      if (LNN_now - LNN_lastShake > 1500) {       // 1.5 秒冷却，一次摇动只触发一次
+        LNN_lastShake = LNN_now;
+        LNN_pickDish();
+      }
+    }
+  }
+
+  // A：事件存在但一直没数据（桌面浏览器常见）→ 3 秒后提示降级
+  function LNN_watchNoData() {
+    clearTimeout(LNN_motionTimer);
+    LNN_motionTimer = setTimeout(function () {
+      if (!LNN_gotMotion) {
+        LNN_sensorTip('未收到传感器数据（电脑浏览器常见），请用手机打开，或点下方按钮抽一次。', true);
+      }
+    }, 3000);
+  }
+
+  // B：同上，3 秒没数据就提示 + 启用鼠标模拟倾斜
+  function LNN_watchNoOrientation() {
+    clearTimeout(LNN_tiltTimer);
+    LNN_tiltTimer = setTimeout(function () {
+      if (!LNN_gotOrientation) {
+        LNN_tiltTip('未收到方向传感器数据，电脑上移动鼠标到画面里可模拟倾斜。', true);
+        LNN_bindTiltMouse();
+      }
+    }, 3000);
+  }
+
+  // B：电脑端降级——鼠标在画面里的横向位置映射成 -30°～30° 倾斜角
+  function LNN_bindTiltMouse() {
+    LNN_tiltStage.addEventListener('mousemove', function (e) {
+      if (LNN_gotOrientation) return;            // 真机有数据时鼠标降级自动失效
+      var LNN_rect = LNN_tiltStage.getBoundingClientRect();
+      var LNN_ratio = (e.clientX - LNN_rect.left) / LNN_rect.width;   // 0 ~ 1
+      LNN_applyTilt((LNN_ratio - 0.5) * 60);     // 映射到 -30 ~ 30
+    });
+  }
+
+  // iOS 13+ 两个权限一起申请（必须在用户手势里调用）；都拿到后挂两个监听
+  function LNN_requestIOSPermission(LNN_permBtn) {
+    LNN_permBtn.style.display = 'inline-block';
+    LNN_sensorTip('检测到 iOS 设备：请先点「开启传感器权限」（摇一摇 + 倾斜一起授权）。');
+    LNN_tiltTip('与摇一摇共用上面的授权按钮。');
+    LNN_permBtn.addEventListener('click', function () {
+      var LNN_motionP = window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function'
+        ? DeviceMotionEvent.requestPermission() : Promise.resolve('granted');
+      var LNN_oriP = window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function'
+        ? DeviceOrientationEvent.requestPermission() : Promise.resolve('granted');
+      Promise.all([LNN_motionP, LNN_oriP]).then(function (LNN_states) {
+        if (LNN_states[0] === 'granted') {
+          window.addEventListener('devicemotion', LNN_onMotion);
+          LNN_sensorTip('权限已开启，摇一摇手机试试。');
+          LNN_watchNoData();
+        } else {
+          LNN_sensorTip('未授权动作传感器，请使用「点我抽一次」按钮。', true);
+        }
+        if (LNN_states[1] === 'granted') {
+          window.addEventListener('deviceorientation', LNN_onOrientation);
+          LNN_tiltTip('权限已开启，左右倾斜手机看视差效果。');
+          LNN_watchNoOrientation();
+        } else {
+          LNN_tiltTip('未授权方向传感器，电脑上可用鼠标模拟。', true);
+          LNN_bindTiltMouse();
+        }
+      }).catch(function () {
+        LNN_sensorTip('权限申请失败，请使用「点我抽一次」按钮。', true);
+        LNN_tiltTip('权限申请失败，电脑上可用鼠标模拟。', true);
+      });
+    });
+  }
+
+  // 两个传感器各做三层兜底：无事件 / 无数据 / 降级方案
+  function LNN_initSensor() {
+    var LNN_isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var LNN_needPerm = LNN_isIOS &&
+      ((window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function') ||
+       (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function'));
+
+    if (LNN_needPerm) {
+      LNN_requestIOSPermission(document.getElementById('LNN_perm_btn'));
+      return;
+    }
+
+    // A 摇一摇：devicemotion
+    if (!window.DeviceMotionEvent) {
+      LNN_sensorTip('当前设备不支持（没有 devicemotion 事件），请用手机打开，或点下方按钮抽一次。', true);
+    } else {
+      window.addEventListener('devicemotion', LNN_onMotion);
+      LNN_watchNoData();
+    }
+
+    // B 倾斜视差：deviceorientation
+    if (!window.DeviceOrientationEvent) {
+      LNN_tiltTip('当前设备不支持（没有 deviceorientation 事件），电脑上移动鼠标可模拟倾斜。', true);
+      LNN_bindTiltMouse();
+    } else {
+      window.addEventListener('deviceorientation', LNN_onOrientation);
+      LNN_watchNoOrientation();
+    }
+  }
+
+  document.getElementById('LNN_pick_btn').addEventListener('click', LNN_pickDish);
+
+  /* ══════════════════ 初始化 ══════════════════ */
+  LNN_buildFoods();
+  LNN_moveToFood(0);
+  LNN_applyTransform(false);
+  LNN_applyTilt(0);
+  LNN_initSensor();
+</script>
+</body>
+</html>

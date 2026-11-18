@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!-- 作者：李南诺 | 学号：24002120324 | 建立时间：2026-11-18 | 使用大模型：GLM-5.3-Flash | 功能名称：移动端手势卡片 · 左右滑动切换中华美食 -->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- 手机页面必备三件套之一：不写 viewport 整页会被缩小 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>移动端手势卡片 · 左右滑动切换美食</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+  :root{
+    --LNN_bg:#f5f6fb;
+    --LNN_ink:#161528;
+    --LNN_muted:#6b7280;
+    --LNN_line:#e5e7f0;
+    --LNN_accent:#e11d48;
+    --LNN_dark:#1b1035;
+  }
+
+  body{
+    font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+    background:var(--LNN_bg);color:var(--LNN_ink);line-height:1.7;overflow-x:hidden;
+  }
+
+  .LNN_wrap{max-width:860px;margin:0 auto;padding:26px 16px 60px}
+
+  /* ── 页头 ── */
+  .LNN_head{
+    background:linear-gradient(135deg,#4c0519,#9f1239 70%,#e11d48);
+    border-radius:20px;padding:26px 24px;color:#fff;
+    box-shadow:0 12px 28px rgba(159,18,57,.3);
+  }
+  .LNN_head .LNN_badge{
+    display:inline-block;font-size:12px;letter-spacing:2px;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);
+    border-radius:999px;padding:5px 14px;margin-bottom:12px;
+  }
+  .LNN_head h1{font-size:24px;letter-spacing:1px;line-height:1.45}
+  .LNN_head h1 b{color:#fde68a}
+  .LNN_head p{margin-top:8px;font-size:13.5px;color:#fde2e8;line-height:1.9}
+
+  .LNN_tip{
+    background:#fffbea;border:1px solid #fde68a;border-radius:14px;
+    padding:13px 16px;margin:16px 0 20px;font-size:13.5px;color:#7c5e10;line-height:1.95;
+  }
+  .LNN_tip b{color:#b45309}
+  .LNN_tip code{background:#fef3c7;color:#92400e;padding:1px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+
+  /* ── 手势卡片演示台 ── */
+  .LNN_stage{margin:14px 0 6px}
+  .LNN_swipe{
+    position:relative;border-radius:18px;overflow:hidden;
+    touch-action:pan-y;              /* 只接管横向手势，纵向滚动交给浏览器 */
+    user-select:none;-webkit-touch-callout:none;
+    box-shadow:0 12px 30px rgba(22,21,40,.2);
+    cursor:grab;
+  }
+  .LNN_swipe:active{cursor:grabbing}
+  .LNN_track{display:flex;will-change:transform}
+  .LNN_card{
+    flex:0 0 100%;position:relative;height:64vh;max-height:520px;min-height:340px;overflow:hidden;
+  }
+  /* 全屏美食图：铺满整张卡片，object-fit:cover 保证清晰不变形 */
+  .LNN_card img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    pointer-events:none;             /* 让手势都落在容器上，图片不抢事件 */
+  }
+  .LNN_card .LNN_mask{
+    position:absolute;left:0;right:0;bottom:0;padding:64px 22px 20px;color:#fff;
+    background:linear-gradient(transparent,rgba(10,8,20,.86));
+  }
+  .LNN_card .LNN_tag{
+    display:inline-block;font-size:12px;letter-spacing:1px;color:#fde68a;
+    border:1px solid rgba(253,230,138,.5);border-radius:999px;padding:2px 10px;margin-bottom:6px;
+  }
+  .LNN_card h3{font-size:24px;letter-spacing:2px}
+  .LNN_card p{font-size:13.5px;color:#e2d9f3;margin-top:4px;line-height:1.85;max-width:92%}
+  .LNN_card .LNN_idx{
+    position:absolute;right:16px;top:14px;font-size:12px;font-family:Consolas,monospace;
+    color:#fff;background:rgba(0,0,0,.45);border-radius:8px;padding:3px 9px;
+  }
+
+  /* ── 底部信息行 ── */
+  .LNN_footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .LNN_counter{font-size:14px;color:var(--LNN_muted);font-weight:bold}
+  .LNN_counter b{color:var(--LNN_accent)}
+  .LNN_hint{
+    font-size:13px;color:#b45309;background:#fff7ed;border:1px solid #fed7aa;
+    border-radius:999px;padding:5px 14px;opacity:0;transition:opacity .25s;
+  }
+  .LNN_hint.LNN_show{opacity:1}
+  .LNN_arrows{display:flex;gap:8px}
+  .LNN_btn{
+    font-family:inherit;font-size:13.5px;padding:9px 18px;border-radius:999px;cursor:pointer;
+    border:1.5px solid var(--LNN_line);background:#fff;color:var(--LNN_ink);
+    transition:transform .15s,border-color .15s,color .15s;
+  }
+  .LNN_btn:hover{border-color:var(--LNN_accent);color:var(--LNN_accent);transform:translateY(-1px)}
+  .LNN_btn:active{transform:scale(.96)}
+
+  /* ── 要求与验收说明 ── */
+  .LNN_sec{
+    background:#fff;border-radius:16px;padding:20px 20px;margin-top:20px;
+    border:1px solid var(--LNN_line);box-shadow:0 4px 14px rgba(22,21,40,.05);
+    position:relative;overflow:hidden;
+  }
+  .LNN_sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#9f1239,#e11d48)}
+  .LNN_sec h2{font-size:17px;margin-bottom:10px;color:var(--LNN_ink)}
+  .LNN_sec ul{margin-left:20px}
+  .LNN_sec li{font-size:13.5px;color:#374151;line-height:2}
+  .LNN_sec code{background:#fdf2f8;color:#be123c;padding:1px 6px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+  .LNN_ans{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid var(--LNN_accent);border-radius:10px;padding:12px 16px;margin-top:12px}
+  .LNN_ans p{font-size:13px;color:#374151;line-height:1.95}
+  .LNN_ans b{color:#9f1239}
+
+  footer{text-align:center;margin-top:24px;font-size:12.5px;color:var(--LNN_muted);line-height:2}
+  footer a{color:var(--LNN_accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media (max-width:560px){
+    .LNN_head{padding:22px 18px}
+    .LNN_head h1{font-size:20px}
+    .LNN_card{height:56vh;min-height:300px}
+    .LNN_card h3{font-size:20px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .LNN_track{transition:none!important}
+    .LNN_hint{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="LNN_wrap">
+
+  <header class="LNN_head">
+    <span class="LNN_badge">高 级 网 页 设 计 · 学号 24002120324 · 李南诺</span>
+    <h1>手势卡片 · <b>左右滑动切换中华美食</b></h1>
+    <p>4 道菜整屏铺满，按住左右拖动手感跟手；滑到两端会有提示。手机、电脑（鼠标拖动）都能测。</p>
+  </header>
+
+  <div class="LNN_tip">
+    <b>✍️ 操作方式：</b>手机上直接左右滑动卡片；电脑上<b>按住鼠标在卡片上左右拖动</b>也可以（方便没有手机时验证）。
+    容器已加 <code>touch-action:pan-y</code> —— 横向手势归卡片，纵向滚动仍归页面，拖卡片时页面不会跟着跑。
+  </div>
+
+  <div class="LNN_stage">
+    <div class="LNN_swipe" id="LNN_swipe">
+      <div class="LNN_track" id="LNN_track"></div>
+    </div>
+    <div class="LNN_footer">
+      <span class="LNN_counter">第 <b id="LNN_cur">1</b> / <span id="LNN_total">4</span> 张</span>
+      <span class="LNN_hint" id="LNN_hint"></span>
+      <span class="LNN_arrows">
+        <button class="LNN_btn" type="button" id="LNN_prev">← 上一道</button>
+        <button class="LNN_btn" type="button" id="LNN_next">下一道 →</button>
+      </span>
+    </div>
+  </div>
+
+  <section class="LNN_sec">
+    <h2>✍️ 任务要求（逐条对照）</h2>
+    <ul>
+      <li>① 4 道菜（菜名、简介、清晰全屏美食图），底部显示「第 1/4 张」；</li>
+      <li>② 监听 <code>touchstart / touchend</code>，用 <code>changedTouches[0]</code> 计算横向位移，阈值 <b>40px</b>；</li>
+      <li>③ 左滑下一张、右滑上一张，边界提示「已经是第一张 / 最后一张」；</li>
+      <li>④ 卡片容器加 <code>touch-action:pan-y</code>，纵向还能滚动页面；</li>
+      <li>⑤ 切换 0.3s 过渡动画，<b>300ms 冷却</b>防止快速连滑一次跳两张；</li>
+      <li>⑥ 类名 / id / JS 变量一律 <code>LNN_</code> 前缀，文件头写姓名学号。</li>
+    </ul>
+    <div class="LNN_ans">
+      <h4 style="font-size:13.5px;color:#9f1239;margin-bottom:6px">✅ 验收点怎么保证的</h4>
+      <p>① <b>短距离误触不切换</b>：抬手时位移绝对值小于 40px 直接回弹原位，不切换；<br>
+      ② <b>快速连滑不跳两张</b>：每次成功切换记录时间戳，300ms 内的第二次滑动被丢弃；<br>
+      ③ <b>拖动时页面不跟着滚</b>：容器 <code>touch-action:pan-y</code>，横向手势由 JS 接管，纵向归浏览器；<br>
+      ④ <b>跟手感</b>：拖动过程中轨道实时跟手指移动（边界处有阻尼），松手才吸附，不是"抬手才跳页"。</p>
+    </div>
+  </section>
+
+  <footer>
+    高级网页设计 · 移动端手势卡片 · 24002120324 李南诺<br>
+    <a href="index.html">← 返回课堂实践中心</a> ｜ <a href="mobile-touch.html">触摸交互四关实践 →</a>
+  </footer>
+
+</div>
+
+<script>
+  /* ══════════ 数据：4 道菜 ══════════ */
+  var LNN_foods = [
+    { name: '葱爆牛肉面', tag: '西北主食', img: 'db/img/food-1.jpg', desc: '酱香牛肉铺在筋道拉面上，配芦笋解腻，一碗管饱。' },
+    { name: '虾仁蛋炒饭', tag: '家常经典', img: 'db/img/food-2.jpg', desc: '粒粒分明，火腿胡萝卜豌豆配色好看，锅气十足。' },
+    { name: '香橙鸡块',   tag: '酸甜口',   img: 'db/img/food-3.jpg', desc: '酸甜橙汁裹上炸鸡块，一片鲜橙点睛，外酥里嫩。' },
+    { name: '菌菇蛋花汤', tag: '暖心汤品', img: 'db/img/food-4.jpg', desc: '清汤汆蛋花，撒一把葱花，饭前喝一碗暖胃开胃。' }
+  ];
+
+  var LNN_track = document.getElementById('LNN_track');
+  var LNN_swipe = document.getElementById('LNN_swipe');
+  var LNN_cur = document.getElementById('LNN_cur');
+  var LNN_total = document.getElementById('LNN_total');
+  var LNN_hintBox = document.getElementById('LNN_hint');
+  var LNN_index = 0;
+  var LNN_lock = 0;            // 300ms 冷却时间戳
+  var LNN_startX = 0, LNN_startY = 0;
+  var LNN_baseX = 0;           // 拖动开始时轨道的 px 偏移
+  var LNN_dragging = false;
+  LNN_total.textContent = LNN_foods.length;
+
+  // 生成 4 张全屏美食卡片（只执行一次）
+  function LNN_build() {
+    LNN_foods.forEach(function (LNN_item, LNN_i) {
+      var LNN_card = document.createElement('div');
+      LNN_card.className = 'LNN_card';
+      LNN_card.innerHTML =
+        '<img src="' + LNN_item.img + '" alt="' + LNN_item.name + '">' +
+        '<span class="LNN_idx">' + (LNN_i + 1) + ' / ' + LNN_foods.length + '</span>' +
+        '<div class="LNN_mask">' +
+          '<span class="LNN_tag">' + LNN_item.tag + '</span>' +
+          '<h3>' + LNN_item.name + '</h3>' +
+          '<p>' + LNN_item.desc + '</p>' +
+        '</div>';
+      LNN_track.appendChild(LNN_card);
+    });
+  }
+
+  // 容器宽度（拖动与吸附都要按 px 计算）
+  function LNN_width() {
+    return LNN_swipe.clientWidth;
+  }
+
+  // 应用轨道位移：拖动中 animate=false（跟手），松手 animate=true（0.3s 过渡）
+  function LNN_apply(LNN_px, LNN_animate) {
+    LNN_track.style.transition = LNN_animate ? 'transform .3s ease' : 'none';
+    LNN_track.style.transform = 'translateX(' + LNN_px + 'px)';
+  }
+
+  // 跳到第 N 张：同步计数，动画吸附
+  function LNN_goto(LNN_i) {
+    LNN_index = Math.max(0, Math.min(LNN_foods.length - 1, LNN_i));
+    LNN_apply(-LNN_index * LNN_width(), true);
+    LNN_cur.textContent = LNN_index + 1;
+  }
+
+  // 短暂显示提示文字（边界提示用）
+  function LNN_hint(LNN_text) {
+    LNN_hintBox.textContent = LNN_text;
+    LNN_hintBox.classList.add('LNN_show');
+    clearTimeout(LNN_hint.LNN_timer);
+    LNN_hint.LNN_timer = setTimeout(function () {
+      LNN_hintBox.classList.remove('LNN_show');
+    }, 1300);
+  }
+
+  // 按方向切换一张：300ms 冷却 + 边界判断
+  function LNN_snap(LNN_dir) {
+    var LNN_now = Date.now();
+    if (LNN_now - LNN_lock < 300) return;        // 冷却中，丢弃这次快速连滑
+    var LNN_next = LNN_index + LNN_dir;
+    if (LNN_next < 0) { LNN_hint('已经是第一张了'); LNN_goto(LNN_index); return; }
+    if (LNN_next > LNN_foods.length - 1) { LNN_hint('已经是最后一张了'); LNN_goto(LNN_index); return; }
+    LNN_lock = LNN_now;
+    LNN_goto(LNN_next);
+  }
+
+  // 记录按下起点：XY 都要记，用来排除"斜着滑"和纵向滚动
+  function LNN_press(LNN_x, LNN_y) {
+    LNN_dragging = true;
+    LNN_startX = LNN_x;
+    LNN_startY = LNN_y;
+    LNN_baseX = -LNN_index * LNN_width();
+    LNN_apply(LNN_baseX, false);                 // 关掉过渡，准备跟手
+  }
+
+  // 跟手移动：边界处乘 0.35 的阻尼，拖不出"空气"
+  function LNN_follow(LNN_x, LNN_y) {
+    if (!LNN_dragging) return;
+    var LNN_dx = LNN_x - LNN_startX;
+    var LNN_dy = LNN_y - LNN_startY;
+    if (Math.abs(LNN_dx) < Math.abs(LNN_dy)) return;   // 纵向意图时不动轨道
+    var LNN_atStart = LNN_index === 0 && LNN_dx > 0;
+    var LNN_atEnd = LNN_index === LNN_foods.length - 1 && LNN_dx < 0;
+    if (LNN_atStart || LNN_atEnd) LNN_dx *= 0.35;
+    LNN_apply(LNN_baseX + LNN_dx, false);
+  }
+
+  // 松手 / 离开：按总位移决定切换、回弹或边界提示
+  function LNN_release(LNN_x) {
+    if (!LNN_dragging) return;
+    LNN_dragging = false;
+    var LNN_dx = LNN_x - LNN_startX;
+    if (Math.abs(LNN_dx) < 40) {                // 阈值 40px：误触直接回弹
+      LNN_goto(LNN_index);
+      return;
+    }
+    LNN_snap(LNN_dx < 0 ? 1 : -1);               // 左滑下一张，右滑上一张
+  }
+
+  // ── 触摸事件 ──
+  LNN_swipe.addEventListener('touchstart', function (e) {
+    LNN_press(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  LNN_swipe.addEventListener('touchmove', function (e) {
+    LNN_follow(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  LNN_swipe.addEventListener('touchend', function (e) {
+    LNN_release(e.changedTouches[0].clientX);   // 抬手的手指在 changedTouches 里
+  }, { passive: true });
+
+  // 被系统打断（来电 / 通知横幅）：回弹原位，防止卡在半路
+  LNN_swipe.addEventListener('touchcancel', function () {
+    LNN_dragging = false;
+    LNN_goto(LNN_index);
+  }, { passive: true });
+
+  // ── 电脑端鼠标拖动（与触摸共用同一套 press / follow / release 状态机）──
+  LNN_swipe.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    LNN_press(e.clientX, e.clientY);
+  });
+  window.addEventListener('mousemove', function (e) {
+    LNN_follow(e.clientX, e.clientY);
+  });
+  window.addEventListener('mouseup', function (e) {
+    LNN_release(e.clientX);
+  });
+
+  // 左右按钮走同一套切换逻辑
+  document.getElementById('LNN_prev').addEventListener('click', function () { LNN_snap(-1); });
+  document.getElementById('LNN_next').addEventListener('click', function () { LNN_snap(1); });
+
+  // 窗口尺寸变化（旋转屏幕等）：按新宽度重新吸附到当前张
+  window.addEventListener('resize', function () {
+    LNN_goto(LNN_index);
+  });
+
+  /* ══════════ 初始化 ══════════ */
+  LNN_build();
+  LNN_goto(0);
+  // 支持 #N 直达第 N 张（便于课堂演示与验证）
+  var LNN_h = parseInt((location.hash || '').replace('#', ''), 10);
+  if (LNN_h >= 1 && LNN_h <= LNN_foods.length) LNN_goto(LNN_h - 1);
+</script>
+</body>
+</html>
