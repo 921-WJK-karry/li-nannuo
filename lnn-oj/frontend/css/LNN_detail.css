@@ -1,0 +1,140 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：题目详情页样式（页面专属部分，基础样式见 LNN_common.css） */
+
+/* 主体 */
+.LNN_detail_main {
+  padding: 30px 0 56px;
+}
+
+/* 返回链接 */
+.LNN_back_link {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--LNN-text-muted);
+  margin-bottom: 16px;
+  transition: color 0.2s;
+}
+
+.LNN_back_link:hover {
+  color: var(--LNN-accent);
+}
+
+/* 标题区 */
+.LNN_detail_head {
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  padding: 26px 30px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+}
+
+.LNN_detail_title {
+  font-size: 26px;
+  margin-bottom: 14px;
+  color: var(--LNN-text);
+}
+
+.LNN_detail_badges {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.LNN_badge {
+  display: inline-block;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background-color: rgba(34, 184, 162, 0.10);
+  color: #3b5bdb;
+  border: 1px solid rgba(34, 184, 162, 0.25);
+}
+
+.LNN_badge_easy {
+  color: #15803d;
+  background-color: rgba(22, 163, 74, 0.10);
+  border-color: rgba(22, 163, 74, 0.25);
+}
+
+.LNN_badge_medium {
+  color: #b45309;
+  background-color: rgba(217, 119, 6, 0.10);
+  border-color: rgba(217, 119, 6, 0.28);
+}
+
+.LNN_badge_hard {
+  color: #b91c1c;
+  background-color: rgba(185, 28, 28, 0.09);
+  border-color: rgba(185, 28, 28, 0.25);
+}
+
+/* 信息栏 */
+.LNN_detail_meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.LNN_meta_item {
+  background-color: var(--LNN-card);
+  border: 1px solid var(--LNN-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+}
+
+.LNN_meta_label {
+  display: block;
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+  margin-bottom: 4px;
+}
+
+.LNN_meta_value {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--LNN-text);
+}
+
+/* 描述区块 */
+.LNN_desc_section {
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  padding: 24px 28px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+}
+
+.LNN_desc_title {
+  font-size: 17px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(34, 184, 162, 0.14);
+  color: var(--LNN-text);
+}
+
+.LNN_desc_content {
+  font-size: 15px;
+  color: var(--LNN-text-sub);
+  white-space: pre-wrap;
+}
+
+.LNN_submit_placeholder {
+  color: var(--LNN-text-muted);
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .LNN_detail_meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

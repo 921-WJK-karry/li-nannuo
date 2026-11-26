@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-20 | 大模型：GLM-5.3-Flash
+     页面说明：比赛列表页（支持状态筛选） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>比赛列表 - LNN OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_contests.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link LNN_nav_link_active">比赛列表</a>
+        <a href="news.html" class="LNN_nav_link">赛事动态</a>
+        <a href="gallery.html" class="LNN_nav_link">题库图库</a>
+        <a href="database.html" class="LNN_nav_link">数据库</a>
+        <a href="tech_news.html" class="LNN_nav_link">科技新闻</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">比赛列表</h1>
+      <p class="LNN_page_desc">月赛、专题赛、模拟赛定期举办，按状态筛选查看。</p>
+    </div>
+  </section>
+
+  <!-- 状态筛选 -->
+  <section class="LNN_filter_bar">
+    <div class="LNN_container LNN_filter_inner">
+      <button class="LNN_tab LNN_tab_active" data-status="">全部</button>
+      <button class="LNN_tab" data-status="upcoming">未开始</button>
+      <button class="LNN_tab" data-status="ongoing">进行中</button>
+      <button class="LNN_tab" data-status="finished">已结束</button>
+    </div>
+  </section>
+
+  <!-- 比赛列表 -->
+  <section class="LNN_list_section">
+    <div class="LNN_container">
+      <p id="LNN_list_count" class="LNN_list_count">加载中…</p>
+      <div id="LNN_contest_list" class="LNN_contest_list"></div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+  <script src="js/LNN_contests.js"></script>
+</body>
+</html>

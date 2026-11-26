@@ -1,0 +1,99 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：数据库连接测试页样式（页面专属部分，基础样式见 LNN_common.css） */
+
+/* 连接表单卡片 */
+.LNN_connect_section {
+  padding: 8px 0 56px;
+}
+
+.LNN_connect_card {
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  padding: 30px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+}
+
+.LNN_form_group {
+  margin-bottom: 18px;
+}
+
+.LNN_form_label {
+  display: block;
+  font-size: 14px;
+  color: var(--LNN-text-sub);
+  margin-bottom: 8px;
+}
+
+.LNN_form_input {
+  width: 100%;
+  background-color: var(--LNN-card-solid);
+  border: 1px solid rgba(34, 184, 162, 0.22);
+  border-radius: var(--LNN-radius-sm);
+  color: var(--LNN-text);
+  padding: 11px 14px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.LNN_form_input:focus {
+  border-color: var(--LNN-accent);
+  box-shadow: 0 0 0 3px rgba(34, 184, 162, 0.14);
+}
+
+/* 连接按钮 */
+.LNN_connect_btn {
+  width: 100%;
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2));
+  border: none;
+  border-radius: var(--LNN-radius-sm);
+  color: #ffffff;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(34, 184, 162, 0.30);
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+}
+
+.LNN_connect_btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(34, 184, 162, 0.40);
+  filter: brightness(1.05);
+}
+
+.LNN_connect_btn:disabled {
+  background: #c3cbde;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 结果提示框 */
+.LNN_result_box {
+  margin-top: 20px;
+  border-radius: var(--LNN-radius-sm);
+  padding: 14px 18px;
+  font-size: 14px;
+  border: 1px solid;
+}
+
+.LNN_result_hidden {
+  display: none;
+}
+
+.LNN_result_success {
+  color: #15803d;
+  border-color: rgba(22, 163, 74, 0.30);
+  background-color: rgba(22, 163, 74, 0.08);
+}
+
+.LNN_result_error {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.28);
+  background-color: rgba(185, 28, 28, 0.07);
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-20 | 大模型：GLM-5.3-Flash
+     页面说明：题库图库页（gallery 画廊式图文列表，网格布局） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>题库图库 - LNN OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_gallery.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link">比赛列表</a>
+        <a href="news.html" class="LNN_nav_link">赛事动态</a>
+        <a href="database.html" class="LNN_nav_link">数据库</a>
+        <a href="tech_news.html" class="LNN_nav_link">科技新闻</a>
+        <a href="gallery.html" class="LNN_nav_link LNN_nav_link_active">题库图库</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">题库图库</h1>
+      <p class="LNN_page_desc">以插画形式展示题库涉及的算法主题，图上有题，题下有图。</p>
+    </div>
+  </section>
+
+  <!-- 图库网格 -->
+  <section class="LNN_gallery_section">
+    <div class="LNN_container">
+      <div class="LNN_gallery_grid">
+
+        <!-- 卡片 1 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=two%20glowing%20numbers%20merging%20with%20a%20plus%20sign%2C%20simple%20math%20concept%2C%20flat%20vector%20illustration%2C%20blue%20and%20cyan%20on%20dark%20background&image_size=landscape_4_3"
+                 alt="入门计算插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">入门</span>
+            <h2 class="LNN_gallery_title">A+B Problem</h2>
+            <p class="LNN_gallery_desc">输入两个整数，输出它们的和，适合作为评测系统的第一题。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 2 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=colorful%20ascending%20bar%20chart%20sorting%20visualization%2C%20bars%20of%20different%20heights%20being%20reordered%2C%20flat%20vector%20illustration%2C%20vibrant%20colors%20on%20dark%20background&image_size=landscape_4_3"
+                 alt="排序算法插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">排序</span>
+            <h2 class="LNN_gallery_title">冒泡排序</h2>
+            <p class="LNN_gallery_desc">相邻元素两两比较、逐轮交换，是最经典的排序入门算法。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 3 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=glowing%20numeric%20grid%20pattern%20with%20highlighted%20prime%20numbers%2C%20mathematics%20concept%2C%20dark%20tech%20illustration%2C%20green%20and%20blue%20neon&image_size=landscape_4_3"
+                 alt="质数判断插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">数学</span>
+            <h2 class="LNN_gallery_title">判断质数</h2>
+            <p class="LNN_gallery_desc">试除法判断正整数是否为质数，考察数学与循环边界处理。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 4 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=golden%20ratio%20fibonacci%20spiral%20pattern%20with%20glowing%20lines%2C%20elegant%20math%20visualization%2C%20dark%20background%2C%20gold%20and%20purple%20neon%20style&image_size=landscape_4_3"
+                 alt="斐波那契数列插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">递推</span>
+            <h2 class="LNN_gallery_title">斐波那契数列</h2>
+            <p class="LNN_gallery_desc">递推求第 n 项并对 1e9+7 取模，是动态规划思维的起点。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 5 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=glowing%20dynamic%20programming%20table%2C%20grid%20of%20numbers%20with%20staircase%20filling%20pattern%2C%20flat%20tech%20illustration%2C%20purple%20and%20blue%20gradient%20on%20dark%20background&image_size=landscape_4_3"
+                 alt="动态规划插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">动态规划</span>
+            <h2 class="LNN_gallery_title">最长公共子序列</h2>
+            <p class="LNN_gallery_desc">经典二维 DP：以状态转移表逐步推导两个字符串的最长公共子序列。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 6 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=network%20graph%20with%20nodes%20and%20edges%2C%20shortest%20path%20route%20highlighted%20in%20bright%20glow%2C%20dark%20tech%20illustration%2C%20blue%20and%20orange%20neon&image_size=landscape_4_3"
+                 alt="最短路径插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">图论</span>
+            <h2 class="LNN_gallery_title">最短路径</h2>
+            <p class="LNN_gallery_desc">带权有向图上求单源最短路，Dijkstra 算法的标准练手题。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 7 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=hand%20picking%20the%20largest%20coin%20from%20piles%20of%20golden%20coins%2C%20greedy%20choice%20concept%2C%20flat%20vector%20illustration%2C%20warm%20gold%20and%20teal%20colors&image_size=landscape_4_3"
+                 alt="贪心算法插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">贪心</span>
+            <h2 class="LNN_gallery_title">区间合并</h2>
+            <p class="LNN_gallery_desc">先排序再逐段合并重叠区间，体会贪心策略的局部最优。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 卡片 8 -->
+        <figure class="LNN_gallery_card">
+          <div class="LNN_gallery_pic">
+            <img class="LNN_gallery_img"
+                 src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=programming%20contest%20arena%20with%20rows%20of%20laptops%20and%20focused%20students%2C%20big%20countdown%20screen%2C%20flat%20vector%20illustration%2C%20blue%20and%20purple%20stage%20lighting&image_size=landscape_4_3"
+                 alt="比赛现场插画">
+          </div>
+          <figcaption class="LNN_gallery_body">
+            <span class="LNN_gallery_tag">比赛</span>
+            <h2 class="LNN_gallery_title">赛场比赛现场</h2>
+            <p class="LNN_gallery_desc">每一场比赛都是一次实战演练，欢迎查看赛事动态了解赛况。</p>
+          </figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+</body>
+</html>

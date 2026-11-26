@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-25 | 大模型：GLM-5.3-Flash
+     说明：AI 功能测试结果展示页（客服聊天 / 图像识别 / 知识库问答 / 语音识别 截图汇总） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 功能测试结果 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_test_results.css">
+</head>
+<body class="LNN_body">
+  <div class="LNN_bg_glow LNN_glow_1"></div>
+  <div class="LNN_bg_glow LNN_glow_2"></div>
+
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <div class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></div>
+      <nav class="LNN_nav">
+        <a class="LNN_nav_link" href="index.html">首页</a>
+        <a class="LNN_nav_link" href="problems.html">题库练习</a>
+        <a class="LNN_nav_link" href="contests.html">比赛列表</a>
+        <a class="LNN_nav_link" href="news.html">赛事动态</a>
+        <a class="LNN_nav_link" href="tech_news.html">科技新闻</a>
+        <a class="LNN_nav_link" href="ai_chat.html">AI 聊天</a>
+        <a class="LNN_nav_link" href="support.html">在线客服</a>
+        <a class="LNN_nav_link" href="kb.html">知识库</a>
+        <a class="LNN_nav_link" href="vision.html">图像识别</a>
+        <a class="LNN_nav_link" href="voice.html">语音识别</a>
+        <a class="LNN_nav_link LNN_nav_link_active" href="test_results.html">测试结果</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="LNN_container">
+    <div class="LNN_page_head">
+      <h1 class="LNN_page_title">AI 功能测试结果</h1>
+      <p class="LNN_page_desc">
+        四大 AI 功能实测截图汇总：客服聊天（DeepSeek-V4-Flash）· 图像识别（Qwen3-VL-8B）·
+        知识库问答 RAG（文档检索 + 来源标注）· 语音识别（SenseVoiceSmall）。
+        全部通过 http://localhost:8324 实际运行验证。
+      </p>
+    </div>
+
+    <!-- 一、客服聊天 -->
+    <section class="LNN_result_section">
+      <h2 class="LNN_section_title">💬 客服聊天测试</h2>
+      <p class="LNN_result_desc">
+        「中华美食街」客服小美：只回答营业时间、招牌菜、配送范围三类问题。
+        连续两轮对话验证上下文记忆与服务商切换（硅基流动 DeepSeek-V4-Flash）。
+      </p>
+      <div class="LNN_shot_grid">
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_chat_1.png" alt="客服聊天测试1：营业时间问答" loading="lazy">
+          <figcaption>
+            <b>测试 1 · 营业时间问答</b>
+            问「你们几点开门？」→ 客服准确回复每天 10:00 开门、21:30 打烊、最后点单 21:00，数据与系统提示词完全一致。
+          </figcaption>
+        </figure>
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_chat_2.png" alt="客服聊天测试2：招牌菜推荐" loading="lazy">
+          <figcaption>
+            <b>测试 2 · 招牌菜推荐</b>
+            追问「有什么推荐菜」→ 多轮上下文正常，逐项报出北京烤鸭 168 元/只、麻婆豆腐 28 元等五道招牌菜价格。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 二、图像识别 -->
+    <section class="LNN_result_section">
+      <h2 class="LNN_section_title">🖼️ 图像识别测试</h2>
+      <p class="LNN_result_desc">
+        上传图片由硅基流动视觉模型 Qwen/Qwen3-VL-8B-Instruct 分析并返回内容描述
+        （POST /api/ai/vision，multipart 上传 + 可选附加提问）。
+      </p>
+      <div class="LNN_shot_grid">
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_vision_1.png" alt="图像识别测试1：上传北京烤鸭图片" loading="lazy">
+          <figcaption>
+            <b>测试 1 · 图片上传与预览</b>
+            上传「北京烤鸭.png」（894.3 KB）后自动生成本地预览，支持点击 / 拖拽两种上传方式。
+          </figcaption>
+        </figure>
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_vision_2.png" alt="图像识别测试2：识别结果描述" loading="lazy">
+          <figcaption>
+            <b>测试 2 · 识别结果输出</b>
+            模型准确识别烤鸭烹饪色泽、荷叶饼 / 葱丝黄瓜配菜、甜面酱蘸料与紫砂茶具，
+            并统计 Token 用量（输入 647 / 输出 344），底部显示实际响应模型名。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 三、知识库问答 -->
+    <section class="LNN_result_section">
+      <h2 class="LNN_section_title">📚 知识库问答（RAG）测试</h2>
+      <p class="LNN_result_desc">
+        上传 doc / docx / ppt / pptx / pdf / txt 构建专属知识库：先检索知识库片段，
+        再交给大模型依据内容回答（POST /api/kb/upload + POST /api/kb/ask）。
+      </p>
+      <div class="LNN_shot_grid">
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_kb_1.png" alt="知识库测试1：文档上传入库" loading="lazy">
+          <figcaption>
+            <b>测试 1 · 文档上传与解析入库</b>
+            「北京烤鸭.docx」上传成功并解析为 4 个文本块入库；知识库管理列表展示文件类型、
+            大小、文本块数与上传时间，支持一键删除。
+          </figcaption>
+        </figure>
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_kb_2.png" alt="知识库测试2：基于知识库回答并标注来源" loading="lazy">
+          <figcaption>
+            <b>测试 2 · 检索增强回答</b>
+            问「北京烤鸭原料是什么」→ 回答依据知识库（北京填鸭：皮下脂肪丰腴、肉质细嫩，
+            适合烤出酥脆鸭皮），并标注 📎 来源：北京烤鸭.docx，答案可溯源。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 四、语音识别 -->
+    <section class="LNN_result_section">
+      <h2 class="LNN_section_title">🎤 语音识别测试</h2>
+      <p class="LNN_result_desc">
+        麦克风录音（60 秒上限）或上传音频文件，经 ASR 模型转写为文字
+        （POST /api/asr/recognize，主配七牛 Qwen-Audio-3.0-ASR-Flash，上线前自动降级硅基流动）。
+      </p>
+      <div class="LNN_shot_grid LNN_shot_grid_single">
+        <figure class="LNN_shot_card">
+          <img src="images/screenshots/LNN_shot_voice_1.png" alt="语音识别测试：音频转写文字" loading="lazy">
+          <figcaption>
+            <b>测试 · 音频文件转写</b>
+            上传粤语歌曲音频（.ogg，653.3 KB）→ 识别完成并逐句转写歌词文字；
+            结果卡展示识别文字、服务商（硅基流动 SenseVoiceSmall）、语言（Cantonese）与音频文件名。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <div class="LNN_summary_card">
+      ✅ 测试结论：四大 AI 功能（客服聊天 / 图像识别 / 知识库 RAG / 语音识别）全部实测通过，
+      密钥均在后端 .env 管理，接口统一返回 { code, msg, data } 格式，服务端控制台完整输出发送与接收的大模型数据。
+    </div>
+  </main>
+
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <div class="LNN_footer_text">© 2026 LNN-OJ 程序设计比赛题库系统 · 李南诺 24002120324</div>
+    </div>
+  </footer>
+</body>
+</html>

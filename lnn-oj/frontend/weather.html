@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+  姓名：李南诺 | 学号：24002120324
+  时间：2026-11-25 | 大模型：GLM-5.3-Flash
+  说明：准点天气 App——手机端风格的天气场景 RAG 知识库问答页（气象问答 + 知识库管理）
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>准点天气 AI - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_weather.css">
+</head>
+<body class="LNN_body">
+  <div class="LNN_bg_glow LNN_glow_1"></div>
+  <div class="LNN_bg_glow LNN_glow_2"></div>
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a class="LNN_logo" href="index.html"><span class="LNN_logo_badge">LNN</span>-OJ</a>
+      <nav class="LNN_nav">
+        <a href="problems.html">题库练习</a>
+        <a href="contests.html">比赛列表</a>
+        <a href="news.html">赛事动态</a>
+        <a href="tech_news.html">科技新闻</a>
+        <a href="database.html">数据库测试</a>
+        <a href="ai_chat.html">AI 聊天</a>
+        <a href="support.html">在线客服</a>
+        <a href="kb.html">知识库</a>
+        <a class="LNN_nav_active" href="weather.html">准点天气</a>
+        <a href="gallery.html">图库</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="LNN_container LNN_page_main">
+    <div class="LNN_page_head">
+      <h1 class="LNN_page_title">准点天气 AI</h1>
+      <p class="LNN_page_desc">手机 App 风格的天气知识库问答：气象助手「点点」基于准点天气知识库（RAG）回答天气与产品问题。</p>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/weather/ask</span>
+        <span class="LNN_api_desc">气象问答接口（body: {"question":"..."}）</span>
+      </div>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/weather/upload</span>
+        <span class="LNN_api_desc">天气知识库上传接口（multipart，file 字段）</span>
+      </div>
+    </div>
+
+    <!-- 手机屏幕容器 -->
+    <div class="LNN_phone">
+      <div class="LNN_phone_notch"></div>
+      <!-- 状态栏 -->
+      <div class="LNN_status_bar">
+        <span class="LNN_sb_time">9:41</span>
+        <span class="LNN_sb_signal">📶 🔋 100%</span>
+      </div>
+
+      <!-- App 天气头部 -->
+      <div class="LNN_wx_header">
+        <div class="LNN_wx_header_top">
+          <span class="LNN_wx_city">📍 北京市 · 海淀区</span>
+          <span class="LNN_wx_more">⋯</span>
+        </div>
+        <div class="LNN_wx_temp_row">
+          <div class="LNN_wx_temp">23<span class="LNN_wx_temp_unit">°C</span></div>
+          <div class="LNN_wx_sun">☀️</div>
+        </div>
+        <div class="LNN_wx_cond">多云 · 东南风 2 级 · 湿度 62%</div>
+        <div class="LNN_wx_tips">体感 22°C · 穿衣指数：适宜穿薄外套</div>
+        <div class="LNN_wx_cloud LNN_wx_cloud_1">☁️</div>
+        <div class="LNN_wx_cloud LNN_wx_cloud_2">☁️</div>
+      </div>
+
+      <!-- Tab 切换 -->
+      <div class="LNN_wx_tabs">
+        <button type="button" class="LNN_wx_tab LNN_wx_tab_active" id="LNN_tab_ask">💬 气象问答</button>
+        <button type="button" class="LNN_wx_tab" id="LNN_tab_kb">📂 知识库</button>
+      </div>
+
+      <!-- 气象问答面板 -->
+      <section class="LNN_wx_panel" id="LNN_panel_ask">
+        <div class="LNN_wx_chat_box" id="LNN_wx_chat_box">
+          <div class="LNN_wx_msg LNN_wx_msg_ai">
+            <div class="LNN_wx_avatar">点</div>
+            <div class="LNN_wx_bubble LNN_wx_bubble_ai">您好，我是准点天气的智能气象助手「点点」☀️<br>可以问我天气预警、生活指数、准点天气功能等话题哦～</div>
+          </div>
+        </div>
+
+        <div class="LNN_wx_quick_chips" id="LNN_wx_quick_chips">
+          <button class="LNN_wx_chip" type="button">天气预警的红色代表什么？</button>
+          <button class="LNN_wx_chip" type="button">会员有什么特权？</button>
+          <button class="LNN_wx_chip" type="button">降水概率是什么意思？</button>
+          <button class="LNN_wx_chip" type="button">洗车指数怎么算的？</button>
+        </div>
+
+        <div class="LNN_wx_input_bar">
+          <textarea id="LNN_wx_input" class="LNN_wx_input" rows="1"
+            placeholder="问问点点天气的事儿…（Enter 发送，Shift+Enter 换行）"></textarea>
+          <button type="button" id="LNN_wx_send_btn" class="LNN_wx_send_btn">发送</button>
+        </div>
+      </section>
+
+      <!-- 知识库面板 -->
+      <section class="LNN_wx_panel" id="LNN_panel_kb" hidden>
+        <div class="LNN_wx_kb_scroll">
+          <!-- 上传区 -->
+          <div class="LNN_wx_upload_area" id="LNN_wx_upload_area">
+            <div class="LNN_wx_upload_icon">⬆️</div>
+            <p class="LNN_wx_upload_text" id="LNN_wx_upload_text">点击或拖拽上传天气知识文件</p>
+            <p class="LNN_wx_upload_hint">支持 doc / docx / ppt / pptx / pdf / txt / md，可多选，最大 10MB</p>
+            <input type="file" id="LNN_wx_file_input" accept=".txt,.md,.doc,.docx,.ppt,.pptx,.pdf" multiple hidden>
+          </div>
+          <!-- 上传进度条 -->
+          <div class="LNN_wx_progress_wrap" id="LNN_wx_progress_wrap" hidden>
+            <div class="LNN_wx_progress_head">
+              <span id="LNN_wx_progress_name">上传中…</span>
+              <span id="LNN_wx_progress_pct">0%</span>
+            </div>
+            <div class="LNN_wx_progress_track">
+              <div class="LNN_wx_progress_fill" id="LNN_wx_progress_fill"></div>
+            </div>
+          </div>
+          <!-- 文件列表 -->
+          <ul class="LNN_wx_file_list" id="LNN_wx_file_list">
+            <li class="LNN_wx_kb_empty">知识库暂无文件</li>
+          </ul>
+          <div class="LNN_wx_kb_note">知识库内容用于气象问答（RAG），删除后相关答案将无法生成。</div>
+        </div>
+      </section>
+    </div>
+
+    <div class="LNN_model_note">RAG 流程：问题 → 检索 weather 场景知识片段 Top4 → 拼入「点点」提示词 → 大模型作答（服务端控制台输出 [LNN_wx RAG] 发送/接收数据）</div>
+  </main>
+
+  <footer class="LNN_footer">
+    <p>© 2026 LNN-OJ 程序设计比赛题库系统 · 李南诺 24002120324</p>
+  </footer>
+
+  <script src="js/LNN_weather.js"></script>
+</body>
+</html>

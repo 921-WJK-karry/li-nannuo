@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-20 | 大模型：GLM-5.3-Flash
+     页面说明：数据库连接测试页（输入用户名/密码实测 MySQL 连接） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据库连接 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_database.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link">比赛列表</a>
+        <a href="news.html" class="LNN_nav_link">赛事动态</a>
+        <a href="gallery.html" class="LNN_nav_link">题库图库</a>
+        <a href="tech_news.html" class="LNN_nav_link">科技新闻</a>
+        <a href="database.html" class="LNN_nav_link LNN_nav_link_active">数据库</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">数据库连接测试</h1>
+      <p class="LNN_page_desc">输入 MySQL 用户名和密码，实测连接数据库 LNN_web。</p>
+    </div>
+  </section>
+
+  <!-- 连接表单 -->
+  <section class="LNN_connect_section">
+    <div class="LNN_container">
+      <form id="LNN_connect_form" class="LNN_connect_card">
+        <div class="LNN_form_group">
+          <label class="LNN_form_label" for="LNN_input_username">用户名</label>
+          <input id="LNN_input_username" class="LNN_form_input" type="text" value="root" autocomplete="off">
+        </div>
+        <div class="LNN_form_group">
+          <label class="LNN_form_label" for="LNN_input_password">密码</label>
+          <input id="LNN_input_password" class="LNN_form_input" type="password" value="root">
+        </div>
+        <button id="LNN_connect_btn" class="LNN_connect_btn" type="submit">连接数据库</button>
+      </form>
+
+      <!-- 连接结果提示 -->
+      <div id="LNN_result_box" class="LNN_result_box LNN_result_hidden"></div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+  <script src="js/LNN_database.js"></script>
+</body>
+</html>

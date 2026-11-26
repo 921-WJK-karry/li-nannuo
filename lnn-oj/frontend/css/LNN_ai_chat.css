@@ -1,0 +1,466 @@
+/**
+ * 姓名：李南诺 | 学号：24002120324
+ * 时间：2026-11-25 | 大模型：GLM-5.3-Flash
+ * 说明：AI 聊天页样式（复用 LNN_common.css 设计令牌）
+ */
+
+/* ===== 聊天卡片 ===== */
+.LNN_chat_wrap {
+  padding: 8px 0 40px;
+}
+
+/* ===== 接口信息条 ===== */
+.LNN_api_bar {
+  padding: 4px 0 16px;
+}
+
+.LNN_api_card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background-color: var(--LNN-card);
+  border: 1px dashed rgba(34, 184, 162, 0.40);
+  border-radius: 12px;
+  padding: 12px 18px;
+}
+
+.LNN_api_method {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: rgba(22, 163, 74, 0.10);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+.LNN_api_link {
+  font-size: 14px;
+  color: #3b5bdb;
+  font-family: Consolas, monospace;
+}
+
+.LNN_api_desc {
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+
+.LNN_chat_card {
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--LNN-card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  box-shadow: var(--LNN-shadow);
+  overflow: hidden;
+}
+
+/* ===== 对话记录区 ===== */
+.LNN_chat_box {
+  height: 460px;
+  overflow-y: auto;
+  padding: 22px 22px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+.LNN_chat_box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.LNN_chat_box::-webkit-scrollbar-thumb {
+  background: rgba(34, 184, 162, 0.25);
+  border-radius: 3px;
+}
+
+/* ===== 消息行 ===== */
+.LNN_msg {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.LNN_msg_user {
+  flex-direction: row-reverse;
+}
+
+/* 头像 */
+.LNN_avatar {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.LNN_avatar_ai {
+  background: linear-gradient(135deg, var(--LNN-accent), var(--LNN-accent-2));
+}
+
+.LNN_avatar_user {
+  background: linear-gradient(135deg, #7e6bfa, #b06bfa);
+}
+
+/* 气泡 */
+.LNN_bubble {
+  max-width: 72%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 14.5px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.LNN_bubble_ai {
+  background: var(--LNN-card-solid);
+  border: 1px solid var(--LNN-border);
+  color: var(--LNN-text);
+  border-top-left-radius: 4px;
+  box-shadow: 0 3px 10px rgba(34, 140, 120, 0.06);
+}
+
+.LNN_bubble_user {
+  background: linear-gradient(120deg, var(--LNN-accent), var(--LNN-accent-2));
+  color: #fff;
+  border-top-right-radius: 4px;
+  box-shadow: 0 4px 12px rgba(34, 184, 162, 0.25);
+}
+
+/* 错误提示气泡 */
+.LNN_bubble_error {
+  background: #fff5f5;
+  border: 1px solid rgba(235, 87, 87, 0.3);
+  color: #c0392b;
+}
+
+/* 加载中动画 */
+.LNN_bubble_loading {
+  color: var(--LNN-text-muted);
+}
+
+.LNN_loading_dot {
+  display: inline-block;
+  animation: LNN_blink 1.2s infinite;
+}
+
+.LNN_loading_dot:nth-child(2) { animation-delay: 0.2s; }
+.LNN_loading_dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes LNN_blink {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+
+/* ===== 输入区 ===== */
+.LNN_input_bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--LNN-border);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.LNN_chat_input {
+  flex: 1;
+  resize: none;
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius-sm);
+  padding: 12px 14px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--LNN-text);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.LNN_chat_input:focus {
+  border-color: var(--LNN-accent);
+  box-shadow: 0 0 0 3px var(--LNN-accent-soft);
+}
+
+.LNN_input_actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.LNN_btn_send,
+.LNN_btn_clear {
+  border: none;
+  border-radius: var(--LNN-radius-sm);
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.LNN_btn_send {
+  color: #fff;
+  background: linear-gradient(120deg, var(--LNN-accent), var(--LNN-accent-2));
+  box-shadow: 0 4px 12px rgba(34, 184, 162, 0.28);
+}
+
+.LNN_btn_send:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+.LNN_btn_send:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.LNN_btn_clear {
+  color: var(--LNN-text-sub);
+  background: #fff;
+  border: 1px solid var(--LNN-border);
+}
+
+.LNN_btn_clear:hover {
+  color: var(--LNN-accent);
+  border-color: var(--LNN-accent);
+}
+
+/* ===== 模型说明 ===== */
+.LNN_model_note {
+  margin: 0;
+  padding: 0 22px 14px;
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+  text-align: right;
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 640px) {
+  .LNN_chat_box { height: 380px; padding: 16px 14px 6px; }
+  .LNN_bubble { max-width: 82%; }
+  .LNN_input_bar { flex-direction: column; }
+  .LNN_input_actions { flex-direction: row; }
+  .LNN_orb { display: none; }
+}
+
+/* ===== 动效增强 ===== */
+
+/* 背景浮动光球 */
+.LNN_orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.LNN_orb_1 {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(34, 184, 162, 0.30), transparent 70%);
+  animation: LNN_float 14s ease-in-out infinite;
+}
+
+.LNN_orb_2 {
+  width: 360px;
+  height: 360px;
+  bottom: -100px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.26), transparent 70%);
+  animation: LNN_float 18s ease-in-out infinite reverse;
+}
+
+@keyframes LNN_float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 24px) scale(1.08); }
+}
+
+/* 聊天卡片入场 + 输入聚焦时卡片发光 */
+.LNN_chat_card {
+  transition: box-shadow 0.3s, border-color 0.3s;
+  animation: LNN_fade_up 0.6s ease both;
+}
+
+.LNN_chat_card:focus-within {
+  border-color: rgba(34, 184, 162, 0.35);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+@keyframes LNN_fade_up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 页面标题渐变流动 */
+.LNN_page_title {
+  background-size: 200% 100%;
+  animation: LNN_flow 6s linear infinite;
+}
+
+/* 消息入场弹出动画 */
+.LNN_msg_enter {
+  animation: LNN_msg_pop 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes LNN_msg_pop {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* AI 头像渐变流光 */
+.LNN_avatar_ai {
+  background: linear-gradient(120deg, var(--LNN-accent), var(--LNN-accent-2), var(--LNN-accent));
+  background-size: 200% 100%;
+  animation: LNN_flow 5s linear infinite;
+}
+
+@keyframes LNN_flow {
+  from { background-position: 0% 0; }
+  to { background-position: 200% 0; }
+}
+
+/* AI 思考中：头像叠加呼吸脉冲光晕 */
+.LNN_avatar_thinking {
+  animation: LNN_flow 5s linear infinite, LNN_pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes LNN_pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 184, 162, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(34, 184, 162, 0); }
+}
+
+/* 错误气泡抖动提醒 */
+.LNN_bubble_error {
+  animation: LNN_shake 0.4s ease;
+}
+
+@keyframes LNN_shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* 发送按钮光泽扫过 */
+.LNN_btn_send {
+  position: relative;
+  overflow: hidden;
+}
+
+.LNN_btn_send::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s ease;
+}
+
+.LNN_btn_send:hover::after {
+  left: 130%;
+}
+
+/* ===== 服务商切换栏 ===== */
+.LNN_provider_bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px 0;
+}
+
+.LNN_provider_label {
+  font-size: 13px;
+  color: var(--LNN-text-sub);
+}
+
+.LNN_provider_select {
+  border: 1px solid var(--LNN-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--LNN-text);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.LNN_provider_select:focus {
+  outline: none;
+  border-color: var(--LNN-accent);
+}
+
+.LNN_provider_tip {
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+/* ===== 快捷提问标签 ===== */
+.LNN_quick_chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 22px 0;
+}
+
+.LNN_quick_chips.LNN_chips_hidden {
+  display: none;
+}
+
+.LNN_quick_chip {
+  border: 1px solid var(--LNN-border);
+  background: #fff;
+  color: var(--LNN-text-sub);
+  font-size: 13px;
+  font-family: inherit;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.15s;
+  animation: LNN_fade_up 0.5s ease both;
+}
+
+.LNN_quick_chip:nth-child(1) { animation-delay: 0.15s; }
+.LNN_quick_chip:nth-child(2) { animation-delay: 0.25s; }
+.LNN_quick_chip:nth-child(3) { animation-delay: 0.35s; }
+.LNN_quick_chip:nth-child(4) { animation-delay: 0.45s; }
+
+.LNN_quick_chip:hover {
+  color: var(--LNN-accent);
+  border-color: var(--LNN-accent);
+  background: var(--LNN-accent-soft);
+  transform: translateY(-2px);
+}
+
+/* 模型名高亮 */
+.LNN_model_note span {
+  color: var(--LNN-accent);
+  font-weight: 600;
+}
+
+/* 尊重系统减弱动效设置 */
+@media (prefers-reduced-motion: reduce) {
+  .LNN_orb,
+  .LNN_avatar_ai,
+  .LNN_msg_enter,
+  .LNN_chat_card,
+  .LNN_page_title,
+  .LNN_quick_chip {
+    animation: none;
+  }
+}

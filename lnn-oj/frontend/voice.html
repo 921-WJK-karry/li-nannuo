@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+  姓名：李南诺 | 学号：24002120324
+  时间：2026-11-25 | 大模型：GLM-5.3-Flash
+  说明：语音识别页面——麦克风录音或上传音频文件，调用七牛 ASR（Qwen-Audio-3.0-ASR-Flash，未上线时自动降级硅基 SenseVoiceSmall）返回文字
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音识别 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_kb.css">
+  <link rel="stylesheet" href="css/LNN_voice.css">
+</head>
+<body class="LNN_body">
+  <div class="LNN_bg_glow LNN_glow_1"></div>
+  <div class="LNN_bg_glow LNN_glow_2"></div>
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a class="LNN_logo" href="index.html"><span class="LNN_logo_badge">LNN</span>-OJ</a>
+      <nav class="LNN_nav">
+        <a href="problems.html">题库练习</a>
+        <a href="contests.html">比赛列表</a>
+        <a href="news.html">赛事动态</a>
+        <a href="tech_news.html">科技新闻</a>
+        <a href="database.html">数据库测试</a>
+        <a href="ai_chat.html">AI 聊天</a>
+        <a href="support.html">在线客服</a>
+        <a href="kb.html">知识库</a>
+        <a href="vision.html">图像识别</a>
+        <a class="LNN_nav_active" href="voice.html">语音识别</a>
+        <a href="gallery.html">图库</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="LNN_container LNN_page_main">
+    <!-- 页面信息 -->
+    <div class="LNN_page_head">
+      <h1 class="LNN_page_title">语音识别</h1>
+      <p class="LNN_page_desc">点击麦克风开始录音（或上传音频文件），系统将语音发送给 ASR 模型转写为文字。模型：七牛 Qwen-Audio-3.0-ASR-Flash（平台未上线时自动降级硅基 SenseVoiceSmall）。</p>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/asr/recognize</span>
+        <span class="LNN_api_desc">语音识别接口（multipart，audio 字段，最大 25MB）</span>
+      </div>
+    </div>
+
+    <div class="LNN_chat_card">
+      <h2 class="LNN_section_title">🎙️ 麦克风录音</h2>
+      <div class="LNN_record_area" id="LNN_record_area">
+        <button type="button" class="LNN_mic_btn" id="LNN_mic_btn" title="开始录音">
+          <span class="LNN_mic_icon">🎤</span>
+        </button>
+        <p class="LNN_record_status" id="LNN_record_status">点击麦克风开始录音</p>
+        <p class="LNN_record_time" id="LNN_record_time"></p>
+        <audio id="LNN_playback" class="LNN_playback" controls style="display:none;"></audio>
+        <p class="LNN_upload_hint">浏览器将请求麦克风权限；录音结束自动识别，最长 60 秒</p>
+      </div>
+    </div>
+
+    <div class="LNN_chat_card">
+      <h2 class="LNN_section_title">📁 上传音频文件</h2>
+      <div class="LNN_upload_area" id="LNN_upload_area">
+        <div class="LNN_upload_icon">⬆️</div>
+        <p class="LNN_upload_text" id="LNN_upload_text">点击选择音频文件</p>
+        <p class="LNN_upload_hint">支持 wav / mp3 / m4a / webm / ogg / flac，最大 25MB</p>
+        <input type="file" id="LNN_audio_input" accept=".wav,.mp3,.m4a,.webm,.ogg,.flac" hidden>
+        <button type="button" class="LNN_send_btn LNN_upload_btn" id="LNN_pick_btn">选择文件</button>
+      </div>
+    </div>
+
+    <!-- 识别结果卡片 -->
+    <div class="LNN_chat_card">
+      <h2 class="LNN_section_title">📝 识别结果</h2>
+      <div class="LNN_voice_result" id="LNN_result_box">
+        <p class="LNN_kb_empty">录音或上传音频后，识别出的文字将显示在这里</p>
+      </div>
+      <p class="LNN_model_note" id="LNN_model_note">服务商：<span id="LNN_model_name">七牛 Qwen-Audio-3.0-ASR-Flash（未上线自动降级硅基）</span></p>
+    </div>
+  </main>
+
+  <footer class="LNN_footer">
+    <p>© 2026 LNN-OJ 程序设计比赛题库系统 · 李南诺 24002120324</p>
+  </footer>
+
+  <script src="js/LNN_voice.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+/**
+ * 姓名：李南诺 | 学号：24002120324
+ * 时间：2026-11-25 | 大模型：GLM-5.3-Flash
+ * 说明：图像识别页专属样式（预览图、结果卡），其余复用 LNN_common / LNN_kb
+ */
+
+/* 图片预览区 */
+.LNN_preview_wrap {
+  margin-top: 14px;
+  text-align: center;
+  animation: LNN_fade_up 0.4s ease both;
+}
+
+.LNN_preview_img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 12px;
+  border: 1px solid var(--LNN-border);
+  box-shadow: var(--LNN-shadow);
+}
+
+.LNN_preview_meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+/* 问题输入栏 */
+.LNN_question_bar {
+  margin-top: 14px;
+  padding-top: 0;
+}
+
+/* 识别结果 */
+.LNN_vision_result {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(34, 184, 162, 0.05);
+  border: 1px solid var(--LNN-border);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--LNN-text);
+  white-space: pre-wrap;
+  animation: LNN_fade_up 0.4s ease both;
+}
+
+.LNN_vision_result.LNN_error {
+  background: rgba(229, 72, 77, 0.06);
+  border-color: rgba(229, 72, 77, 0.35);
+  color: #e5484d;
+}
+
+/* 识别中动画 */
+.LNN_vision_loading {
+  color: var(--LNN-accent);
+  animation: LNN_blink 1s ease-in-out infinite;
+}
+
+.LNN_vision_usage {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}

@@ -1,0 +1,99 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：赛事动态图文列表页样式（页面专属部分，基础样式见 LNN_common.css） */
+
+/* 图文列表 */
+.LNN_news_section {
+  padding: 0 0 56px;
+}
+
+.LNN_news_list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.LNN_news_item {
+  display: flex;
+  gap: 18px;
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.LNN_news_item:hover {
+  border-color: rgba(34, 184, 162, 0.45);
+  transform: translateY(-3px);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+/* 缩略图 */
+.LNN_news_thumb {
+  flex-shrink: 0;
+  width: 240px;
+  height: 135px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(34, 184, 162, 0.14);
+}
+
+/* 文字信息 */
+.LNN_news_info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.LNN_news_meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.LNN_news_tag {
+  font-size: 12px;
+  padding: 4px 13px;
+  border-radius: 999px;
+  background: linear-gradient(100deg, rgba(34, 184, 162, 0.12), rgba(88, 166, 255, 0.12));
+  color: #3b5bdb;
+  border: 1px solid rgba(34, 184, 162, 0.22);
+}
+
+.LNN_news_date {
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+.LNN_news_title {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: var(--LNN-text);
+}
+
+.LNN_news_excerpt {
+  font-size: 14px;
+  color: var(--LNN-text-sub);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .LNN_news_item {
+    flex-direction: column;
+  }
+
+  .LNN_news_thumb {
+    width: 100%;
+    height: 160px;
+  }
+}

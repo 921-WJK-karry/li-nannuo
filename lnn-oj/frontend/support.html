@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-25 | 大模型：GLM-5.3-Flash
+     页面说明：在线客服页（七牛云 qiniu/conatus-free 模型，经后端 POST /api/support/chat 转发） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>在线客服 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_ai_chat.css">
+  <link rel="stylesheet" href="css/LNN_support.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 背景装饰浮动光球 -->
+  <div class="LNN_orb LNN_orb_1"></div>
+  <div class="LNN_orb LNN_orb_2"></div>
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link">比赛列表</a>
+        <a href="tech_news.html" class="LNN_nav_link">科技新闻</a>
+        <a href="ai_chat.html" class="LNN_nav_link">AI 聊天</a>
+        <a href="support.html" class="LNN_nav_link LNN_nav_link_active">在线客服</a>
+        <a href="database.html" class="LNN_nav_link">数据库</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">在线客服</h1>
+      <p class="LNN_page_desc">平台使用问题（报名、提交、排名等）由客服机器人解答，基于硅基流动 DeepSeek 大模型。</p>
+    </div>
+  </section>
+
+  <!-- 接口信息条 -->
+  <section class="LNN_api_bar">
+    <div class="LNN_container">
+      <div class="LNN_api_card">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/support/chat</span>
+        <span class="LNN_api_desc">在线客服接口（硅基流动 DeepSeek-V4-Flash，七牛备用，密钥存于服务端 .env）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 客服主体 -->
+  <main class="LNN_chat_wrap">
+    <div class="LNN_container">
+      <div class="LNN_chat_card">
+        <!-- 对话记录区 -->
+        <div id="LNN_chat_box" class="LNN_chat_box">
+          <div class="LNN_msg LNN_msg_ai">
+            <div class="LNN_avatar LNN_avatar_ai">客</div>
+            <div class="LNN_bubble LNN_bubble_ai">您好，我是 LNN-OJ 在线客服，关于报名比赛、提交代码、查看排名等问题都可以问我～</div>
+          </div>
+        </div>
+        <!-- 快捷提问 -->
+        <div id="LNN_quick_chips" class="LNN_quick_chips">
+          <button class="LNN_quick_chip" type="button">如何报名比赛</button>
+          <button class="LNN_quick_chip" type="button">怎么提交代码</button>
+          <button class="LNN_quick_chip" type="button">如何查看比赛排名</button>
+          <button class="LNN_quick_chip" type="button">难度标签是什么意思</button>
+        </div>
+        <!-- 输入区 -->
+        <div class="LNN_input_bar">
+          <textarea id="LNN_chat_input" class="LNN_chat_input" rows="2"
+            placeholder="输入你的问题，Enter 发送，Shift+Enter 换行…"></textarea>
+          <div class="LNN_input_actions">
+            <button id="LNN_chat_clear" class="LNN_btn_clear" type="button">清空对话</button>
+            <button id="LNN_chat_send" class="LNN_btn_send" type="button">发送</button>
+          </div>
+        </div>
+        <p class="LNN_model_note">服务商：硅基流动 · 模型：<span id="LNN_model_name">deepseek-ai/DeepSeek-V4-Flash</span></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+  <script src="js/LNN_support.js"></script>
+</body>
+</html>

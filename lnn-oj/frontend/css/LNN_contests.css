@@ -1,0 +1,122 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：比赛列表页样式（页面专属部分，基础样式见 LNN_common.css） */
+
+/* 状态筛选标签 */
+.LNN_filter_bar {
+  padding: 12px 0 20px;
+}
+
+.LNN_filter_inner {
+  display: flex;
+  gap: 10px;
+}
+
+.LNN_tab {
+  background-color: var(--LNN-card-solid);
+  border: 1px solid rgba(34, 184, 162, 0.22);
+  border-radius: 999px;
+  color: var(--LNN-text-sub);
+  padding: 8px 22px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.LNN_tab:hover {
+  color: var(--LNN-accent);
+  border-color: rgba(34, 184, 162, 0.5);
+}
+
+.LNN_tab_active {
+  color: #ffffff;
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2));
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(34, 184, 162, 0.35);
+}
+
+/* 比赛列表 */
+.LNN_list_section {
+  padding: 0 0 56px;
+}
+
+.LNN_list_count {
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+  margin-bottom: 14px;
+}
+
+.LNN_contest_list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.LNN_contest_item {
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.LNN_contest_item:hover {
+  border-color: rgba(34, 184, 162, 0.45);
+  transform: translateX(3px);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+.LNN_contest_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.LNN_contest_title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--LNN-text);
+}
+
+.LNN_contest_desc {
+  font-size: 14px;
+  color: var(--LNN-text-sub);
+  margin-bottom: 10px;
+}
+
+.LNN_contest_time {
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+}
+
+/* 状态徽标 */
+.LNN_status_badge {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.LNN_status_upcoming {
+  color: #3b5bdb;
+  background-color: rgba(34, 184, 162, 0.10);
+  border-color: rgba(34, 184, 162, 0.28);
+}
+
+.LNN_status_ongoing {
+  color: #15803d;
+  background-color: rgba(22, 163, 74, 0.10);
+  border-color: rgba(22, 163, 74, 0.25);
+}
+
+.LNN_status_finished {
+  color: #6b7280;
+  background-color: rgba(107, 114, 128, 0.10);
+  border-color: rgba(107, 114, 128, 0.25);
+}

@@ -1,0 +1,100 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-25 | 大模型：GLM-5.3-Flash
+   说明：AI 功能测试结果展示页专属样式（截图卡片 + 错峰入场动效） */
+
+/* 测试分区 */
+.LNN_result_section {
+  margin-bottom: 40px;
+  animation: LNN_fade_up 0.5s ease both;
+}
+
+.LNN_result_section:nth-of-type(1) { animation-delay: 0.05s; }
+.LNN_result_section:nth-of-type(2) { animation-delay: 0.15s; }
+.LNN_result_section:nth-of-type(3) { animation-delay: 0.25s; }
+.LNN_result_section:nth-of-type(4) { animation-delay: 0.35s; }
+
+.LNN_result_desc {
+  font-size: 14px;
+  color: var(--LNN-text-sub);
+  margin: 10px 0 18px;
+  padding-left: 14px;
+  border-left: 3px dashed rgba(255, 143, 171, 0.55);
+}
+
+/* 截图网格：双列 */
+.LNN_shot_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.LNN_shot_grid_single {
+  grid-template-columns: 1fr;
+}
+
+/* 截图卡片（贴纸风） */
+.LNN_shot_card {
+  position: relative;
+  background: var(--LNN-card);
+  border: 1.5px solid var(--LNN-border);
+  border-radius: var(--LNN-radius);
+  overflow: hidden;
+  box-shadow: var(--LNN-shadow);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+  animation: LNN_pop_in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.LNN_shot_card:nth-child(1) { animation-delay: 0.10s; }
+.LNN_shot_card:nth-child(2) { animation-delay: 0.22s; }
+.LNN_shot_card:nth-child(3) { animation-delay: 0.34s; }
+
+.LNN_shot_card:hover {
+  transform: translateY(-6px) rotate(-0.5deg);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+/* 截图 */
+.LNN_shot_card img {
+  display: block;
+  width: 100%;
+  border-bottom: 1.5px dashed rgba(34, 184, 162, 0.28);
+  transition: transform 0.35s ease;
+}
+
+.LNN_shot_card:hover img {
+  transform: scale(1.015);
+}
+
+/* 图注 */
+.LNN_shot_card figcaption {
+  padding: 12px 16px 14px;
+  font-size: 13.5px;
+  color: var(--LNN-text-sub);
+  line-height: 1.7;
+}
+
+.LNN_shot_card figcaption b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14.5px;
+  color: var(--LNN-text);
+}
+
+/* 总结卡片 */
+.LNN_summary_card {
+  margin: 30px 0 10px;
+  padding: 18px 22px;
+  background: linear-gradient(120deg, rgba(34, 184, 162, 0.10), rgba(255, 143, 171, 0.10));
+  border: 1.5px dashed rgba(34, 184, 162, 0.40);
+  border-radius: var(--LNN-radius);
+  font-size: 14.5px;
+  color: var(--LNN-text);
+  animation: LNN_pop_in 0.55s ease 0.45s both;
+}
+
+/* 响应式 */
+@media (max-width: 720px) {
+  .LNN_shot_grid {
+    grid-template-columns: 1fr;
+  }
+}

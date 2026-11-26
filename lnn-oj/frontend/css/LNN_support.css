@@ -1,0 +1,16 @@
+/**
+ * 姓名：李南诺 | 学号：24002120324
+ * 时间：2026-11-25 | 大模型：GLM-5.3-Flash
+ * 说明：在线客服页样式（复用 LNN_ai_chat.css，仅覆盖客服专属配色）
+ */
+
+/* 客服头像：青绿渐变，与 AI 聊天页的蓝紫区分 */
+.LNN_avatar_ai {
+  background: linear-gradient(120deg, #10b981, #2fb8f6);
+  background-size: 200% 100%;
+}
+
+/* 客服用户气泡保持蓝紫不变，仅模型名换成青绿高亮 */
+.LNN_model_note span {
+  color: #10b981;
+}

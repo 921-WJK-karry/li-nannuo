@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-20 | 大模型：GLM-5.3-Flash
+     页面说明：科技新闻列表页（数据来自 LNN_tech_news 表，经 GET /api/news 接口返回） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>科技新闻 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_tech_news.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link">比赛列表</a>
+        <a href="news.html" class="LNN_nav_link">赛事动态</a>
+        <a href="gallery.html" class="LNN_nav_link">题库图库</a>
+        <a href="tech_news.html" class="LNN_nav_link LNN_nav_link_active">科技新闻</a>
+        <a href="database.html" class="LNN_nav_link">数据库</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">科技新闻</h1>
+      <p class="LNN_page_desc">新闻数据存储于数据库表 LNN_tech_news，本页通过后端接口实时读取。</p>
+    </div>
+  </section>
+
+  <!-- 接口信息条 -->
+  <section class="LNN_api_bar">
+    <div class="LNN_container">
+      <div class="LNN_api_card">
+        <span class="LNN_api_method">GET</span>
+        <a href="/api/news" target="_blank" class="LNN_api_link">http://localhost:8324/api/news</a>
+        <span class="LNN_api_desc">后端接口（点击可查看原始 JSON 数据）</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关键词搜索 -->
+  <section class="LNN_search_bar">
+    <div class="LNN_container">
+      <input id="LNN_search_keyword" type="text" class="LNN_search_input" placeholder="按标题或摘要搜索新闻…">
+    </div>
+  </section>
+
+  <!-- 新闻列表 -->
+  <section class="LNN_list_section">
+    <div class="LNN_container">
+      <p id="LNN_list_count" class="LNN_list_count">加载中…</p>
+      <div id="LNN_news_list" class="LNN_news_list"></div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+  <script src="js/LNN_tech_news.js"></script>
+</body>
+</html>

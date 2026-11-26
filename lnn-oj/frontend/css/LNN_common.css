@@ -1,0 +1,508 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-25 | 大模型：GLM-5.3-Flash
+   说明：全站共享设计系统 V2（清新马卡龙风：薄荷绿 × 天空蓝 × 樱花粉）
+         设计令牌 + 基础样式 + 可爱装饰（漂浮光球/贴纸卡片/果冻动效）
+         各页面 CSS 仅写页面专属样式，颜色统一走令牌 */
+
+/* ========== 设计令牌 ========== */
+:root {
+  --LNN-bg: #eef9f4;
+  --LNN-card: rgba(255, 255, 255, 0.82);
+  --LNN-card-solid: #ffffff;
+  --LNN-border: rgba(34, 184, 162, 0.20);
+  --LNN-text: #22343c;
+  --LNN-text-sub: #5b7078;
+  --LNN-text-muted: #8fa3ab;
+  --LNN-accent: #22b8a2;
+  --LNN-accent-2: #58a6ff;
+  --LNN-accent-3: #ff8fab;
+  --LNN-accent-4: #a78bfa;
+  --LNN-accent-soft: rgba(34, 184, 162, 0.10);
+  --LNN-pink-soft: rgba(255, 143, 171, 0.12);
+  --LNN-shadow: 0 6px 22px rgba(34, 140, 120, 0.10);
+  --LNN-shadow-hover: 0 12px 28px rgba(34, 184, 162, 0.20);
+  --LNN-radius: 18px;
+  --LNN-radius-sm: 12px;
+}
+
+/* ========== 基础 ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.LNN_body {
+  font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+  color: var(--LNN-text);
+  line-height: 1.65;
+  min-height: 100vh;
+  background:
+    /* 波点糖纸纹理 */
+    radial-gradient(rgba(34, 184, 162, 0.06) 1.5px, transparent 1.5px),
+    radial-gradient(rgba(255, 143, 171, 0.05) 1.5px, transparent 1.5px),
+    radial-gradient(1000px 500px at 88% -12%, rgba(88, 166, 255, 0.10), transparent 60%),
+    radial-gradient(900px 500px at -8% 30%, rgba(34, 184, 162, 0.10), transparent 60%),
+    linear-gradient(160deg, #f2fbf8 0%, #eef4ff 55%, var(--LNN-bg) 100%);
+  background-size: 26px 26px, 26px 26px, auto, auto, auto;
+  background-position: 0 0, 13px 13px, 0 0, 0 0, 0 0;
+  background-attachment: fixed;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+::selection {
+  background: rgba(255, 143, 171, 0.30);
+}
+
+/* 可爱滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--LNN-accent), var(--LNN-accent-2));
+  border-radius: 999px;
+  border: 2px solid #f2fbf8;
+}
+
+/* 容器 */
+.LNN_container {
+  width: 90%;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ========== 漂浮装饰光球（各页面 HTML 均已内置，此前未启用） ========== */
+.LNN_bg_glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.LNN_glow_1 {
+  width: 46vw;
+  height: 46vw;
+  left: -14vw;
+  top: -16vw;
+  background: radial-gradient(circle, rgba(34, 184, 162, 0.35), rgba(34, 184, 162, 0) 70%);
+  animation: LNN_drift_a 22s ease-in-out infinite alternate;
+}
+
+.LNN_glow_2 {
+  width: 40vw;
+  height: 40vw;
+  right: -12vw;
+  bottom: -14vw;
+  background: radial-gradient(circle, rgba(255, 143, 171, 0.30), rgba(167, 139, 250, 0.18) 55%, rgba(255, 143, 171, 0) 72%);
+  animation: LNN_drift_b 26s ease-in-out infinite alternate;
+}
+
+@keyframes LNN_drift_a {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(6vw, 5vh) scale(1.12); }
+}
+
+@keyframes LNN_drift_b {
+  from { transform: translate(0, 0) scale(1.08); }
+  to   { transform: translate(-5vw, -6vh) scale(1); }
+}
+
+/* 渐变标题通用（渐变流动） */
+.LNN_gradient_text {
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2), var(--LNN-accent-3), var(--LNN-accent));
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: LNN_gradient_flow 7s linear infinite;
+}
+
+@keyframes LNN_gradient_flow {
+  from { background-position: 0% 50%; }
+  to   { background-position: 220% 50%; }
+}
+
+/* ========== 顶部导航（毛玻璃 + 彩虹顶条） ========== */
+.LNN_header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(34, 184, 162, 0.16);
+  box-shadow: 0 4px 20px rgba(34, 140, 120, 0.07);
+}
+
+.LNN_header::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg,
+    var(--LNN-accent) 0%, var(--LNN-accent-2) 30%,
+    var(--LNN-accent-3) 60%, var(--LNN-accent-4) 85%, var(--LNN-accent) 100%);
+  background-size: 200% 100%;
+  animation: LNN_gradient_flow 9s linear infinite;
+}
+
+.LNN_header_inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 62px;
+}
+
+.LNN_logo {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--LNN-text);
+  transition: transform 0.25s ease;
+}
+
+.LNN_logo:hover {
+  transform: rotate(-3deg) scale(1.06);
+}
+
+.LNN_logo_accent {
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 2px;
+}
+
+.LNN_nav {
+  display: flex;
+  gap: 6px;
+}
+
+.LNN_nav_link {
+  font-size: 14.5px;
+  color: var(--LNN-text-sub);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: color 0.2s, background-color 0.2s, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.LNN_nav_link:hover {
+  color: var(--LNN-accent);
+  background-color: var(--LNN-accent-soft);
+  transform: translateY(-2px) rotate(-1.5deg);
+}
+
+.LNN_nav_link_active {
+  color: #fff;
+  background: linear-gradient(120deg, var(--LNN-accent), var(--LNN-accent-2));
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(34, 184, 162, 0.30);
+}
+
+/* ========== 页面标题 ========== */
+.LNN_page_head {
+  padding: 44px 0 20px;
+  animation: LNN_fade_up 0.5s ease both;
+}
+
+.LNN_page_title {
+  font-size: 32px;
+  margin-bottom: 6px;
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2), var(--LNN-accent-3));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: LNN_gradient_flow 6s linear infinite;
+}
+
+.LNN_page_desc {
+  font-size: 14.5px;
+  color: var(--LNN-text-sub);
+}
+
+/* ========== 页脚 ========== */
+.LNN_footer {
+  padding: 30px 0;
+  text-align: center;
+  border-top: 1px dashed rgba(34, 184, 162, 0.30);
+}
+
+.LNN_footer_text {
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+}
+
+.LNN_footer:hover .LNN_footer_text {
+  color: var(--LNN-accent);
+}
+
+/* ========== 通用空状态 ========== */
+.LNN_empty {
+  text-align: center;
+  color: var(--LNN-text-muted);
+  padding: 48px 0;
+  font-size: 14px;
+}
+
+/* ========== 全站通用动效 ========== */
+@keyframes LNN_fade_up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 弹性入场：卡片/列表项可直接引用 */
+@keyframes LNN_pop_in {
+  0%   { opacity: 0; transform: scale(0.92) translateY(10px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 摇摆（图标 hover 用） */
+@keyframes LNN_wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  50% { transform: rotate(6deg); }
+  75% { transform: rotate(-4deg); }
+}
+
+/* 上下漂浮 */
+@keyframes LNN_float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+
+/* 闪烁（加载提示用） */
+@keyframes LNN_blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* 果冻按压（按钮 :active 用） */
+@keyframes LNN_jelly {
+  0%   { transform: scale(1, 1); }
+  35%  { transform: scale(0.92, 1.08); }
+  60%  { transform: scale(1.06, 0.94); }
+  100% { transform: scale(1, 1); }
+}
+
+/* 按钮统一果冻手感 */
+.LNN_send_btn:active,
+.LNN_upload_btn:active,
+.LNN_mic_btn:active,
+.LNN_kb_delete_btn:active {
+  animation: LNN_jelly 0.4s ease;
+}
+
+/* ========== 全站通用卡片装饰（贴纸内框 + 悬浮手感） ========== */
+/* 主卡片（聊天/客服/知识库/视觉/语音 + 首页导航卡）：白色贴纸 + 内侧虚线框 */
+.LNN_chat_card,
+.LNN_nav_card,
+.LNN_upload_area {
+  position: relative;
+  border-radius: var(--LNN-radius);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+}
+
+.LNN_chat_card,
+.LNN_nav_card {
+  border: 1.5px solid var(--LNN-border);
+  background: var(--LNN-card);
+}
+
+.LNN_chat_card::after,
+.LNN_nav_card::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed rgba(34, 184, 162, 0.28);
+  border-radius: calc(var(--LNN-radius) - 6px);
+  pointer-events: none;
+}
+
+.LNN_chat_card:hover,
+.LNN_nav_card:hover {
+  transform: translateY(-5px) rotate(-0.6deg);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+/* 卡片 hover 时内框变色呼吸 */
+.LNN_chat_card:hover::after,
+.LNN_nav_card:hover::after {
+  border-color: rgba(255, 143, 171, 0.45);
+}
+
+/* 卡片右上角小圆点装饰（双色糖珠） */
+.LNN_chat_card::before,
+.LNN_nav_card::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffb3c6, var(--LNN-accent-3) 70%);
+  box-shadow: -16px 0 0 -2px rgba(88, 166, 255, 0.55), -30px 0 0 -3px rgba(34, 184, 162, 0.5);
+  pointer-events: none;
+}
+
+/* 内容页条目卡（题库/比赛/动态/图库/接口条/知识库管理/数据库）：统一贴纸升级 */
+.LNN_problem_item,
+.LNN_contest_item,
+.LNN_gallery_card,
+.LNN_kb_manage_card,
+.LNN_api_card,
+.LNN_connect_card {
+  position: relative;
+  border: 1.5px solid var(--LNN-border) !important;
+  background: var(--LNN-card) !important;
+  border-radius: var(--LNN-radius) !important;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+/* 虚线内框 */
+.LNN_problem_item::after,
+.LNN_contest_item::after,
+.LNN_gallery_card::after,
+.LNN_kb_manage_card::after,
+.LNN_api_card::after,
+.LNN_connect_card::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border: 1.5px dashed rgba(34, 184, 162, 0.24);
+  border-radius: calc(var(--LNN-radius) - 6px);
+  pointer-events: none;
+  transition: border-color 0.28s ease;
+}
+
+/* 悬浮轻抬 + 糖珠装饰 */
+.LNN_problem_item:hover,
+.LNN_contest_item:hover,
+.LNN_gallery_card:hover,
+.LNN_kb_manage_card:hover,
+.LNN_api_card:hover,
+.LNN_connect_card:hover {
+  transform: translateY(-4px) rotate(-0.5deg);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+.LNN_problem_item:hover::after,
+.LNN_contest_item:hover::after,
+.LNN_gallery_card:hover::after,
+.LNN_kb_manage_card:hover::after,
+.LNN_api_card:hover::after,
+.LNN_connect_card:hover::after {
+  border-color: rgba(255, 143, 171, 0.45);
+}
+
+.LNN_problem_item::before,
+.LNN_contest_item::before,
+.LNN_gallery_card::before,
+.LNN_api_card::before,
+.LNN_connect_card::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #b3e6ff, var(--LNN-accent-2) 70%);
+  box-shadow: -15px 0 0 -2px rgba(255, 143, 171, 0.55), -28px 0 0 -3px rgba(34, 184, 162, 0.5);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 图库卡片：右上角圆点放左上角，避免遮挡图片主体 */
+.LNN_gallery_card::before {
+  top: 10px;
+  left: 10px;
+  right: auto;
+}
+
+/* 图标可爱动效：hover 摇摆 / 常态轻浮 */
+.LNN_nav_icon,
+.LNN_upload_icon,
+.LNN_mic_btn {
+  animation: LNN_float 3.6s ease-in-out infinite;
+}
+
+.LNN_nav_card:hover .LNN_nav_icon,
+.LNN_upload_area:hover .LNN_upload_icon,
+.LNN_upload_area:hover .LNN_upload_hint {
+  animation: LNN_wiggle 0.6s ease;
+}
+
+/* 上传区：hover 虚线变粉 + 轻微倾斜 */
+.LNN_upload_area {
+  border: 2px dashed var(--LNN-border);
+  background: var(--LNN-card);
+}
+
+.LNN_upload_area:hover {
+  border-color: rgba(255, 143, 171, 0.55);
+  transform: rotate(-0.5deg);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+.LNN_upload_area.LNN_dragover {
+  border-color: var(--LNN-accent);
+  background: rgba(34, 184, 162, 0.06);
+  transform: scale(1.015);
+}
+
+/* 区块标题：左侧渐变小树叶条 */
+.LNN_section_title {
+  position: relative;
+  padding-left: 14px;
+}
+
+.LNN_section_title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 70%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--LNN-accent), var(--LNN-accent-2));
+}
+
+/* ========== 响应式 + 动效降级 ========== */
+@media (max-width: 720px) {
+  .LNN_header_inner {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 0;
+    gap: 8px;
+  }
+
+  .LNN_nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .LNN_bg_glow {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

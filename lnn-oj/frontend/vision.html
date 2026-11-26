@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+  姓名：李南诺 | 学号：24002120324
+  时间：2026-11-25 | 大模型：GLM-5.3-Flash
+  说明：图像识别页面——上传图片，调用硅基流动视觉模型（Qwen3-VL）返回图片描述
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图像识别 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_kb.css">
+  <link rel="stylesheet" href="css/LNN_vision.css">
+</head>
+<body class="LNN_body">
+  <div class="LNN_bg_glow LNN_glow_1"></div>
+  <div class="LNN_bg_glow LNN_glow_2"></div>
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a class="LNN_logo" href="index.html"><span class="LNN_logo_badge">LNN</span>-OJ</a>
+      <nav class="LNN_nav">
+        <a href="problems.html">题库练习</a>
+        <a href="contests.html">比赛列表</a>
+        <a href="news.html">赛事动态</a>
+        <a href="tech_news.html">科技新闻</a>
+        <a href="database.html">数据库测试</a>
+        <a href="ai_chat.html">AI 聊天</a>
+        <a href="support.html">在线客服</a>
+        <a href="kb.html">知识库</a>
+        <a class="LNN_nav_active" href="vision.html">图像识别</a>
+        <a href="gallery.html">图库</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="LNN_container LNN_page_main">
+    <!-- 页面信息 -->
+    <div class="LNN_page_head">
+      <h1 class="LNN_page_title">图像识别</h1>
+      <p class="LNN_page_desc">上传一张图片，由硅基流动视觉模型 Qwen3-VL 分析并返回图片内容描述，可附加想问的图片问题。</p>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/ai/vision</span>
+        <span class="LNN_api_desc">图像识别接口（multipart，image 字段 + 可选 question 字段）</span>
+      </div>
+    </div>
+
+    <div class="LNN_chat_card">
+      <h2 class="LNN_section_title">🖼️ 上传图片</h2>
+      <!-- 上传区（复用知识库上传样式） -->
+      <div class="LNN_upload_area" id="LNN_upload_area">
+        <div class="LNN_upload_icon">⬆️</div>
+        <p class="LNN_upload_text" id="LNN_upload_text">点击选择或拖拽图片到此处上传</p>
+        <p class="LNN_upload_hint">支持 jpg / png / webp / gif / bmp，最大 10MB，上传后自动识别</p>
+        <input type="file" id="LNN_image_input" accept=".jpg,.jpeg,.png,.webp,.gif,.bmp" hidden>
+        <button type="button" class="LNN_send_btn LNN_upload_btn" id="LNN_pick_btn">选择图片</button>
+      </div>
+
+      <!-- 图片预览 -->
+      <div class="LNN_preview_wrap" id="LNN_preview_wrap" style="display:none;">
+        <img id="LNN_preview_img" class="LNN_preview_img" alt="图片预览">
+        <div class="LNN_preview_meta" id="LNN_preview_meta"></div>
+      </div>
+
+      <!-- 附加问题 -->
+      <div class="LNN_input_bar LNN_question_bar">
+        <textarea id="LNN_input" class="LNN_input" rows="1"
+          placeholder="想问图片什么问题？（选填，留空则生成完整描述）"></textarea>
+      </div>
+    </div>
+
+    <!-- 识别结果卡片 -->
+    <div class="LNN_chat_card">
+      <h2 class="LNN_section_title">🤖 识别结果</h2>
+      <div class="LNN_vision_result" id="LNN_result_box">
+        <p class="LNN_kb_empty">上传图片后，识别结果将显示在这里</p>
+      </div>
+      <p class="LNN_model_note" id="LNN_model_note">服务商：硅基流动 · 视觉模型：<span id="LNN_model_name">Qwen/Qwen3-VL-8B-Instruct</span></p>
+    </div>
+  </main>
+
+  <footer class="LNN_footer">
+    <p>© 2026 LNN-OJ 程序设计比赛题库系统 · 李南诺 24002120324</p>
+  </footer>
+
+  <script src="js/LNN_vision.js"></script>
+</body>
+</html>

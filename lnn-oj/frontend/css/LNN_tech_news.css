@@ -1,0 +1,180 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：科技新闻列表页样式（页面专属部分，基础样式见 LNN_common.css） */
+
+/* 接口信息条 */
+.LNN_api_bar {
+  padding: 4px 0 16px;
+}
+
+.LNN_api_card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background-color: var(--LNN-card);
+  border: 1px dashed rgba(34, 184, 162, 0.40);
+  border-radius: 12px;
+  padding: 12px 18px;
+  box-shadow: 0 4px 14px rgba(34, 140, 120, 0.05);
+}
+
+.LNN_api_method {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: rgba(22, 163, 74, 0.10);
+  color: #15803d;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+.LNN_api_link {
+  font-size: 14px;
+  color: #3b5bdb;
+  font-family: Consolas, monospace;
+  transition: color 0.2s;
+}
+
+.LNN_api_link:hover {
+  color: var(--LNN-accent);
+  text-decoration: underline;
+}
+
+.LNN_api_desc {
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+/* 搜索框 */
+.LNN_search_bar {
+  padding: 0 0 16px;
+}
+
+.LNN_search_input {
+  width: 100%;
+  background-color: var(--LNN-card-solid);
+  border: 1px solid rgba(34, 184, 162, 0.22);
+  border-radius: var(--LNN-radius-sm);
+  color: var(--LNN-text);
+  padding: 11px 14px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.LNN_search_input:focus {
+  border-color: var(--LNN-accent);
+  box-shadow: 0 0 0 3px rgba(34, 184, 162, 0.14);
+}
+
+/* 新闻列表 */
+.LNN_list_section {
+  padding: 0 0 56px;
+}
+
+.LNN_list_count {
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+  margin-bottom: 14px;
+}
+
+.LNN_news_list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.LNN_news_item {
+  display: flex;
+  gap: 16px;
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--LNN-border);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(34, 140, 120, 0.06);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+
+.LNN_news_item:hover {
+  border-color: rgba(34, 184, 162, 0.45);
+  transform: translateX(3px);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+/* 左右交错分布：偶数行图片在右 */
+.LNN_news_item:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+/* 新闻配图 */
+.LNN_news_thumb {
+  flex-shrink: 0;
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(34, 184, 162, 0.14);
+}
+
+/* 文字信息区 */
+.LNN_news_info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.LNN_news_item_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.LNN_news_item_title {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--LNN-text);
+}
+
+.LNN_news_item_category {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: linear-gradient(100deg, rgba(34, 184, 162, 0.12), rgba(88, 166, 255, 0.12));
+  color: #3b5bdb;
+  border: 1px solid rgba(34, 184, 162, 0.22);
+}
+
+.LNN_news_item_summary {
+  font-size: 14px;
+  color: var(--LNN-text-sub);
+  margin-bottom: 10px;
+}
+
+.LNN_news_item_meta {
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .LNN_news_item {
+    flex-direction: column;
+  }
+
+  .LNN_news_thumb {
+    width: 100%;
+    height: 150px;
+  }
+
+  .LNN_news_item_top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

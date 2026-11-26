@@ -1,0 +1,88 @@
+/**
+ * 姓名：李南诺 | 学号：24002120324
+ * 时间：2026-11-25 | 大模型：GLM-5.3-Flash
+ * 说明：语音识别页专属样式（麦克风按钮、录音状态、结果卡）
+ */
+
+/* 录音区 */
+.LNN_record_area {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.LNN_mic_btn {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--LNN-accent), var(--LNN-accent-2));
+  color: #fff;
+  box-shadow: var(--LNN-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.LNN_mic_btn:hover {
+  transform: scale(1.06);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+/* 录音中：脉冲光圈 */
+.LNN_mic_btn.LNN_recording {
+  animation: LNN_mic_pulse 1.2s ease-out infinite;
+}
+
+@keyframes LNN_mic_pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 184, 162, 0.45); }
+  100% { box-shadow: 0 0 0 22px rgba(34, 184, 162, 0); }
+}
+
+.LNN_record_status {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--LNN-text);
+}
+
+.LNN_record_time {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--LNN-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.LNN_playback {
+  display: block;
+  margin: 12px auto 0;
+  max-width: 320px;
+  width: 100%;
+}
+
+/* 识别结果 */
+.LNN_voice_result {
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(34, 184, 162, 0.05);
+  border: 1px solid var(--LNN-border);
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--LNN-text);
+  animation: LNN_fade_up 0.4s ease both;
+}
+
+.LNN_voice_result.LNN_error {
+  background: rgba(229, 72, 77, 0.06);
+  border-color: rgba(229, 72, 77, 0.35);
+  color: #e5484d;
+}
+
+.LNN_voice_loading {
+  color: var(--LNN-accent);
+  animation: LNN_blink 1s ease-in-out infinite;
+}
+
+.LNN_voice_meta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--LNN-text-muted);
+}

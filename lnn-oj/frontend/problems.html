@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- 姓名：李南诺 | 学号：24002120324
+     时间：2026-11-20 | 大模型：GLM-5.3-Flash
+     页面说明：题库练习页（题目列表，支持难度/标签/关键词筛选） -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>题库练习 - LNN OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_problems.css">
+</head>
+<body class="LNN_body">
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a href="index.html" class="LNN_logo">LNN<span class="LNN_logo_accent">-OJ</span></a>
+      <nav class="LNN_nav">
+        <a href="index.html" class="LNN_nav_link">首页</a>
+        <a href="problems.html" class="LNN_nav_link LNN_nav_link_active">题库练习</a>
+        <a href="contests.html" class="LNN_nav_link">比赛列表</a>
+        <a href="news.html" class="LNN_nav_link">赛事动态</a>
+        <a href="gallery.html" class="LNN_nav_link">题库图库</a>
+        <a href="database.html" class="LNN_nav_link">数据库</a>
+        <a href="tech_news.html" class="LNN_nav_link">科技新闻</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 页面标题 -->
+  <section class="LNN_page_head">
+    <div class="LNN_container">
+      <h1 class="LNN_page_title">题库练习</h1>
+      <p class="LNN_page_desc">按难度、标签或关键词筛选题目，开始你的算法训练。</p>
+    </div>
+  </section>
+
+  <!-- 筛选栏 -->
+  <section class="LNN_filter_bar">
+    <div class="LNN_container LNN_filter_inner">
+      <select id="LNN_filter_difficulty" class="LNN_select">
+        <option value="">全部难度</option>
+        <option value="easy">简单</option>
+        <option value="medium">中等</option>
+        <option value="hard">困难</option>
+      </select>
+      <select id="LNN_filter_tag" class="LNN_select">
+        <option value="">全部标签</option>
+      </select>
+      <input id="LNN_filter_keyword" type="text" class="LNN_input" placeholder="搜索题目标题…">
+    </div>
+  </section>
+
+  <!-- 题目列表 -->
+  <section class="LNN_list_section">
+    <div class="LNN_container">
+      <p id="LNN_list_count" class="LNN_list_count">加载中…</p>
+      <div id="LNN_problem_list" class="LNN_problem_list"></div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="LNN_footer">
+    <div class="LNN_container">
+      <p class="LNN_footer_text">李南诺 | 学号 24002120324 | 程序设计比赛题库系统</p>
+    </div>
+  </footer>
+
+  <script src="js/LNN_problems.js"></script>
+</body>
+</html>

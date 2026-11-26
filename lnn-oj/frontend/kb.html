@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--
+  姓名：李南诺 | 学号：24002120324
+  时间：2026-11-25 | 大模型：GLM-5.3-Flash
+  说明：知识库问答页面（RAG）——文件上传、知识库管理、基于知识库的问答
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识库问答 - LNN-OJ</title>
+  <link rel="stylesheet" href="css/LNN_common.css">
+  <link rel="stylesheet" href="css/LNN_ai_chat.css">
+  <link rel="stylesheet" href="css/LNN_kb.css">
+</head>
+<body class="LNN_body">
+  <div class="LNN_bg_glow LNN_glow_1"></div>
+  <div class="LNN_bg_glow LNN_glow_2"></div>
+
+  <!-- 顶部导航 -->
+  <header class="LNN_header">
+    <div class="LNN_container LNN_header_inner">
+      <a class="LNN_logo" href="index.html"><span class="LNN_logo_badge">LNN</span>-OJ</a>
+      <nav class="LNN_nav">
+        <a href="problems.html">题库练习</a>
+        <a href="contests.html">比赛列表</a>
+        <a href="news.html">赛事动态</a>
+        <a href="tech_news.html">科技新闻</a>
+        <a href="database.html">数据库测试</a>
+        <a href="ai_chat.html">AI 聊天</a>
+        <a href="support.html">在线客服</a>
+        <a class="LNN_nav_active" href="kb.html">知识库</a>
+        <a href="gallery.html">图库</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="LNN_container LNN_page_main">
+    <!-- 页面信息 -->
+    <div class="LNN_page_head">
+      <h1 class="LNN_page_title">知识库问答</h1>
+      <p class="LNN_page_desc">上传 doc / docx / ppt / pptx / pdf / txt 文件构建专属知识库（RAG）：先检索知识库片段，再交给大模型依据内容回答。</p>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/kb/upload</span>
+        <span class="LNN_api_desc">知识库文件上传接口（multipart，file 字段）</span>
+      </div>
+      <div class="LNN_api_bar">
+        <span class="LNN_api_method">POST</span>
+        <span class="LNN_api_link">http://localhost:8324/api/kb/ask</span>
+        <span class="LNN_api_desc">知识库问答接口（body: {"question":"..."}）</span>
+      </div>
+    </div>
+
+    <!-- 知识库管理卡片 -->
+    <div class="LNN_chat_card LNN_kb_manage_card">
+      <h2 class="LNN_section_title">📁 知识库管理</h2>
+      <!-- 上传模块 -->
+      <div class="LNN_upload_area" id="LNN_upload_area">
+        <div class="LNN_upload_icon">⬆️</div>
+        <p class="LNN_upload_text">点击选择或拖拽文件到此处上传</p>
+        <p class="LNN_upload_hint">支持 doc / docx / ppt / pptx / pdf / txt / md，最大 10MB</p>
+        <input type="file" id="LNN_file_input" accept=".txt,.md,.doc,.docx,.ppt,.pptx,.pdf" hidden>
+        <button type="button" class="LNN_send_btn LNN_upload_btn" id="LNN_pick_btn">选择文件</button>
+      </div>
+      <!-- 文件列表 -->
+      <ul class="LNN_kb_file_list" id="LNN_file_list">
+        <li class="LNN_kb_empty">知识库暂无文件</li>
+      </ul>
+    </div>
+
+    <!-- 问答卡片（复用聊天样式） -->
+    <div class="LNN_chat_card">
+      <div class="LNN_chat_header">
+        <div class="LNN_avatar LNN_avatar_ai">📚</div>
+        <div>
+          <p class="LNN_chat_name">知识库问答助手</p>
+          <p class="LNN_chat_status">基于已上传知识库内容回答</p>
+        </div>
+        <button type="button" class="LNN_clear_btn" id="LNN_clear_btn">清空对话</button>
+      </div>
+
+      <div class="LNN_chat_box" id="LNN_chat_box">
+        <div class="LNN_msg LNN_msg_ai">
+          <div class="LNN_avatar LNN_avatar_ai">📚</div>
+          <div class="LNN_bubble LNN_bubble_ai">您好！请先上传知识库文件，然后就可以向我提问知识库里的内容啦～</div>
+        </div>
+      </div>
+
+      <!-- 快捷提问 -->
+      <div id="LNN_quick_chips" class="LNN_quick_chips">
+        <button class="LNN_quick_chip" type="button">营业时间是几点？</button>
+        <button class="LNN_quick_chip" type="button">招牌菜有哪些？</button>
+        <button class="LNN_quick_chip" type="button">可以预订包间吗</button>
+        <button class="LNN_quick_chip" type="button">会员有什么优惠</button>
+      </div>
+
+      <!-- 输入区 -->
+      <div class="LNN_input_bar">
+        <textarea id="LNN_input" class="LNN_input" rows="1"
+          placeholder="输入问题，基于知识库回答（Enter 发送，Shift+Enter 换行）"></textarea>
+        <button type="button" id="LNN_send_btn" class="LNN_send_btn">发送</button>
+      </div>
+    </div>
+
+    <div class="LNN_model_note">RAG 流程：问题 → 关键词检索知识库片段 → 拼入提示词 → 大模型作答（控制台输出发送/接收数据）</div>
+  </main>
+
+  <footer class="LNN_footer">
+    <p>© 2026 LNN-OJ 程序设计比赛题库系统 · 李南诺 24002120324</p>
+  </footer>
+
+  <script src="js/LNN_kb.js"></script>
+</body>
+</html>

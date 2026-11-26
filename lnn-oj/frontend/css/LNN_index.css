@@ -1,0 +1,199 @@
+/* 姓名：李南诺 | 学号：24002120324
+   时间：2026-11-20 | 大模型：GLM-5.3-Flash
+   说明：项目首页样式（canvas 背景 + 信息卡 + 导航面板，清新浅色风） */
+
+/* canvas 背景层 */
+.LNN_bg_canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+
+/* 主内容层（位于 canvas 之上） */
+.LNN_main {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 72px 24px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+/* 项目信息卡（毛玻璃 + 渐变描边） */
+.LNN_info_card {
+  position: relative;
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--LNN-radius);
+  padding: 42px 36px 34px;
+  text-align: center;
+  box-shadow: var(--LNN-shadow);
+  overflow: hidden;
+}
+
+/* 卡片顶部渐变饰条 */
+.LNN_info_card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--LNN-accent), var(--LNN-accent-2));
+}
+
+.LNN_project_name {
+  font-size: 38px;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.LNN_project_en {
+  font-size: 14px;
+  color: var(--LNN-text-muted);
+  letter-spacing: 3px;
+  margin-bottom: 26px;
+}
+
+.LNN_info_list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 38px;
+  margin-bottom: 22px;
+}
+
+.LNN_info_item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.LNN_info_label {
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+}
+
+.LNN_info_value {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--LNN-text);
+}
+
+/* 服务状态徽标 */
+.LNN_status {
+  display: inline-block;
+  font-size: 12.5px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 184, 162, 0.25);
+  color: var(--LNN-text-sub);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.LNN_status_online {
+  color: #15803d;
+  border-color: rgba(22, 163, 74, 0.35);
+  background-color: rgba(22, 163, 74, 0.08);
+}
+
+.LNN_status_offline {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.30);
+  background-color: rgba(185, 28, 28, 0.07);
+}
+
+/* 页面导航面板 */
+.LNN_nav_panel {
+  background-color: var(--LNN-card);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--LNN-radius);
+  padding: 30px 28px 34px;
+  box-shadow: var(--LNN-shadow);
+}
+
+.LNN_nav_title {
+  font-size: 17px;
+  text-align: center;
+  margin-bottom: 22px;
+  color: var(--LNN-text-sub);
+  letter-spacing: 5px;
+}
+
+.LNN_nav_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* 导航卡片 */
+.LNN_nav_card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 16px 24px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(34, 184, 162, 0.14);
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.LNN_nav_card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 184, 162, 0.45);
+  box-shadow: var(--LNN-shadow-hover);
+}
+
+.LNN_nav_icon {
+  font-size: 26px;
+  font-weight: bold;
+  background: linear-gradient(100deg, var(--LNN-accent), var(--LNN-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.LNN_nav_name {
+  font-size: 17px;
+  font-weight: bold;
+  color: var(--LNN-text);
+}
+
+.LNN_nav_desc {
+  font-size: 12.5px;
+  color: var(--LNN-text-muted);
+}
+
+/* 版权行 */
+.LNN_copyright {
+  text-align: center;
+  font-size: 13px;
+  color: var(--LNN-text-muted);
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .LNN_project_name {
+    font-size: 28px;
+  }
+
+  .LNN_nav_grid {
+    grid-template-columns: 1fr;
+  }
+}
