@@ -344,3 +344,11 @@ delay: 3200
 ## 2026-11-26 | 模型：GLM-5.3-Flash
 
 帮我把这两个入口按照要求起一个名字也放在课堂目录里面（指 linannuo_web/index.html 项目入口跳转页 与 linannuo_web/frontend/test_results.html AI 功能测试结果展示页）
+
+## 2026-11-26 | 模型：GLM-5.3-Flash
+
+帮我把这个抓小球的HTML放在和课堂目录里面的抓小球事件放在一块，加上一个入口在课堂目录上面
+
+## 2026-11-26 | 模型：GLM-5.3-Flash
+
+帮我把这个加入一个入口在课堂目录里面，放在移动端导航 司南iconfont-4.html旁边

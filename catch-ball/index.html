@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>抓小球小游戏</title>
+  <style>
+    /* ========== 全局重置 ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      background-color: #FFFDE7;
+    }
+
+    /* ========== 顶部分数栏 ========== */
+    .score-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(255, 249, 196, 0.95);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-bottom: 2px solid #FBC02D;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .score-bar .score,
+    .score-bar .timer {
+      font-size: 18px;
+      font-weight: 500;
+      color: #5D4037;
+    }
+
+    .score-bar strong {
+      color: #1565C0;
+      font-size: 22px;
+      margin-left: 4px;
+    }
+
+    .score-bar .timer.warning strong {
+      color: #D32F2F;
+      animation: timer-blink 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes timer-blink {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0.6; transform: scale(1.08); }
+    }
+
+    /* ========== 游戏主区域 ========== */
+    #game-area {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding-top: 60px;
+      cursor: crosshair;
+    }
+
+    /* 页面抖动动画（空白区域扣分） */
+    .shake {
+      animation: shake 0.15s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25%      { transform: translateX(-4px); }
+      75%      { transform: translateX(4px); }
+    }
+
+    /* ========== 小球 ========== */
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      /* 蓝色径向渐变 + 高光 */
+      background: radial-gradient(
+        circle at 30% 30%,
+        #90CAF9 0%,
+        #42A5F5 30%,
+        #1E88E5 60%,
+        #0D47A1 100%
+      );
+      box-shadow:
+        inset -6px -6px 12px rgba(0, 0, 0, 0.3),
+        inset 4px 4px 10px rgba(255, 255, 255, 0.35),
+        0 6px 16px rgba(13, 71, 161, 0.4);
+      animation: ball-appear 0.2s ease-out;
+      z-index: 10;
+      /* 防止触摸延迟并让小球能接住触摸事件 */
+      touch-action: none;
+    }
+
+    .ball.dying {
+      animation: ball-disappear 0.15s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ball-appear {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes ball-disappear {
+      to { transform: scale(1.3); opacity: 0; }
+    }
+
+    /* ========== 飘字（得分/扣分反馈） ========== */
+    .floating-text {
+      position: absolute;
+      font-size: 24px;
+      font-weight: bold;
+      pointer-events: none;
+      z-index: 50;
+      animation: float-up 0.6s ease-out forwards;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .floating-text.positive { color: #2E7D32; }
+    .floating-text.negative { color: #C62828; }
+
+    @keyframes float-up {
+      0%   { transform: translate(-50%, 0);    opacity: 1; }
+      100% { transform: translate(-50%, -50px); opacity: 0; }
+    }
+
+    /* ========== 遮罩层（初始状态 + 结束状态） ========== */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 200;
+      animation: overlay-fade-in 0.3s ease-out;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay-content {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 36px 48px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+      max-width: 90%;
+      animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes overlay-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes pop-in {
+      from { transform: scale(0.7); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    .overlay-content h2 {
+      font-size: 28px;
+      color: #1565C0;
+      margin-bottom: 12px;
+    }
+
+    .overlay-content p {
+      font-size: 16px;
+      color: #5D4037;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .overlay-content .final-score {
+      font-size: 48px;
+      font-weight: bold;
+      color: #D84315;
+      margin: 12px 0 20px;
+      text-shadow: 0 2px 8px rgba(216, 67, 21, 0.2);
+    }
+
+    /* ========== 按钮 ========== */
+    .game-btn {
+      background: linear-gradient(135deg, #2196F3, #1565C0);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 30px;
+      padding: 14px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(21, 101, 192, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .game-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(21, 101, 192, 0.5);
+    }
+
+    .game-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 8px rgba(21, 101, 192, 0.3);
+    }
+
+    /* ========== 移动端适配 ========== */
+    @media (max-width: 480px) {
+      .score-bar {
+        height: 52px;
+        padding: 0 12px;
+      }
+      .score-bar .score,
+      .score-bar .timer {
+        font-size: 15px;
+      }
+      .score-bar strong {
+        font-size: 18px;
+      }
+      #game-area {
+        padding-top: 52px;
+      }
+      .overlay-content {
+        padding: 28px 28px;
+      }
+      .overlay-content h2 {
+        font-size: 22px;
+      }
+      .overlay-content .final-score {
+        font-size: 38px;
+      }
+      .game-btn {
+        padding: 12px 32px;
+        font-size: 16px;
+      }
+      .floating-text {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 顶部分数栏 -->
+  <header class="score-bar" id="scoreBar">
+    <span class="score">分数: <strong id="score">0</strong></span>
+    <span class="timer" id="timerWrap">倒计时: <strong id="timer">02:00</strong></span>
+  </header>
+
+  <!-- 游戏主区域 -->
+  <main id="game-area">
+
+    <!-- 遮罩：初始状态 / 结束状态 -->
+    <div id="overlay" class="overlay">
+      <div class="overlay-content">
+        <h2 id="overlay-title">抓小球</h2>
+        <p id="overlay-message">点击蓝色小球 +2 分<br>点击空白区域 -1 分</p>
+        <div id="final-score-box" class="final-score" style="display:none;"></div>
+        <button class="game-btn" id="start-btn">开始游戏</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    'use strict';
+
+    // ========== 常量 ==========
+    const GAME_DURATION = 120;       // 游戏时长（秒）
+    const SCORE_BAR_H   = 60;        // 分数栏高度（px），与 CSS 保持一致
+    const SCORE_BAR_H_MOBILE = 52;   // 移动端分数栏高度
+    const MARGIN        = 10;        // 小球与边缘的最小间距
+    const BALL_MIN_SIZE = 40;        // 小球最小直径
+    const BALL_MAX_SIZE = 80;        // 小球最大直径
+
+    // ========== DOM 引用 ==========
+    const gameArea      = document.getElementById('game-area');
+    const overlay       = document.getElementById('overlay');
+    const overlayTitle  = document.getElementById('overlay-title');
+    const overlayMsg    = document.getElementById('overlay-message');
+    const finalScoreBox = document.getElementById('final-score-box');
+    const startBtn      = document.getElementById('start-btn');
+    const scoreEl       = document.getElementById('score');
+    const timerEl       = document.getElementById('timer');
+    const timerWrap     = document.getElementById('timerWrap');
+
+    // ========== 游戏状态 ==========
+    let score          = 0;
+    let timeLeft       = GAME_DURATION;
+    let isPlaying      = false;
+    let ballEl         = null;
+    let timerInterval  = null;
+    let isProcessing   = false;  // 防快速连点锁
+
+    // ========== 辅助函数 ==========
+
+    /** 决定当前分数栏高度（兼容移动端） */
+    function getScoreBarHeight() {
+      return window.innerWidth <= 480 ? SCORE_BAR_H_MOBILE : SCORE_BAR_H;
+    }
+
+    /** 格式化秒数为 MM:SS */
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    /** 小球位置计算 — 避开分数栏和视口边界 */
+    function getRandomPosition(size) {
+      const barH = getScoreBarHeight();
+      const maxX = window.innerWidth  - size - MARGIN;
+      const maxY = window.innerHeight - size - MARGIN;
+      const x = Math.random() * (maxX - MARGIN) + MARGIN;
+      const y = Math.random() * (maxY - MARGIN) + barH + MARGIN;
+      return { x: Math.round(x), y: Math.round(y) };
+    }
+
+    /** 随机小球尺寸 */
+    function getRandomSize() {
+      return Math.floor(Math.random() * (BALL_MAX_SIZE - BALL_MIN_SIZE + 1)) + BALL_MIN_SIZE;
+    }
+
+    // ========== 核心游戏逻辑 ==========
+
+    /** 开始游戏（重置所有状态并启动） */
+    function startGame() {
+      // 重置状态
+      score    = 0;
+      timeLeft = GAME_DURATION;
+      isPlaying    = true;
+      isProcessing = false;
+
+      // 更新 UI
+      scoreEl.textContent = '0';
+      timerEl.textContent = formatTime(GAME_DURATION);
+      timerWrap.classList.remove('warning');
+
+      // 清理 endGame 残留的 DOM 状态
+      finalScoreBox.style.display = 'none';
+      finalScoreBox.textContent = '';
+      overlayTitle.textContent  = '抓小球';
+      overlayMsg.innerHTML      = '点击蓝色小球 +2 分<br>点击空白区域 -1 分';
+      startBtn.textContent      = '开始游戏';
+
+      // 隐藏遮罩
+      overlay.classList.add('hidden');
+
+      // 生成第一个小球
+      generateBall();
+
+      // 启动倒计时
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    /** 每秒更新倒计时 */
+    function updateTimer() {
+      timeLeft--;
+
+      if (timeLeft <= 0) {
+        endGame();
+        return;
+      }
+
+      timerEl.textContent = formatTime(timeLeft);
+
+      // 最后 10 秒变红闪烁
+      if (timeLeft <= 10) {
+        timerWrap.classList.add('warning');
+      }
+    }
+
+    /** 生成新小球 */
+    function generateBall() {
+      const size = getRandomSize();
+      const pos  = getRandomPosition(size);
+
+      ballEl = document.createElement('div');
+      ballEl.className = 'ball';
+      ballEl.style.width  = size + 'px';
+      ballEl.style.height = size + 'px';
+      ballEl.style.left   = pos.x + 'px';
+      ballEl.style.top    = pos.y + 'px';
+
+      // 使用 pointerup 统一处理鼠标点击 + 手机触摸
+      ballEl.addEventListener('pointerup', handleBallClick, { passive: false });
+
+      gameArea.appendChild(ballEl);
+    }
+
+    /** 小球被点击 — 得分 +2，刷新新球 */
+    function handleBallClick(e) {
+      // 关键：防止冒泡触发下方空白区域的 -1 处理
+      e.stopPropagation();
+      e.preventDefault();
+
+      // 防连点锁
+      if (!isPlaying || isProcessing) return;
+      isProcessing = true;
+
+      const rect = ballEl.getBoundingClientRect();
+      // 飘字坐标（相对于 game-area）
+      const faRect = gameArea.getBoundingClientRect();
+      const fx = rect.left + rect.width  / 2 - faRect.left;
+      const fy = rect.top  + rect.height / 2 - faRect.top;
+
+      // +2 分
+      updateScore(2, fx, fy);
+
+      // 播放消失动画后移除
+      ballEl.classList.add('dying');
+      ballEl.addEventListener('animationend', () => {
+        if (ballEl && ballEl.parentNode) ballEl.parentNode.removeChild(ballEl);
+        ballEl = null;
+        generateBall();  // 立即刷新新球
+        isProcessing = false;
+      }, { once: true });
+    }
+
+    /** 更新分数 + 显示飘字 */
+    function updateScore(delta, x, y) {
+      score += delta;
+      scoreEl.textContent = score;
+      showFloatingText(x, y, (delta > 0 ? '+' : '') + delta, delta > 0);
+    }
+
+    /** 显示飘字动画 */
+    function showFloatingText(x, y, text, isPositive) {
+      const ft = document.createElement('div');
+      ft.className = 'floating-text ' + (isPositive ? 'positive' : 'negative');
+      ft.textContent = text;
+      ft.style.left = x + 'px';
+      ft.style.top  = y + 'px';
+
+      gameArea.appendChild(ft);
+
+      // 动画结束后移除 DOM
+      ft.addEventListener('animationend', () => {
+        if (ft.parentNode) ft.parentNode.removeChild(ft);
+      }, { once: true });
+    }
+
+    /** 空白区域被点击 — 扣 1 分 + 抖动 */
+    function handleAreaClick(e) {
+      if (!isPlaying || isProcessing) return;
+
+      const faRect = gameArea.getBoundingClientRect();
+      const fx = e.clientX - faRect.left;
+      const fy = e.clientY - faRect.top;
+
+      updateScore(-1, fx, fy);
+
+      // 页面抖动
+      gameArea.classList.remove('shake');
+      // 强制重排以重启动画
+      void gameArea.offsetWidth;
+      gameArea.classList.add('shake');
+    }
+
+    /** 结束游戏 */
+    function endGame() {
+      isPlaying = false;
+
+      // 停止倒计时
+      clearInterval(timerInterval);
+      timerInterval = null;
+
+      // 移除小球
+      if (ballEl && ballEl.parentNode) {
+        ballEl.parentNode.removeChild(ballEl);
+        ballEl = null;
+      }
+
+      // 移除所有飘字
+      gameArea.querySelectorAll('.floating-text').forEach(el => el.remove());
+
+      // 显示结束遮罩
+      overlayTitle.textContent = '游戏结束';
+      overlayMsg.innerHTML = '感谢参与！看看你得了多少分~';
+      finalScoreBox.textContent = '最终得分：' + score;
+      finalScoreBox.style.display = 'block';
+      startBtn.textContent = '再来一局';
+      overlay.classList.remove('hidden');
+    }
+
+    // ========== 事件绑定 ==========
+
+    startBtn.addEventListener('click', startGame);
+
+    // 空白区域点击（冒泡上来的都是非小球事件）
+    gameArea.addEventListener('pointerup', function(e) {
+      // 如果小球被点，stopPropagation 已经阻止冒泡，不会到这里
+      // 如果点到飘字或其他内部元素，也视为空白
+      if (e.target === gameArea || !e.target.classList.contains('ball')) {
+        handleAreaClick(e);
+      }
+    }, { passive: true });
+
+    // 游戏进行中，窗口变化时刷新倒计时区域样式即可，小球位置不动
+    window.addEventListener('resize', () => {
+      // 仅当游戏未开始时也无特殊动作
+    });
+  </script>
+
+</body>
+</html>
